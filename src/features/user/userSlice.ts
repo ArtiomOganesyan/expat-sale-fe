@@ -1,5 +1,6 @@
-import { authAPI } from "./authAPI"
+import { authAPI } from "../auth/authAPI"
 import { createAppSlice } from "../../app/createAppSlice"
+import { userAPI } from "./userAPI"
 
 const initialState: {
   user: any
@@ -11,10 +12,14 @@ const initialState: {
   error: null,
 }
 
-export const authSlice = createAppSlice({
-  name: "authSlice",
+export const userSlice = createAppSlice({
+  name: "userSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    updateUser: (state, action) => {
+      state.user = { ...state.user, ...action.payload }
+    },
+  },
   extraReducers: builder => {
     // CHECK IF USER IS LOGGED IN
     builder.addMatcher(authAPI.endpoints.authCheck.matchPending, state => {
@@ -109,8 +114,32 @@ export const authSlice = createAppSlice({
         state.error = action.payload
       },
     )
+    // PROFILE UPDATE
+    builder.addMatcher(
+      userAPI.endpoints.updateUser.matchPending,
+      (state, action) => {
+        state.loading = true
+        state.error = null
+      },
+    )
+    builder.addMatcher(
+      userAPI.endpoints.updateUser.matchRejected,
+      (state, action) => {
+        state.loading = true
+        state.error = action.payload
+      },
+    )
+    builder.addMatcher(
+      userAPI.endpoints.updateUser.matchFulfilled,
+      (state, action) => {
+        state.loading = false
+        state.error = null
+        state.user = action.payload
+      },
+    )
   },
 })
 
-export const selectUser = (state: any) => state.authSlice.user
-export const { reducer } = authSlice
+export const selectUser = (state: any) => state.userSlice.user
+export const { updateUser } = userSlice.actions
+export const { reducer } = userSlice

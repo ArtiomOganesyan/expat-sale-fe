@@ -1,12 +1,10 @@
 import { Link } from "react-router"
 import styles from "./Navbar.module.css"
 import { useAppSelector } from "../../app/hooks"
-import { selectUser } from "../../features/auth/authSlice"
+import { selectUser } from "../../features/user/userSlice"
 
 function Navbar() {
   const user = useAppSelector(selectUser)
-
-  
 
   const authLinks = () => {
     return (

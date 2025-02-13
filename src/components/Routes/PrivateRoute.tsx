@@ -1,4 +1,4 @@
-import { selectUser } from "../../features/auth/authSlice"
+import { selectUser } from "../../features/user/userSlice"
 import { useAppSelector } from "../../app/hooks"
 import { Outlet } from "react-router"
 

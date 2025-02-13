@@ -3,15 +3,17 @@ import { combineSlices, configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 import { counterSlice } from "../features/counter/counterSlice"
 import { quotesApiSlice } from "../features/quotes/quotesApiSlice"
-import { authSlice } from "../features/auth/authSlice"
+import { userSlice } from "../features/user/userSlice"
 import { authAPI } from "../features/auth/authAPI"
+import { userAPI } from "../features/user/userAPI"
 
 // `combineSlices` automatically combines the reducers using
 // their `reducerPath`s, therefore we no longer need to call `combineReducers`.
 const rootReducer = combineSlices(
   counterSlice,
   quotesApiSlice,
-  authSlice,
+  userSlice,
+  userAPI,
   authAPI,
 )
 // Infer the `RootState` type from the root reducer
@@ -28,6 +30,7 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
       return getDefaultMiddleware().concat(
         quotesApiSlice.middleware,
         authAPI.middleware,
+        userAPI.middleware,
       )
     },
     preloadedState,

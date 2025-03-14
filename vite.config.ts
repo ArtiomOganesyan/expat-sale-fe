@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     open: true,
     port: 6999,
+    allowedHosts: ["96d7-2001-ee0-4b4d-130-c8a3-d73b-fdda-cb39.ngrok-free.app"],
   },
   test: {
     globals: true,

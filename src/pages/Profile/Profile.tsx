@@ -56,6 +56,10 @@ function Profile() {
     }
   }
 
+  const createNewItem = () => {
+    navigate("/item/new")
+  }
+
   return (
     <div
       style={{
@@ -63,73 +67,67 @@ function Profile() {
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "flex-start",
-        width: "90vw",
-        padding: "1rem",
-        margin: "1rem auto",
-        border: "1px solid #ccc",
-        borderRadius: 10,
       }}
     >
-      <form
+      <div
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 10,
-          width: "100%",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          width: "90vw",
+          padding: "1rem",
+          margin: "1rem auto",
+          border: "1px solid #ccc",
+          borderRadius: 10,
         }}
       >
-        <div
+        <form
           style={{
             display: "flex",
-            justifyContent: "space-between",
-            padding: "0 .25rem",
+            flexDirection: "column",
+            gap: 10,
+            width: "100%",
           }}
         >
-          <img
-            width={50}
-            height={50}
+          <div
             style={{
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "3px solid #ccc",
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "0 .25rem",
             }}
-            src={user?.avatar || imgSrc}
-            alt="user_avatar"
-          />
-          <input
-            name="username"
-            placeholder="Username"
-            value={updatedUser?.username || ""}
-            disabled={!edit}
-            onChange={handleUpdateUser}
-          />
-          <button type="button" onClick={handleEdit}>
-            {edit ? "Cancel" : "Edit"}
-          </button>
-        </div>
-        <div
-          style={{ width: "100%", border: "1px solid #ccc", margin: "1rem 0" }}
-        />
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <div
+          >
+            <img
+              width={50}
+              height={50}
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "0 .25rem",
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "3px solid #ccc",
               }}
-            >
-              <label>Email:</label>
-              <input
-                type="text"
-                placeholder="Email"
-                name="email"
-                value={updatedUser?.email || ""}
-                disabled={!edit}
-                onChange={handleUpdateUser}
-              />
-            </div>
-            <div>
+              src={user?.avatar || imgSrc}
+              alt="user_avatar"
+            />
+            <input
+              name="username"
+              placeholder="Username"
+              value={updatedUser?.username || ""}
+              disabled={!edit}
+              onChange={handleUpdateUser}
+            />
+            <button type="button" onClick={handleEdit}>
+              {edit ? "Cancel" : "Edit"}
+            </button>
+          </div>
+          <div
+            style={{
+              width: "100%",
+              border: "1px solid #ccc",
+              margin: "1rem 0",
+            }}
+          />
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <div
                 style={{
                   display: "flex",
@@ -137,67 +135,104 @@ function Profile() {
                   padding: "0 .25rem",
                 }}
               >
-                <label>Telegram:</label>
+                <label>Email:</label>
                 <input
                   type="text"
-                  placeholder="Telegram"
-                  name="telegram"
-                  value={updatedUser?.telegram || ""}
+                  placeholder="Email"
+                  name="email"
+                  value={updatedUser?.email || ""}
                   disabled={!edit}
                   onChange={handleUpdateUser}
                 />
               </div>
-            </div>
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "0 .25rem",
-                }}
-              >
-                <label>Zalo:</label>
-                <input
-                  type="text"
-                  placeholder="Zalo"
-                  name="zalo"
-                  value={updatedUser?.zalo || ""}
-                  disabled={!edit}
-                  onChange={handleUpdateUser}
-                />
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    padding: "0 .25rem",
+                  }}
+                >
+                  <label>Telegram:</label>
+                  <input
+                    type="text"
+                    placeholder="Telegram"
+                    name="telegram"
+                    value={updatedUser?.telegram || ""}
+                    disabled={!edit}
+                    onChange={handleUpdateUser}
+                  />
+                </div>
+              </div>
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    padding: "0 .25rem",
+                  }}
+                >
+                  <label>Zalo:</label>
+                  <input
+                    type="text"
+                    placeholder="Zalo"
+                    name="zalo"
+                    value={updatedUser?.zalo || ""}
+                    disabled={!edit}
+                    onChange={handleUpdateUser}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          style={{
-            opacity: updateMeta.isError ? 1 : 0,
-            lineHeight: updateMeta.isError ? 1 : 0,
-            fontSize: 12,
-            color: "red",
-            transition: "opacity 0.3s, line-height 0.3s",
-          }}
-        >
-          {(updateMeta?.error as any)?.data?.error ||
-            (updateMeta.isError && "An error occurred.")}
-        </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          <button
-            type="button"
-            disabled={!edit || updateMeta.isLoading}
-            onClick={handleEdit}
+          <div
+            style={{
+              opacity: updateMeta.isError ? 1 : 0,
+              lineHeight: updateMeta.isError ? 1 : 0,
+              fontSize: 12,
+              color: "red",
+              transition: "opacity 0.3s, line-height 0.3s",
+            }}
           >
-            Save
-          </button>
-          <button
-            type="button"
-            onClick={() => handleLogout()}
-            disabled={logoutMeta.isLoading}
-          >
-            Logout
-          </button>
+            {(updateMeta?.error as any)?.data?.error ||
+              (updateMeta.isError && "An error occurred.")}
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button
+              type="button"
+              disabled={!edit || updateMeta.isLoading}
+              onClick={handleEdit}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              onClick={() => handleLogout()}
+              disabled={logoutMeta.isLoading}
+            >
+              Logout
+            </button>
+          </div>
+        </form>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          width: "90vw",
+          padding: "1rem",
+          margin: "1rem auto",
+          border: "1px solid #ccc",
+          borderRadius: 10,
+        }}
+      >
+        <div>
+          <div>My Listings: __AMOUNT__</div>
+          <button onClick={createNewItem}>+</button>
         </div>
-      </form>
+      </div>
     </div>
   )
 }

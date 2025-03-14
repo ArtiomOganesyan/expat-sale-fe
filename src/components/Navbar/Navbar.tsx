@@ -33,7 +33,7 @@ function Navbar() {
     <div className={styles.container}>
       <ul className={styles.navbar}>
         <li>
-          <Link to={"/"}>item 1</Link>
+          <Link to={"/"}>Listing</Link>
         </li>
         <li>
           <Link to={"/about"}>item 2</Link>

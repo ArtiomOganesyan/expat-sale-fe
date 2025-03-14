@@ -137,6 +137,29 @@ export const userSlice = createAppSlice({
         state.user = action.payload
       },
     )
+    // AVATAR UPDATE
+    builder.addMatcher(
+      userAPI.endpoints.updateUserAvatar.matchPending,
+      (state, action) => {
+        state.loading = true
+        state.error = null
+      },
+    )
+    builder.addMatcher(
+      userAPI.endpoints.updateUserAvatar.matchRejected,
+      (state, action) => {
+        state.loading = true
+        state.error = action.payload
+      },
+    )
+    builder.addMatcher(
+      userAPI.endpoints.updateUserAvatar.matchFulfilled,
+      (state, action) => {
+        state.loading = false
+        state.error = null
+        state.user = { ...state.user, avatar: action.payload.image_url }
+      },
+    )
   },
 })
 

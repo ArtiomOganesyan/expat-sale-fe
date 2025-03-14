@@ -14,7 +14,16 @@ export const userAPI = createApi({
         credentials: "include",
       }),
     }),
+    updateUserAvatar: builder.mutation<any, any>({
+      query: formData => ({
+        url: `/users/image`,
+        headers: {},
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      }),
+    }),
   }),
 })
 
-export const { useUpdateUserMutation } = userAPI
+export const { useUpdateUserMutation, useUpdateUserAvatarMutation } = userAPI

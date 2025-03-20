@@ -6,7 +6,7 @@ import { quotesApiSlice } from "../features/quotes/quotesApiSlice"
 import { userSlice } from "../features/user/userSlice"
 import { authAPI } from "../features/auth/authAPI"
 import { userAPI } from "../features/user/userAPI"
-// import { ExpatSaleApi } from "./api"
+import { ExpatSaleApi } from "./api"
 
 const rootReducer = combineSlices(
   counterSlice,
@@ -14,7 +14,7 @@ const rootReducer = combineSlices(
   userSlice,
   userAPI,
   authAPI,
-  // ExpatSaleApi,
+  ExpatSaleApi,
 )
 export type RootState = ReturnType<typeof rootReducer>
 
@@ -26,7 +26,7 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
         quotesApiSlice.middleware,
         authAPI.middleware,
         userAPI.middleware,
-        // ExpatSaleApi.middleware,
+        ExpatSaleApi.middleware,
       )
     },
     preloadedState,

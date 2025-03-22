@@ -1,0 +1,27 @@
+:root {
+  /* Backgrounds */
+  --color-bg-main: #dbe4cf;
+  --color-bg-secondary: #e4bce4;
+  --color-bg-secondary-hover: #d7b98f;
+
+  /* Accent & Info */
+  --color-accent: #c27fc2;
+  --color-accent-hover: #a866a8;
+
+  --color-info: #95bfc0;
+  --color-info-hover: #7ea8a9;
+
+  /* Status */
+  --color-success: #6ca878;
+  --color-success-hover: #5c9368;
+
+  --color-error: #e45a4d;
+  --color-error-hover: #cc4b40;
+
+  /* Text */
+  --color-text-primary: #292929;
+  --color-text-secondary: #696969;
+
+  /* Borders */
+  --color-border: #bcbcbc;
+}

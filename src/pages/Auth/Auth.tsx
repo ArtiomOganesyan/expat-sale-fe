@@ -1,12 +1,13 @@
-import { useLocation } from "react-router"
-import LoginForm from "../../features/auth/LoginForm"
-import RegisterForm from "../../features/auth/RegisterForm"
+import { Outlet } from "react-router"
+
+import style from "./Auth.module.css"
 
 function Auth() {
-  const { pathname } = useLocation()
-
   return (
-    <div>{pathname === "/auth/login" ? <LoginForm /> : <RegisterForm />}</div>
+    <div className={style.container}>
+      <h2>Authentication</h2>
+      <Outlet />
+    </div>
   )
 }
 

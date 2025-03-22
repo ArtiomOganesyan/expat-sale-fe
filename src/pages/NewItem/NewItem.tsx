@@ -1,15 +1,15 @@
 import { useState } from "react"
-import { useAppSelector } from "../../app/hooks"
-import { selectUser } from "../../features/user/userSlice"
+import { useAppSelector } from "../../hooks/hooks"
+import { selectUser } from "../../entities/user/userSlice"
 import styles from "./NewItem.module.css"
 import {
   CATEGORIES,
   categoryToSubcategoriesMapping,
   CONDITION,
   SUBCATEGORIES,
-} from "../../app/constants/Item"
+} from "../../utils/constants/Item"
 import { prepareCategoryText } from "../../utils/prepareCategoryText"
-import { useCreateItemMutation } from "../../features/item/itemAPI"
+import { useCreateItemMutation } from "../../entities/items/itemAPI"
 
 function NewItem() {
   const user = useAppSelector(selectUser)

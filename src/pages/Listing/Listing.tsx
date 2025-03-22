@@ -1,4 +1,4 @@
-import ListingMasonry from "../../features/listing/ListingMasonry"
+import ListingMasonry from "../../features/items/ListingMasonry"
 
 function Listing() {
   return (

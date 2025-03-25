@@ -1,8 +1,8 @@
 :root {
   /* Backgrounds */
-  --color-bg-main: #dbe4cf;
-  --color-bg-secondary: #e4bce4;
-  --color-bg-secondary-hover: #d7b98f;
+  --color-bg-main: #e4e4e4;
+  --color-bg-secondary: #fad6fa;
+  --color-bg-secondary-hover: #caaaca;
 
   /* Accent & Info */
   --color-accent: #c27fc2;
@@ -24,4 +24,7 @@
 
   /* Borders */
   --color-border: #bcbcbc;
+
+  /* Other */
+  --color-invisible: rgba(255, 255, 255, 0);
 }

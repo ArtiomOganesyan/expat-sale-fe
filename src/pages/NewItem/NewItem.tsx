@@ -20,7 +20,7 @@ function NewItem() {
     title: "",
     description: "",
     price: 0,
-    currency: "USD",
+    currency: "EUR",
     isFree: false,
     isPublished: true,
     category: CATEGORIES.OTHER,

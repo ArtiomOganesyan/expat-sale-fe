@@ -5,6 +5,8 @@
   list-style: none;
   text-decoration: none;
   color: var(--color-text-primary);
+  border: none;
+  outline: none;
 }
 
 body {

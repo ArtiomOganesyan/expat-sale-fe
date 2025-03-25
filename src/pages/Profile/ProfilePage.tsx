@@ -1,5 +1,5 @@
-import UserData from "../../features/Userdata/UserData"
-import UserItems from "../../features/UserItems/UserItems"
+import UserData from "../../features/user_data/UserData"
+import UserItems from "../../features/user_items/UserItems"
 import style from "./ProfilePage.module.css"
 
 function ProfilePage() {

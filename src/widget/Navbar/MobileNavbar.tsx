@@ -53,6 +53,9 @@ function MobileNavbar() {
         <MenuItem onClick={() => handleMenuClose("Register")}>
           Register
         </MenuItem>
+        <MenuItem onClick={() => handleMenuClose("Settings")}>
+          Settings
+        </MenuItem>
       </>
     )
   }

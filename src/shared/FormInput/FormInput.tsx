@@ -1,10 +1,11 @@
 type FormInputProps = {
-  label: string
+  label?: string
   type: string
   id: string
   name: string
   value?: string
   placeholder?: string
+  disabled?: boolean
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -16,10 +17,11 @@ function FormInput({
   onChange,
   value,
   placeholder,
+  disabled,
 }: FormInputProps) {
   return (
     <div>
-      <label htmlFor={id}>{label}</label>
+      {label || <label htmlFor={id}>{label}</label>}
       <input
         type={type}
         id={id}
@@ -27,6 +29,7 @@ function FormInput({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        disabled={disabled}
       />
     </div>
   )

@@ -5,7 +5,8 @@ function ListingCard(props: any) {
   console.log(props)
 
   return (
-    <div style={{ borderBottom: "1px solid #ccc" }}>
+    <div className={props.className}>
+      {/* <div style={{ borderBottom: "1px solid #ccc" }}> */}
       {props.images?.length ? (
         <Carousel autoPlay={false} animation="slide" indicators={true}>
           {props.images.map((image: string) => (
@@ -20,15 +21,16 @@ function ListingCard(props: any) {
           ))}
         </Carousel>
       ) : null}
-      <div style={{ marginTop: "1rem" }}>
-        <Link to={`/listing/${props.id}`}>
-          <div>{props.title}</div>
-          <div>
-            {props.price} {props.currency}
-          </div>
-        </Link>
-      </div>
+      {/* <div style={{ marginTop: "1rem" }}>
+          <Link to={`/listing/${props.id}`}>
+            <div>{props.title}</div>
+            <div>
+              {props.price} {props.currency}
+            </div>
+          </Link>
+        </div> */}
     </div>
+    // </div>
   )
 }
 

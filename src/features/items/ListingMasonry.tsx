@@ -1,13 +1,20 @@
 import { useLocation } from "react-router"
-import ListingCard from "../../shared/ListingCard/ListingCard"
+
 import styles from "./ListingMasonry.module.css"
 import { useGetListingMasonryQuery } from "../../entities/items/itemsAPI"
+import { ListingCard } from "../../shared/ListingCard/ListingCardMui"
+import Listing from "../../pages/Listing/Listing"
 
 function ListingMasonry() {
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
   const category = searchParams.get("category")
   const isFree = searchParams.get("is_free")
+
+  function getRandomEvenOrOdd(isEven = true, min = 0, max = 100) {
+    let num = Math.floor(Math.random() * ((max - min) / 2 + 1)) * 2 + min
+    return isEven ? num : num + 1
+  }
 
   const { data, isError, error, isLoading, isFetching } =
     useGetListingMasonryQuery({ limit: 10, skip: 0, category, is_free: isFree })
@@ -24,10 +31,28 @@ function ListingMasonry() {
   }
 
   return (
-    <div className={styles.container}>
-      {data?.map((listing: any) => (
-        <ListingCard key={listing.id} {...listing} />
-      ))}
+    <div className={styles.grid_container}>
+      {data?.map((listing: any, index: number) => {
+        if (getRandomEvenOrOdd() % 3) {
+          return (
+            <ListingCard
+              className={`${styles.item} ${styles.large}`}
+              size="large"
+              key={listing.id}
+              {...listing}
+            />
+          )
+        }
+
+        return (
+          <ListingCard
+            className={`${styles.item}`}
+            size="small"
+            key={listing.id}
+            {...listing}
+          />
+        )
+      })}
     </div>
   )
 }

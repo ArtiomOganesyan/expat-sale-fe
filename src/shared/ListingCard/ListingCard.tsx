@@ -2,8 +2,6 @@ import Carousel from "react-material-ui-carousel"
 import { Link } from "react-router"
 
 function ListingCard(props: any) {
-  console.log(props)
-
   return (
     <div style={{ borderBottom: "1px solid #ccc" }}>
       {props.images?.length ? (

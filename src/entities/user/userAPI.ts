@@ -9,7 +9,7 @@ export const userAPI = createApi({
     updateUser: builder.mutation<any, any>({
       query: ({ id, data }) => ({
         url: `/users/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: data,
         credentials: "include",
       }),

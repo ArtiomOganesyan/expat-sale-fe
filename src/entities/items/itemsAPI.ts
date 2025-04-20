@@ -18,10 +18,10 @@ export const itemsAPI = listingApi.injectEndpoints({
         { type: TAG_TYPES.LISTING_MASONRY, id: `${limit}-${skip}` },
       ],
     }),
-    getStoreById: builder.query<any, any>({
-      query: ({ id }) => `stores/${id}`,
-      providesTags: (_result, _error, { id }) => [
-        { type: TAG_TYPES.LISTING_CARD, id },
+    getItemsByUserId: builder.query<any, any>({
+      query: ({ user_id }) => `/items/user/${user_id}`,
+      providesTags: (_result, _error, { user_id }) => [
+        { type: TAG_TYPES.LISTING_MASONRY, id: `items-user-${user_id}` },
       ],
     }),
     checkStoreNameUniqueness: builder.query<any, any>({
@@ -64,4 +64,4 @@ export const itemsAPI = listingApi.injectEndpoints({
   }),
 })
 
-export const { useGetListingMasonryQuery } = itemsAPI
+export const { useGetListingMasonryQuery, useGetItemsByUserIdQuery } = itemsAPI

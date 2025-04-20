@@ -1,4 +1,4 @@
-import AuthCheck from "./shared/AuthCheck"
+import InitialLoad from "./shared/InitialLoad"
 
 import "./assets/styles/global.css"
 import "./assets/styles/variables.css"
@@ -10,7 +10,7 @@ import style from "./App.module.css"
 const App = () => {
   return (
     <div className={style.container}>
-      <AuthCheck />
+      <InitialLoad />
       <AppRouter />
       <MobileNavbar />
     </div>

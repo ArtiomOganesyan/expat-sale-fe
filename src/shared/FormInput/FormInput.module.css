@@ -1,0 +1,20 @@
+/* .form_input {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.form_input > input {
+  padding: 0.5rem;
+  border: 1px solid var(--color-info);
+  border-radius: 8px;
+  background-color: var(--color-bg-main);
+  transition: all 0.3s;
+}
+
+.form_input > input:disabled {
+  border: 1px solid var(--color-invisible);
+  border-bottom: 1px solid var(--color-info);
+  border-radius: 0px;
+} */

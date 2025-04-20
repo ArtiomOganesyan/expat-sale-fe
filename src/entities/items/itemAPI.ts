@@ -22,7 +22,21 @@ export const itemAPI = listingApi.injectEndpoints({
         credentials: "include",
       }),
     }),
+    addImageToItem: builder.mutation<any, any>({
+      query: ({ itemId, file }) => {
+        const formData = new FormData()
+
+        formData.append("image", file)
+
+        return {
+          url: `/items/upload/image/${itemId}`,
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        }
+      },
+    }),
   }),
 })
 
-export const { useCreateItemMutation } = itemAPI
+export const { useCreateItemMutation, useAddImageToItemMutation } = itemAPI

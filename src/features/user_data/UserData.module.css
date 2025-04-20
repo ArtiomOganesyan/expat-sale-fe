@@ -17,14 +17,6 @@
   width: 100%;
 }
 
-.container > form input {
-  padding: 0.5rem;
-  border: 1px solid var(--color-info);
-  border-radius: 8px;
-  background-color: var(--color-bg-main);
-  transition: all 0.3s;
-}
-
 .container > form input:disabled {
   border: 1px solid var(--color-invisible);
   border-bottom: 1px solid var(--color-info);
@@ -36,6 +28,7 @@
   flex-direction: column;
   gap: 10px;
   align-items: center;
+  width: 100%;
 }
 
 .image_container {
@@ -102,18 +95,12 @@
 .user_data {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1.5rem;
 }
 
 .user_data > div {
   display: flex;
   justify-content: space-between;
-
-  > input {
-    width: 60%;
-    max-width: 250%;
-  }
-  /* margin: 0 1rem; */
 }
 
 .phone_data {
@@ -128,11 +115,8 @@
 
 .phone_data > div {
   width: 70%;
-  > input {
-    width: 100%;
-  }
 }
 
 .phone_data > :nth-child(2) {
-  width: 20%;
+  width: 25%;
 }

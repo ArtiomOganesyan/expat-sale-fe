@@ -1,13 +1,4 @@
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Menu,
-  MenuItem,
-  Box,
-} from "@mui/material"
-import MenuIcon from "@mui/icons-material/Menu"
+import { AppBar, Toolbar, IconButton, Menu, MenuItem, Box } from "@mui/material"
 
 import FingerprintIcon from "@mui/icons-material/Fingerprint"
 import AccountCircle from "@mui/icons-material/AccountCircle"

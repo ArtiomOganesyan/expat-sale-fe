@@ -12,6 +12,7 @@ import FormInput from "../../shared/FormInput/FormInput"
 import ImageContainer from "./ui/ImageContainer"
 import Actions from "./ui/Actions"
 import FormError from "../../shared/FormError/FormError"
+import { InputAdornment, Paper } from "@mui/material"
 
 function UserData() {
   const [edit, setEdit] = useState(false)
@@ -88,14 +89,13 @@ function UserData() {
 
     try {
       await updateUserAvatarMutation(formData)
-      console.log("Avatar updated successfully")
     } catch (error) {
       console.error("Error updating avatar:", error)
     }
   }
 
   return (
-    <div className={style.container}>
+    <Paper elevation={10} className={style.container}>
       <form>
         <div className={style.header}>
           <ImageContainer
@@ -107,6 +107,7 @@ function UserData() {
 
           <FormInput
             id="username"
+            label="Username"
             type="text"
             name="username"
             placeholder="Username"
@@ -129,7 +130,7 @@ function UserData() {
           <FormInput
             id="email"
             type="text"
-            label="Email:"
+            label="Email"
             placeholder="Email"
             name="email"
             value={updatedUser?.email || ""}
@@ -139,7 +140,7 @@ function UserData() {
           <FormInput
             id="telegram"
             type="text"
-            label="Telegram:"
+            label="Telegram"
             placeholder="Telegram"
             name="telegram"
             value={updatedUser?.telegram || ""}
@@ -149,7 +150,7 @@ function UserData() {
           <FormInput
             id="zalo"
             type="text"
-            label="Zalo:"
+            label="Zalo"
             placeholder="Zalo"
             name="zalo"
             value={updatedUser?.zalo || ""}
@@ -159,7 +160,7 @@ function UserData() {
           <FormInput
             id="facebook"
             type="text"
-            label="Facebook:"
+            label="Facebook"
             placeholder="Facebook"
             name="facebook"
             value={updatedUser?.facebook || ""}
@@ -167,19 +168,26 @@ function UserData() {
             onChange={handleUpdateUser}
           />
           <div className={style.phone_data}>
-            <p>Phone Number:</p>
+            <p>Phone Number</p>
             <FormInput
               id="phone_code"
-              type="text"
-              placeholder="+ Code"
+              type="number"
+              placeholder="Code"
               name="phone_code"
               value={updatedUser?.phone_code || ""}
               disabled={!edit}
               onChange={handleUpdateUser}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">+</InputAdornment>
+                  ),
+                },
+              }}
             />
             <FormInput
               id="phone"
-              type="text"
+              type="number"
               placeholder="Phone number"
               name="phone"
               value={updatedUser?.phone || ""}
@@ -190,7 +198,7 @@ function UserData() {
         </div>
         <FormError error={error} />
       </form>
-    </div>
+    </Paper>
   )
 }
 

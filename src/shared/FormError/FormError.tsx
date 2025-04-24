@@ -1,13 +1,13 @@
-import React from "react"
-
 type FormErrorProps = {
   error: string
+  style?: React.CSSProperties
 }
 
-function FormError({ error }: FormErrorProps) {
+function FormError({ error, style }: FormErrorProps) {
   return (
     <div
       style={{
+        ...style,
         opacity: error ? 1 : 0,
         lineHeight: error ? 1 : 0,
         fontSize: 12,

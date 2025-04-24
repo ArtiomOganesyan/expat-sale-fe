@@ -1,16 +1,32 @@
 import { useNavigate } from "react-router"
-import { IconButton } from "@mui/material"
+import { IconButton, Paper } from "@mui/material"
 import AddBoxIcon from "@mui/icons-material/AddBox"
+import { useGetItemsByUserIdQuery } from "../../entities/items/itemsAPI"
+import { useAppSelector } from "../../hooks/hooks"
+import { selectUser } from "../../entities/user/userSlice"
 
 function UserItems() {
   const navigate = useNavigate()
+  const user = useAppSelector(selectUser)
+
+  const { data, isLoading, isFetching, isError, error } =
+    useGetItemsByUserIdQuery({ user_id: user.id })
 
   const createNewItem = () => {
     navigate("/item/new")
   }
 
+  if (isLoading || isFetching) {
+    return <p>Loading...</p>
+  }
+
+  if (isError) {
+    return <p>Error loading items</p>
+  }
+
   return (
-    <div
+    <Paper
+      elevation={10}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -23,13 +39,20 @@ function UserItems() {
         borderRadius: 10,
       }}
     >
-      <div>
-        <div>My Listings: __AMOUNT__</div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+        }}
+      >
+        <p>My Listings: {data.length}</p>
         <IconButton onClick={createNewItem}>
           <AddBoxIcon />
         </IconButton>
       </div>
-    </div>
+    </Paper>
   )
 }
 

@@ -1,12 +1,18 @@
+import TextField from "@mui/material/TextField"
+
 type FormInputProps = {
-  label?: string
-  type: string
   id: string
+  type: string
   name: string
-  value?: string
+  label?: string
+  value?: string | number
   placeholder?: string
   disabled?: boolean
+  inlineStyles?: React.CSSProperties
+  slotProps?: any
+  sx?: any
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  options?: any
 }
 
 function FormInput({
@@ -18,20 +24,25 @@ function FormInput({
   value,
   placeholder,
   disabled,
+  sx,
+  slotProps,
+  options,
 }: FormInputProps) {
   return (
-    <div>
-      {label || <label htmlFor={id}>{label}</label>}
-      <input
-        type={type}
-        id={id}
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        disabled={disabled}
-      />
-    </div>
+    <TextField
+      variant="outlined"
+      id={id}
+      label={label}
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      disabled={disabled}
+      sx={{ ...sx, width: "100%" }}
+      slotProps={slotProps}
+      {...options}
+    />
   )
 }
 

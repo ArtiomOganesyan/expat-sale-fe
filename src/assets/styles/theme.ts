@@ -74,7 +74,7 @@ export const theme = createTheme({
           background: "var(--color-bg-main)",
           padding: "0 12px",
           transition: "0.2s",
-          fontSize: "1.25rem",
+          fontSize: "1rem",
           borderRadius: 4,
           "&.Mui-disabled": {
             transition: "0.2s",

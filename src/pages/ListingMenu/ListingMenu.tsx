@@ -1,7 +1,12 @@
 import Stack from "@mui/material/Stack"
 import { Link } from "react-router"
+import en from "./i18n/en.json"
+import ru from "./i18n/ru.json"
+import { useCustomTranslation } from "../../hooks/useCustomTranslation"
 
 function ListingMenu() {
+  const { t } = useCustomTranslation("listingMenu", en, ru)
+
   return (
     <div
       style={{
@@ -20,7 +25,7 @@ function ListingMenu() {
               cursor: "pointer",
             }}
           >
-            Housing
+            {t("Housing")}
           </div>
         </Link>
       </div>
@@ -146,7 +151,7 @@ function ListingMenu() {
               cursor: "pointer",
             }}
           >
-            Free Thins
+            Free Things
           </div>
         </Link>
       </div>

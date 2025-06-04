@@ -9,6 +9,9 @@ import { useAppSelector } from "../../hooks/hooks"
 import { selectUser } from "../../entities/user/userSlice"
 import NavbarLinkMapping from "./utils/NavbarLinkMapping"
 import { useNavigate } from "react-router"
+import FilterMenu from "./Drawer"
+import LanguageSwitcher from "../../features/language-switcher/LanguageSwitcher"
+import LanguageIcon from "@mui/icons-material/Language"
 
 function MobileNavbar() {
   const user = useAppSelector(selectUser)
@@ -16,9 +19,16 @@ function MobileNavbar() {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const menuOpen = Boolean(anchorEl)
+  const [openLanguageModal, setOpenLanguageModal] = useState<boolean>(false) //
+
+  const [openFilter, setOpenFilter] = useState<boolean>(false)
 
   const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget)
+  }
+
+  const handleFilter = (value: boolean) => {
+    setOpenFilter(value)
   }
 
   const handleMenuClose = (routeKey: keyof typeof NavbarLinkMapping) => {
@@ -44,6 +54,7 @@ function MobileNavbar() {
         <MenuItem onClick={() => handleMenuClose("Register")}>
           Register
         </MenuItem>
+        <MenuItem onClick={() => handleFilter(!openFilter)}>Filter</MenuItem>
         <MenuItem onClick={() => handleMenuClose("Settings")}>
           Settings
         </MenuItem>
@@ -68,6 +79,7 @@ function MobileNavbar() {
           <IconButton color="inherit" onClick={handleMenuOpen}>
             {user?.id ? <AccountCircle /> : <FingerprintIcon />}
           </IconButton>
+
           <Menu
             anchorEl={anchorEl}
             open={menuOpen}
@@ -78,6 +90,15 @@ function MobileNavbar() {
             {user?.id ? authLinks() : nonAuthLinks()}
           </Menu>
         </Box>
+        <FilterMenu open={openFilter} toggleDrawer={handleFilter} />
+        <IconButton color="inherit" onClick={() => setOpenLanguageModal(true)}>
+          <LanguageIcon />
+        </IconButton>
+
+        <LanguageSwitcher
+          open={openLanguageModal}
+          setOpen={setOpenLanguageModal}
+        />
       </Toolbar>
     </AppBar>
   )

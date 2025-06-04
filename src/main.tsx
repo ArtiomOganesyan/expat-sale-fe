@@ -6,23 +6,25 @@ import { BrowserRouter } from "react-router"
 import App from "./App"
 import { ThemeProvider } from "@mui/material/styles"
 import { theme } from "./assets/styles/theme"
+import { prepareApp } from "./bootstrap"
+import "./i18n/i18n"
 
 const container = document.getElementById("root")
 
 if (container) {
-  const root = createRoot(container)
-
-  root.render(
-    <React.StrictMode>
-      <BrowserRouter>
-        <Provider store={store}>
-          <ThemeProvider theme={theme}>
-            <App />
-          </ThemeProvider>
-        </Provider>
-      </BrowserRouter>
-    </React.StrictMode>,
-  )
+  prepareApp().then(() => {
+    createRoot(document.getElementById("root")!).render(
+      <React.StrictMode>
+        <BrowserRouter>
+          <Provider store={store}>
+            <ThemeProvider theme={theme}>
+              <App />
+            </ThemeProvider>
+          </Provider>
+        </BrowserRouter>
+      </React.StrictMode>,
+    )
+  })
 } else {
   throw new Error(
     "Root element with ID 'root' was not found in the document. Ensure there is a corresponding HTML element with the ID 'root' in your HTML file.",

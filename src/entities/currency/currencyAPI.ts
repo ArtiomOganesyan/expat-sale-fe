@@ -4,7 +4,9 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string
 
 export const currencyAPI = createApi({
   reducerPath: "currencyAPI",
-  baseQuery: fetchBaseQuery({ baseUrl: BACKEND_URL, credentials: "include" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: BACKEND_URL /* credentials: "include" */,
+  }),
   endpoints: builder => ({
     getCurrencyRate: builder.query<any, any>({
       query: () => ({

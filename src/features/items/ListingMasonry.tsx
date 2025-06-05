@@ -10,7 +10,12 @@ function ListingMasonry() {
   const isFree = searchParams.get("is_free")
 
   const { data, isError, error, isLoading, isFetching } =
-    useGetListingMasonryQuery({ limit: 10, skip: 0, category, is_free: isFree })
+    useGetListingMasonryQuery({
+      limit: 10,
+      offset: 0,
+      category,
+      is_free: isFree,
+    })
 
   if (isLoading) return <div>Loading...</div>
   if (isError) {

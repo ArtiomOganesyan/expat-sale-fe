@@ -11,6 +11,7 @@ const App = () => {
   return (
     <div className={style.container}>
       <InitialLoad />
+      {/* <UserLocationMap /> */}
       <AppRouter />
       <MobileNavbar />
     </div>

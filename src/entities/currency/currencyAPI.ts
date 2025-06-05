@@ -8,7 +8,7 @@ export const currencyAPI = createApi({
   endpoints: builder => ({
     getCurrencyRate: builder.query<any, any>({
       query: () => ({
-        url: `/currency/rates`,
+        url: `/currency`,
         method: "GET",
       }),
     }),

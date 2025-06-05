@@ -1,8 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { currencyAPI } from "./currencyAPI"
 
+export type CurrencyRateResponse = {
+  id: string
+  created_at: string
+  updated_at: string
+  iso_4217: string
+  rate: string
+  symbol: string
+}
+
+export type CurrencyRate = {
+  iso: string
+  symbol: string
+  rate: number
+}
+
 const initialState: {
-  rates: [string, number][]
+  rates: CurrencyRate[]
   loading: boolean
   error: any
 } = {
@@ -28,7 +43,11 @@ export const currencySlice = createSlice({
       currencyAPI.endpoints.getCurrencyRate.matchFulfilled,
       (state, action) => {
         state.loading = false
-        state.rates = Object.entries(action.payload.Rates)
+        state.rates = action.payload.map((item: CurrencyRateResponse) => ({
+          iso: item.iso_4217,
+          symbol: item.symbol,
+          rate: parseFloat(item.rate),
+        }))
       },
     )
     builder.addMatcher(

@@ -46,10 +46,11 @@ function NewItemForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const priceInEUR = getEURPrice(formData.price, formData.currency)
+    // const priceInEUR = getEURPrice(formData.price, formData.currency)
     const result = await create({
       ...formData,
-      price: +priceInEUR,
+      // price: +priceInEUR,
+      price: 0,
       currency: "EUR",
     })
 
@@ -61,13 +62,13 @@ function NewItemForm() {
     }
   }
 
-  const getEURPrice = (price: number, currency: string) => {
-    const rate = currencyRates.find(r => r[0] === currency)
-    if (rate) {
-      return (price / rate[1]).toFixed(2)
-    }
-    return 0
-  }
+  // const getEURPrice = (price: number, currency: string) => {
+  //   const rate = currencyRates.find(r => r[0] === currency)
+  //   if (rate) {
+  //     return (price / rate[1]).toFixed(2)
+  //   }
+  //   return 0
+  // }
 
   const subcategories = useMemo(() => {
     const cat = Object.entries(categoryToSubcategoriesMapping)
@@ -120,7 +121,7 @@ function NewItemForm() {
             value={formData.price}
             onChange={handleInputChange}
           />
-          <FormSelect
+          {/* <FormSelect
             label="Currency"
             id={"currency"}
             onChange={(_, newValue) => {
@@ -130,8 +131,8 @@ function NewItemForm() {
               value: r[0],
               label: r[0],
             }))}
-          />
-          <div>EUR Price: {getEURPrice(formData.price, formData.currency)}</div>
+          /> */}
+          {/* <div>EUR Price: {getEURPrice(formData.price, formData.currency)}</div> */}
         </div>
         <FormSelect<{
           category: string

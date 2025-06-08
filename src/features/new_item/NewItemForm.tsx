@@ -1,66 +1,59 @@
-import { useMemo, useState } from "react"
-import {
-  CATEGORIES,
-  categoryToSubcategoriesMapping,
-  CONDITION,
-  SUBCATEGORIES,
-} from "../../utils/constants/Item"
-import {
-  useAddImageToItemMutation,
-  useCreateItemMutation,
-} from "../../entities/items/itemAPI"
+import { useEffect, useMemo, useState } from 'react';
+import { CATEGORIES, categoryToSubcategoriesMapping, CONDITION, SUBCATEGORIES } from '../../utils/constants/Item';
+import { useAddImageToItemMutation, useCreateItemMutation } from '../../entities/items/itemAPI';
 
-import styles from "./NewItem.module.css"
-import { prepareCategoryText } from "../../utils/prepareCategoryText"
-import FormInput from "../../shared/FormInput/FormInput"
-import FormSelect from "../../shared/FormSelect/FormSelect"
-import FormCheckBox from "../../shared/FormCheck/FormCheckBox"
-import { formChangeHandler } from "./utils/formChangeHandler"
-import { useAppSelector } from "../../hooks/hooks"
-import { getRates } from "../../entities/currency/currencySlice"
-import FormFiles from "../../shared/FormFiles/FormFiles"
-import Button from "@mui/material/Button"
+import styles from './NewItem.module.css';
+import { prepareCategoryText } from '../../utils/prepareCategoryText';
+import FormInput from '../../shared/FormInput/FormInput';
+import FormSelect from '../../shared/FormSelect/FormSelect';
+import FormCheckBox from '../../shared/FormCheck/FormCheckBox';
+import { formChangeHandler } from './utils/formChangeHandler';
+import { useAppSelector } from '../../hooks/hooks';
+import { getRates } from '../../entities/currency/currencySlice';
+import FormFiles from '../../shared/FormFiles/FormFiles';
+import Button from '@mui/material/Button';
+import { getCategories } from '../../entities/categories/categoriesSlice';
 
 function NewItemForm() {
-  const [create, createMeta] = useCreateItemMutation()
-  const [addImage, addImageMeta] = useAddImageToItemMutation()
-  const isLoading = createMeta.isLoading || addImageMeta.isLoading
-  const currencyRates = useAppSelector(getRates)
+  const [create, createMeta] = useCreateItemMutation();
+  const [addImage, addImageMeta] = useAddImageToItemMutation();
+  const isLoading = createMeta.isLoading || addImageMeta.isLoading;
+  const currencyRates = useAppSelector(getRates);
+  const categories = useAppSelector(getCategories);
 
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
+    title: '',
+    description: '',
     price: 0,
-    currency: "EUR",
-    isFree: false,
-    isPublished: true,
-    category: CATEGORIES.OTHER,
-    subcategory: SUBCATEGORIES.OTHER,
-    condition: CONDITION.USED,
-  })
+    currency: 'EUR',
+    is_free: false,
+    published: true,
+    categoryId: CATEGORIES.OTHER,
+    // subcategory: SUBCATEGORIES.OTHER,
+    // condition: CONDITION.USED,
+    is_new: false,
+  });
 
-  const [files, setFiles] = useState<File[]>([])
+  const [files, setFiles] = useState<File[]>([]);
 
-  const { handleInputChange, handleSelectChange, handleCheckboxChange } =
-    formChangeHandler(setFormData)
+  const { handleInputChange, handleSelectChange, handleCheckboxChange } = formChangeHandler(setFormData);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+    console.log(formData);
     // const priceInEUR = getEURPrice(formData.price, formData.currency)
     const result = await create({
       ...formData,
       // price: +priceInEUR,
-      price: 0,
-      currency: "EUR",
-    })
+      price: Number(formData.price),
+      currency: 'EUR',
+    });
 
     if (result.data) {
-      const itemId = result.data.id
-      const addFilesResult = await Promise.allSettled(
-        files.map(file => addImage({ itemId, file })),
-      )
+      const itemId = result.data.id;
+      const addFilesResult = await Promise.allSettled(files.map(file => addImage({ itemId, file })));
     }
-  }
+  };
 
   // const getEURPrice = (price: number, currency: string) => {
   //   const rate = currencyRates.find(r => r[0] === currency)
@@ -70,40 +63,65 @@ function NewItemForm() {
   //   return 0
   // }
 
+  //старая реализация
+  // const subcategories = useMemo(() => {
+  //   const cat = Object.entries(categoryToSubcategoriesMapping);
+  //   const sub_cat: any = [];
+  //   cat.forEach(([category, value]) => {
+  //     const subcategories = value.map(subcategory => ({
+  //       category: category,
+  //       subcategory: subcategory,
+  //       groupBy: prepareCategoryText(category),
+  //       label: prepareCategoryText(subcategory),
+  //     }));
+  //     sub_cat.push(...subcategories);
+  //   });
+  //   return sub_cat;
+  // }, []);
+
   const subcategories = useMemo(() => {
-    const cat = Object.entries(categoryToSubcategoriesMapping)
-    const sub_cat: any = []
-    cat.forEach(([category, value]) => {
-      const subcategories = value.map(subcategory => ({
-        category: category,
-        subcategory: subcategory,
-        groupBy: prepareCategoryText(category),
-        label: prepareCategoryText(subcategory),
-      }))
-      sub_cat.push(...subcategories)
-    })
-    return sub_cat
-  }, [])
+    const sub_cat: {
+      category: string;
+      subcategory: string;
+      subcategoryId: string;
+      groupBy: string;
+      label: string;
+    }[] = [];
+
+    categories.forEach(category => {
+      category.children.forEach(child => {
+        sub_cat.push({
+          category: category.name,
+          subcategory: child.name,
+          subcategoryId: child.id,
+          groupBy: prepareCategoryText(category.name),
+          label: prepareCategoryText(child.name),
+        });
+      });
+    });
+
+    return sub_cat;
+  }, [categories]);
 
   return (
     <div className={styles.form_container}>
       <form onSubmit={handleSubmit}>
         <FormInput
-          label={"Title"}
-          type={"text"}
-          id={"title"}
-          name={"title"}
-          placeholder={"What do you want to sell?"}
+          label={'Title'}
+          type={'text'}
+          id={'title'}
+          name={'title'}
+          placeholder={'What do you want to sell?'}
           onChange={handleInputChange}
         />
 
         <FormInput
-          label={"Description"}
-          type={"text"}
-          id="description"
-          name="description"
+          label={'Description'}
+          type={'text'}
+          id='description'
+          name='description'
           value={formData.description}
-          placeholder="Describe your item"
+          placeholder='Describe your item'
           onChange={handleInputChange}
           options={{
             multiline: true,
@@ -114,10 +132,10 @@ function NewItemForm() {
 
         <div className={styles.price_block}>
           <FormInput
-            label={"Price"}
-            type={"number"}
-            id={"price"}
-            name={"price"}
+            label={'Price'}
+            type={'number'}
+            id={'price'}
+            name={'price'}
             value={formData.price}
             onChange={handleInputChange}
           />
@@ -135,23 +153,23 @@ function NewItemForm() {
           {/* <div>EUR Price: {getEURPrice(formData.price, formData.currency)}</div> */}
         </div>
         <FormSelect<{
-          category: string
-          subcategory: string
+          category: string;
+          subcategoryId: string;
         }>
-          label={"Category"}
-          id={"category"}
+          label={'Category'}
+          id={'category'}
           onChange={(_, newValue) => {
-            handleSelectChange("category", newValue?.category || "Other")
-            handleSelectChange("subcategory", newValue?.subcategory || "Other")
+            handleSelectChange('categoryId', newValue?.subcategoryId || 'Other');
           }}
           options={subcategories}
         />
 
         <FormSelect
-          label={"Condition"}
-          id={"condition"}
+          label={'Condition'}
+          id={'condition'}
           onChange={(_, newValue) => {
-            handleSelectChange("condition", newValue?.value || "EUR")
+            const isNew = newValue?.value === 'new';
+            handleSelectChange('is_new', isNew);
           }}
           options={Object.values(CONDITION).map(c => ({
             value: c,
@@ -161,36 +179,37 @@ function NewItemForm() {
 
         <div className={styles.item_option_block}>
           <FormCheckBox
-            label={"Free"}
-            id={"isFree"}
-            name={"isFree"}
-            checked={formData.isFree}
-            onChange={(_, checked) => handleCheckboxChange("isFree", checked)}
+            label={'Free'}
+            id={'isFree'}
+            name={'isFree'}
+            checked={formData.is_free}
+            onChange={(_, checked) => handleCheckboxChange('isFree', checked)}
           />
           <FormCheckBox
-            label={"Published"}
-            id={"isPublished"}
-            name={"isPublished"}
-            checked={formData.isPublished}
-            onChange={(_, checked) =>
-              handleCheckboxChange("isPublished", checked)
-            }
+            label={'Published'}
+            id={'isPublished'}
+            name={'isPublished'}
+            checked={formData.published}
+            onChange={(_, checked) => handleCheckboxChange('isPublished', checked)}
           />
         </div>
 
-        <FormFiles files={files} setFiles={files => setFiles(files)} />
+        <FormFiles
+          files={files}
+          setFiles={files => setFiles(files)}
+        />
 
         <Button
-          sx={{ marginLeft: "auto" }}
-          type="submit"
-          variant="contained"
+          sx={{ marginLeft: 'auto' }}
+          type='submit'
+          variant='contained'
           disabled={isLoading}
         >
-          {isLoading ? "Creating..." : "Create Item"}
+          {isLoading ? 'Creating...' : 'Create Item'}
         </Button>
       </form>
     </div>
-  )
+  );
 }
 
-export default NewItemForm
+export default NewItemForm;

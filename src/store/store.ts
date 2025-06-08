@@ -7,6 +7,8 @@ import { userAPI } from "../entities/user/userAPI"
 import { listingApi } from "../entities/items/api"
 import { currencyAPI } from "../entities/currency/currencyAPI"
 import { currencySlice } from "../entities/currency/currencySlice"
+import { categoriesAPI } from "../entities/categories/categoriesAPI"
+import { categoriesSlice } from "../entities/categories/categoriesSlice"
 
 const rootReducer = combineSlices(
   userSlice,
@@ -15,6 +17,8 @@ const rootReducer = combineSlices(
   listingApi,
   currencySlice,
   currencyAPI,
+  categoriesAPI,
+  categoriesSlice,
 )
 export type RootState = ReturnType<typeof rootReducer>
 
@@ -27,6 +31,7 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
         userAPI.middleware,
         listingApi.middleware,
         currencyAPI.middleware,
+        categoriesAPI.middleware,
       )
     },
     preloadedState,

@@ -3,7 +3,7 @@ import { useAuthCheckQuery } from "../entities/user/authAPI"
 import { useGetCurrencyRateQuery } from "../entities/currency/currencyAPI"
 
 function InitialLoad() {
-  const { error: authError, isLoading: authIsLoading } = useAuthCheckQuery({})
+  const { error: authError, isLoading: authIsLoading } = useAuthCheckQuery()
   const { error: currencyError, isLoading: currencyIsLoading } =
     useGetCurrencyRateQuery({})
 

@@ -14,7 +14,7 @@ function ImageContainer({
 }: any) {
   return (
     <div className={style.image_container}>
-      <img src={user?.avatar || imgSrc} alt="user_avatar" />
+      <img src={user?.image?.public_url || imgSrc} alt="user_avatar" />
 
       <div>
         <IconButton type="button" onClick={handleFileInputClick}>

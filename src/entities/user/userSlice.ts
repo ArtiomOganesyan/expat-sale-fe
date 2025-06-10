@@ -1,24 +1,24 @@
 import { authAPI } from "./authAPI"
 import { createAppSlice } from "../../store/utils/createAppSlice"
 import { userAPI } from "./userAPI"
-import { createSlice } from "@reduxjs/toolkit"
+// import { createSlice } from "@reduxjs/toolkit"
+import { type UserSliceState, type User } from "./user.type"
+import { type RootState } from "../../store/store"
 
-const initialState: {
-  user: any
-  loading: boolean
-  error: any
-} = {
+const initialState: UserSliceState = {
   user: null,
   loading: false,
-  error: null,
+  error: undefined,
 }
 
-export const userSlice = createSlice({
+export const userSlice = createAppSlice({
   name: "userSlice",
   initialState,
   reducers: {
     updateUser: (state, action) => {
-      state.user = { ...state.user, ...action.payload }
+      const user = state?.user
+      if (user) state.user = { ...user, ...action.payload }
+      else state.user = action.payload as User
     },
   },
   extraReducers: builder => {
@@ -26,7 +26,7 @@ export const userSlice = createSlice({
     builder.addMatcher(authAPI.endpoints.authCheck.matchPending, state => {
       state.user = null
       state.loading = true
-      state.error = null
+      state.error = undefined
     })
     builder.addMatcher(
       authAPI.endpoints.authCheck.matchFulfilled,
@@ -47,7 +47,7 @@ export const userSlice = createSlice({
       authAPI.endpoints.login.matchPending,
       (state, action) => {
         state.loading = true
-        state.error = null
+        state.error = undefined
         state.user = null
       },
     )
@@ -56,7 +56,7 @@ export const userSlice = createSlice({
       (state, action) => {
         state.loading = false
         state.user = action.payload
-        state.error = null
+        state.error = undefined
       },
     )
     builder.addMatcher(
@@ -64,7 +64,7 @@ export const userSlice = createSlice({
       (state, action) => {
         state.loading = false
         state.user = null
-        state.error = action.payload
+        state.error = action.error?.message || "An error occurred."
       },
     )
     // REGISTER
@@ -72,7 +72,7 @@ export const userSlice = createSlice({
       authAPI.endpoints.register.matchPending,
       (state, action) => {
         state.loading = true
-        state.error = null
+        state.error = undefined
         state.user = null
       },
     )
@@ -81,7 +81,7 @@ export const userSlice = createSlice({
       (state, action) => {
         state.loading = false
         state.user = action.payload
-        state.error = null
+        state.error = undefined
       },
     )
     builder.addMatcher(
@@ -89,7 +89,7 @@ export const userSlice = createSlice({
       (state, action) => {
         state.loading = false
         state.user = null
-        state.error = action.payload
+        state.error = action.error?.message || "An error occurred."
       },
     )
     // LOGOUT
@@ -97,7 +97,7 @@ export const userSlice = createSlice({
       authAPI.endpoints.logout.matchPending,
       (state, action) => {
         state.loading = true
-        state.error = null
+        state.error = undefined
       },
     )
     builder.addMatcher(
@@ -105,14 +105,14 @@ export const userSlice = createSlice({
       (state, action) => {
         state.loading = false
         state.user = null
-        state.error = null
+        state.error = undefined
       },
     )
     builder.addMatcher(
       authAPI.endpoints.logout.matchRejected,
       (state, action) => {
         state.loading = false
-        state.error = action.payload
+        state.error = action.error?.message || "An error occurred."
       },
     )
     // PROFILE UPDATE
@@ -120,21 +120,21 @@ export const userSlice = createSlice({
       userAPI.endpoints.updateUser.matchPending,
       (state, action) => {
         state.loading = true
-        state.error = null
+        state.error = undefined
       },
     )
     builder.addMatcher(
       userAPI.endpoints.updateUser.matchRejected,
       (state, action) => {
         state.loading = true
-        state.error = action.payload
+        state.error = action.error?.message || "An error occurred."
       },
     )
     builder.addMatcher(
       userAPI.endpoints.updateUser.matchFulfilled,
       (state, action) => {
         state.loading = false
-        state.error = null
+        state.error = undefined
         state.user = action.payload
       },
     )
@@ -143,27 +143,32 @@ export const userSlice = createSlice({
       userAPI.endpoints.updateUserAvatar.matchPending,
       (state, action) => {
         state.loading = true
-        state.error = null
+        state.error = undefined
       },
     )
     builder.addMatcher(
       userAPI.endpoints.updateUserAvatar.matchRejected,
       (state, action) => {
         state.loading = true
-        state.error = action.payload
+        state.error = action.error?.message || "An error occurred."
       },
     )
     builder.addMatcher(
       userAPI.endpoints.updateUserAvatar.matchFulfilled,
       (state, action) => {
         state.loading = false
-        state.error = null
-        state.user = { ...state.user, avatar: action.payload.image_url }
+        state.error = undefined
+
+        console.log("Avatar updated:", action.payload, { state })
+
+        if (state.user) {
+          state.user = { ...state.user, image: action.payload }
+        }
       },
     )
   },
 })
 
-export const selectUser = (state: any) => state.userSlice.user
+export const selectUser = (state: RootState) => state.userSlice.user
 export const { updateUser } = userSlice.actions
 export const { reducer } = userSlice

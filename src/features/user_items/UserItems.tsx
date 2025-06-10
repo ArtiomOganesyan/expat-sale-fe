@@ -10,7 +10,7 @@ function UserItems() {
   const user = useAppSelector(selectUser)
 
   const { data, isLoading, isFetching, isError, error } =
-    useGetItemsByUserIdQuery({ user_id: user.id })
+    useGetItemsByUserIdQuery({ user_id: user?.id })
 
   const createNewItem = () => {
     navigate("/item/new")

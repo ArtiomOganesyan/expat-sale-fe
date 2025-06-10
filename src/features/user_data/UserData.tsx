@@ -12,12 +12,13 @@ import FormInput from "../../shared/FormInput/FormInput"
 import ImageContainer from "./ui/ImageContainer"
 import Actions from "./ui/Actions"
 import FormError from "../../shared/FormError/FormError"
-import { InputAdornment, Paper } from "@mui/material"
+import { Paper } from "@mui/material"
+import { type User } from "../../entities/user/user.type"
 
 function UserData() {
   const [edit, setEdit] = useState(false)
   const [error, setError] = useState("")
-  const [updatedUser, setUpdatedUser] = useState<any | null>(null)
+  const [updatedUser, setUpdatedUser] = useState<User | null>(null)
   const [logout, logoutMeta] = useLazyLogoutQuery()
 
   const user = useAppSelector(selectUser)
@@ -53,11 +54,32 @@ function UserData() {
 
   const handleEditSave = () => {
     setEdit(false)
-    updateUserMutation({ id: user?.id, data: updatedUser })
+
+    const data = { ...updatedUser }
+
+    delete data.id
+    delete data.created_at
+    delete data.updated_at
+    delete data.image
+    delete data.role
+
+    if (user) {
+      updateUserMutation({ id: user?.id, data })
+    }
   }
 
   const handleUpdateUser = (e: ChangeEvent<HTMLInputElement>) => {
-    setUpdatedUser({ ...updatedUser, [e.target.name]: e.target.value })
+    setUpdatedUser(prev =>
+      prev ? { ...prev, [e.target.name]: e.target.value } : prev,
+    )
+  }
+
+  const handleUpdateUserContacts = (e: ChangeEvent<HTMLInputElement>) => {
+    setUpdatedUser(prev =>
+      prev
+        ? { ...prev, contact_platforms: { [e.target.name]: e.target.value } }
+        : prev,
+    )
   }
 
   const handleLogout = async () => {
@@ -78,14 +100,22 @@ function UserData() {
   const updateUserAvatar = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+    const files = event.target.files
+    if (!files?.length) return
 
     const formData = new FormData()
-    formData.append("image", file)
+    Array.from(files).forEach(file => {
+      formData.append("files", file)
+    })
 
     try {
-      await updateUserAvatarMutation(formData)
+      if (user) {
+        await updateUserAvatarMutation({
+          id: user.id,
+          entity: "user",
+          formData,
+        })
+      }
     } catch (error) {
       console.error("Error updating avatar:", error)
     }
@@ -130,9 +160,9 @@ function UserData() {
             label="Email"
             placeholder="Email"
             name="email"
-            value={updatedUser?.email || ""}
+            value={updatedUser?.contact_platforms.email || ""}
             disabled={!edit}
-            onChange={handleUpdateUser}
+            onChange={handleUpdateUserContacts}
           />
           <FormInput
             id="telegram"
@@ -140,9 +170,9 @@ function UserData() {
             label="Telegram"
             placeholder="Telegram"
             name="telegram"
-            value={updatedUser?.telegram || ""}
+            value={updatedUser?.contact_platforms.telegram || ""}
             disabled={!edit}
-            onChange={handleUpdateUser}
+            onChange={handleUpdateUserContacts}
           />
           <FormInput
             id="zalo"
@@ -150,9 +180,9 @@ function UserData() {
             label="Zalo"
             placeholder="Zalo"
             name="zalo"
-            value={updatedUser?.zalo || ""}
+            value={updatedUser?.contact_platforms.zalo || ""}
             disabled={!edit}
-            onChange={handleUpdateUser}
+            onChange={handleUpdateUserContacts}
           />
           <FormInput
             id="facebook"
@@ -160,38 +190,19 @@ function UserData() {
             label="Facebook"
             placeholder="Facebook"
             name="facebook"
-            value={updatedUser?.facebook || ""}
+            value={updatedUser?.contact_platforms.facebook || ""}
             disabled={!edit}
-            onChange={handleUpdateUser}
+            onChange={handleUpdateUserContacts}
           />
-          <div className={style.phone_data}>
-            <p>Phone Number</p>
-            <FormInput
-              id="phone_code"
-              type="number"
-              placeholder="Code"
-              name="phone_code"
-              value={updatedUser?.phone_code || ""}
-              disabled={!edit}
-              onChange={handleUpdateUser}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">+</InputAdornment>
-                  ),
-                },
-              }}
-            />
-            <FormInput
-              id="phone"
-              type="number"
-              placeholder="Phone number"
-              name="phone"
-              value={updatedUser?.phone || ""}
-              disabled={!edit}
-              onChange={handleUpdateUser}
-            />
-          </div>
+          <FormInput
+            id="phone"
+            type="number"
+            placeholder="Phone number"
+            name="phone"
+            value={updatedUser?.contact_platforms.phone || ""}
+            disabled={!edit}
+            onChange={handleUpdateUserContacts}
+          />
         </div>
         <FormError error={error} />
       </form>

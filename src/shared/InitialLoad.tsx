@@ -4,7 +4,7 @@ import { useGetCurrencyRateQuery } from '../entities/currency/currencyAPI';
 import { useGetCategoriesQuery } from '../entities/categories/categoriesAPI';
 
 function InitialLoad() {
-  const { error: authError, isLoading: authIsLoading } = useAuthCheckQuery({});
+  const { error: authError, isLoading: authIsLoading } = useAuthCheckQuery();
   const { error: currencyError, isLoading: currencyIsLoading } = useGetCurrencyRateQuery({});
   const { error: categoriesError, isLoading: categoriesIsLoading } = useGetCategoriesQuery({});
 

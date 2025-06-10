@@ -180,17 +180,17 @@ function NewItemForm() {
         <div className={styles.item_option_block}>
           <FormCheckBox
             label={'Free'}
-            id={'isFree'}
-            name={'isFree'}
+            id={'is_free'}
+            name={'is_free'}
             checked={formData.is_free}
-            onChange={(_, checked) => handleCheckboxChange('isFree', checked)}
+            onChange={(_, checked) => handleCheckboxChange('is_free', checked)}
           />
           <FormCheckBox
             label={'Published'}
-            id={'isPublished'}
-            name={'isPublished'}
+            id={'published'}
+            name={'published'}
             checked={formData.published}
-            onChange={(_, checked) => handleCheckboxChange('isPublished', checked)}
+            onChange={(_, checked) => handleCheckboxChange('published', checked)}
           />
         </div>
 

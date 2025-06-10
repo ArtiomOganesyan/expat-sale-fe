@@ -85,10 +85,7 @@ function UserData() {
   const handleLogout = async () => {
     try {
       const res = await logout()
-
-      if (res.isSuccess) {
-        navigate("/auth/login")
-      }
+      navigate("/auth/login")
     } catch (err) {
       console.error("Logout failed:", err)
     }

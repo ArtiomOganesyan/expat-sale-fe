@@ -30,6 +30,7 @@ function MobileNavbar() {
     return (
       <>
         <MenuItem onClick={() => handleMenuClose("Profile")}>Profile</MenuItem>
+        <MenuItem onClick={() => handleMenuClose("NewItem")}>New Item</MenuItem>
         <MenuItem onClick={() => handleMenuClose("Settings")}>
           Settings
         </MenuItem>

@@ -4,12 +4,12 @@ import { listingApi } from "./api"
 export const itemsAPI = listingApi.injectEndpoints({
   endpoints: builder => ({
     getListingMasonry: builder.query<any, any>({
-      query: ({ offset, limit, category, isFree }) => {
+      query: ({ offset, limit, categoryId, isFree }) => {
         const params = new URLSearchParams()
 
         if (offset !== undefined) params.set("offset", offset)
         if (limit !== undefined) params.set("limit", limit)
-        if (category) params.set("category", category)
+        if (categoryId) params.set("categoryId", categoryId)
         if (isFree) params.set("is_free", isFree)
 
         return `/items?${params.toString()}`

@@ -6,14 +6,14 @@ import { useGetListingMasonryQuery } from "../../entities/items/itemsAPI"
 function ListingMasonry() {
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
-  const category = searchParams.get("category")
+  const categoryId = searchParams.get("categoryId")
   const isFree = searchParams.get("is_free")
 
   const { data, isError, error, isLoading, isFetching } =
     useGetListingMasonryQuery({
       limit: 10,
       offset: 0,
-      category,
+      categoryId,
       is_free: isFree,
     })
 

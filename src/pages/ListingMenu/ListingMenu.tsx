@@ -10,8 +10,6 @@ function ListingMenu() {
     return <div>No categories available</div>
   }
 
-  console.log("categories", categories)
-
   const renderCategoryItem = (category: Category) => {
     return (
       <div style={{ padding: "1rem", position: "relative", width: "50%" }}>

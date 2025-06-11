@@ -1,21 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { categoriesAPI } from './categoriesAPI';
-
-export type CategoriesResponse = {
-  id: string;
-  slug: string;
-  name: string;
-  children: CategoryItem[];
-};
-
-export type CategoryItem = {
-  id: string;
-  slug: string;
-  name: string;
-};
+import { type Category } from './categories.type';
 
 const initialState: {
-  categories: CategoriesResponse[];
+  categories: Category[];
   loading: boolean;
   error: any;
 } = {
@@ -36,7 +24,7 @@ export const categoriesSlice = createSlice({
     });
     builder.addMatcher(categoriesAPI.endpoints.getCategories.matchFulfilled, (state, action) => {
       state.loading = false;
-      state.categories = action.payload
+      state.categories = action.payload;
     });
     builder.addMatcher(categoriesAPI.endpoints.getCategories.matchRejected, (state, action) => {
       state.loading = false;

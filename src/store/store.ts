@@ -1,15 +1,14 @@
-import type { Action, ThunkAction } from "@reduxjs/toolkit"
-import { combineSlices, configureStore } from "@reduxjs/toolkit"
-import { setupListeners } from "@reduxjs/toolkit/query"
-import { userSlice } from "../entities/user/userSlice"
-import { authAPI } from "../entities/user/authAPI"
-import { userAPI } from "../entities/user/userAPI"
-import { listingApi } from "../entities/items/api"
-import { currencyAPI } from "../entities/currency/currencyAPI"
-import { currencySlice } from "../entities/currency/currencySlice"
-import { categoryAPI } from "../entities/category/categoryAPI"
-import { categoriesAPI } from "../entities/categories/categoriesAPI"
-import { categoriesSlice } from "../entities/categories/categoriesSlice"
+import type { Action, ThunkAction } from '@reduxjs/toolkit';
+import { combineSlices, configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { userSlice } from '../entities/user/userSlice';
+import { authAPI } from '../entities/user/authAPI';
+import { userAPI } from '../entities/user/userAPI';
+import { listingApi } from '../entities/items/api';
+import { currencyAPI } from '../entities/currency/currencyAPI';
+import { currencySlice } from '../entities/currency/currencySlice';
+import { categoriesAPI } from '../entities/categories/categoriesAPI';
+import { categoriesSlice } from '../entities/categories/categoriesSlice';
 
 const rootReducer = combineSlices(
   userSlice,
@@ -18,11 +17,10 @@ const rootReducer = combineSlices(
   listingApi,
   currencySlice,
   currencyAPI,
-  categoryAPI,
   categoriesAPI,
-  categoriesSlice,
-)
-export type RootState = ReturnType<typeof rootReducer>
+  categoriesSlice
+);
+export type RootState = ReturnType<typeof rootReducer>;
 
 export const makeStore = (preloadedState?: Partial<RootState>) => {
   const store = configureStore({
@@ -32,24 +30,18 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
         authAPI.middleware,
         userAPI.middleware,
         listingApi.middleware,
-        categoryAPI.middleware,
         currencyAPI.middleware,
         categoriesAPI.middleware
-      )
+      );
     },
     preloadedState,
-  })
-  setupListeners(store.dispatch)
-  return store
-}
+  });
+  setupListeners(store.dispatch);
+  return store;
+};
 
-export const store = makeStore()
+export const store = makeStore();
 
-export type AppStore = typeof store
-export type AppDispatch = AppStore["dispatch"]
-export type AppThunk<ThunkReturnType = void> = ThunkAction<
-  ThunkReturnType,
-  RootState,
-  unknown,
-  Action
->
+export type AppStore = typeof store;
+export type AppDispatch = AppStore['dispatch'];
+export type AppThunk<ThunkReturnType = void> = ThunkAction<ThunkReturnType, RootState, unknown, Action>;

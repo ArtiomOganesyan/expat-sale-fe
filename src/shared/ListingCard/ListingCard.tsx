@@ -1,33 +1,40 @@
-import Carousel from "react-material-ui-carousel"
-import { Link } from "react-router"
+import Carousel from 'react-material-ui-carousel';
+import { Link } from 'react-router';
+import { type Item } from '../../entities/items/items.type';
 
-function ListingCard(props: any) {
+function ListingCard({ item }: { item: Item }) {
   return (
-    <div style={{ borderBottom: "1px solid #ccc" }}>
-      {props.images?.length ? (
-        <Carousel autoPlay={false} animation="slide" indicators={true}>
-          {props.images.map((image: string) => (
+    <div style={{ borderBottom: '1px solid #ccc' }}>
+      {item.images?.length ? (
+        <Carousel
+          autoPlay={false}
+          animation='slide'
+          height={200}
+          indicators={true}
+        >
+          {item.images.map(image => (
             <img
               style={{
-                objectFit: "contain",
-                width: "100%",
+                objectFit: 'contain',
+                height: '200px',
+                width: '100%',
               }}
-              src={image}
-              alt="product"
+              src={image.public_url}
+              alt='product'
             />
           ))}
         </Carousel>
       ) : null}
-      <div style={{ marginTop: "1rem" }}>
-        <Link to={`/listing/${props.id}`}>
-          <div>{props.title}</div>
+      <div style={{ marginTop: '1rem' }}>
+        <Link to={`/listing/${item.id}`}>
+          <div>{item.title}</div>
           <div>
-            {props.price} {props.currency}
+            {item.price} {item.currency}
           </div>
         </Link>
       </div>
     </div>
-  )
+  );
 }
 
-export default ListingCard
+export default ListingCard;

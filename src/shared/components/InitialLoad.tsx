@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { useAuthCheckQuery } from '../entities/user/authAPI';
-import { useGetCurrencyRateQuery } from '../entities/currency/currencyAPI';
-import { useGetCategoriesQuery } from '../entities/categories/categoriesAPI';
+import { useAuthCheckQuery } from '../../entities/user/authAPI';
+import { useGetCurrencyRateQuery } from '../../entities/currency/currencyAPI';
+import { useGetCategoriesQuery } from '../../entities/categories/categoriesAPI';
 
 function InitialLoad() {
   const { error: authError, isLoading: authIsLoading } = useAuthCheckQuery();

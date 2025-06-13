@@ -2,9 +2,9 @@ import React, { useEffect } from "react"
 import styles from "./AuthForm.module.css"
 import { useNavigate } from "react-router"
 import { useRegisterMutation } from "../../../entities/user/authAPI"
-import FormInput from "../../../shared/FormInput/FormInput"
+import FormInput from "../../../shared/components/FormInput/FormInput"
 import { Button } from "@mui/material"
-import FormError from "../../../shared/FormError/FormError"
+import FormError from "../../../shared/components/FormError/FormError"
 
 function RegisterForm() {
   const [username, setUsername] = React.useState("")

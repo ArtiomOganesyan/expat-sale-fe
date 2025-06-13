@@ -1,25 +1,46 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CATEGORIES, categoryToSubcategoriesMapping, CONDITION, SUBCATEGORIES } from '../../utils/constants/Item';
 import { useAddImageToItemMutation, useCreateItemMutation } from '../../entities/items/itemAPI';
 
 import styles from './NewItem.module.css';
 import { prepareCategoryText } from '../../utils/prepareCategoryText';
-import FormInput from '../../shared/FormInput/FormInput';
-import FormSelect from '../../shared/FormSelect/FormSelect';
-import FormCheckBox from '../../shared/FormCheck/FormCheckBox';
+import FormInput from '../../shared/components/FormInput/FormInput';
+import FormSelect from '../../shared/components/FormSelect/FormSelect';
+import FromSelectSearch from '../../shared/components/FormSelectSearch/FromSelectSearch';
+import FormCheckBox from '../../shared/components/FormCheck/FormCheckBox';
 import { formChangeHandler } from './utils/formChangeHandler';
 import { useAppSelector } from '../../hooks/hooks';
 import { getRates } from '../../entities/currency/currencySlice';
-import FormFiles from '../../shared/FormFiles/FormFiles';
+import FormFiles from '../../shared/components/FormFiles/FormFiles';
 import Button from '@mui/material/Button';
 import { getCategories } from '../../entities/categories/categoriesSlice';
+import { useGetCitiesQuery, useGetRegionsQuery } from '../../entities/places/placesAPI';
+import { useDebouncedValue } from '../../shared/hooks/useDebouncedValue';
 
 function NewItemForm() {
+  const [regionInputValue, setRegionInputValue] = useState<string>('');
+  const [citiesList, setCitiesList] = useState<{ city: string; label: string }[]>();
+  const [selectedCity, setSelectedCity] = useState<{ city: string; label: string; groupBy?: string } | null>(null);
+  const [cityInputValue, setCityInputValue] = useState<string>('');
+  const debouncedRegionInputValue = useDebouncedValue(regionInputValue, 1000);
+  const debouncedCityInputValue = useDebouncedValue(cityInputValue, 1000);
+  const skipRegionsQuery = debouncedRegionInputValue.length < 3;
+  const skipCitiesQuery = debouncedCityInputValue.length < 3;
   const [create, createMeta] = useCreateItemMutation();
   const [addImage, addImageMeta] = useAddImageToItemMutation();
   const isLoading = createMeta.isLoading || addImageMeta.isLoading;
   const currencyRates = useAppSelector(getRates);
   const categories = useAppSelector(getCategories);
+  const {
+    data: Regions,
+    isLoading: IsLoadingRegions,
+    error: RegionsError,
+  } = useGetRegionsQuery({ query: debouncedRegionInputValue }, { skip: skipRegionsQuery });
+  const {
+    data: Cities,
+    isLoading: IsLoadingCities,
+    error: CitiesError,
+  } = useGetCitiesQuery({ query: debouncedCityInputValue }, { skip: skipCitiesQuery });
 
   const [formData, setFormData] = useState({
     title: '',
@@ -32,11 +53,16 @@ function NewItemForm() {
     // subcategory: SUBCATEGORIES.OTHER,
     // condition: CONDITION.USED,
     is_new: false,
+    location: {
+      country: '',
+      region: '',
+      city: '',
+    },
   });
 
   const [files, setFiles] = useState<File[]>([]);
 
-  const { handleInputChange, handleSelectChange, handleCheckboxChange } = formChangeHandler(setFormData);
+  const { handleInputChange, handleSelectChange, handleCheckboxChange, handleLocationChange } = formChangeHandler(setFormData);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +71,12 @@ function NewItemForm() {
     const result = await create({
       ...formData,
       // price: +priceInEUR,
+      location: {
+        radius: 0,
+        country: '',
+        region: formData.location.region,
+        city: formData.location.city,
+      },
       price: Number(formData.price),
       currency: 'EUR',
     });
@@ -52,8 +84,7 @@ function NewItemForm() {
     if (result.data) {
       const itemId = result.data.id;
       console.log('FILES BEFORE UPLOAD:', files);
-      const addFilesResult = await addImage({ itemId, files });;
-
+      const addFilesResult = await addImage({ itemId, files });
     }
   };
 
@@ -64,22 +95,6 @@ function NewItemForm() {
   //   }
   //   return 0
   // }
-
-  //старая реализация
-  // const subcategories = useMemo(() => {
-  //   const cat = Object.entries(categoryToSubcategoriesMapping);
-  //   const sub_cat: any = [];
-  //   cat.forEach(([category, value]) => {
-  //     const subcategories = value.map(subcategory => ({
-  //       category: category,
-  //       subcategory: subcategory,
-  //       groupBy: prepareCategoryText(category),
-  //       label: prepareCategoryText(subcategory),
-  //     }));
-  //     sub_cat.push(...subcategories);
-  //   });
-  //   return sub_cat;
-  // }, []);
 
   const subcategories = useMemo(() => {
     const sub_cat: {
@@ -104,6 +119,27 @@ function NewItemForm() {
 
     return sub_cat;
   }, [categories]);
+
+  useEffect(() => {
+    const regionCities = Regions?.reduce<{ city: string; label: string }[]>((acc, item) => {
+      const citiesOptions = item.cities.map(city => ({
+        city: city,
+        label: city,
+      }));
+
+      return acc.concat(citiesOptions);
+    }, []);
+    setCitiesList(regionCities);
+    setCityInputValue('');
+    setSelectedCity(null);
+  }, [Regions]);
+
+  const handleChangeRegions = (value: string) => {
+    setRegionInputValue(value);
+    setCitiesList([]);
+    setCityInputValue('');
+    // setSelectedCity(null);
+  };
 
   return (
     <div className={styles.form_container}>
@@ -177,6 +213,55 @@ function NewItemForm() {
             value: c,
             label: prepareCategoryText(c),
           }))}
+        />
+        <FromSelectSearch<{
+          region: string;
+        }>
+          label={'Region'}
+          id={'region'}
+          onChange={(_, newValue) => {
+            handleLocationChange('location', 'region', newValue?.region);
+            // setRegionInputValue(newValue?.region || '');
+          }}
+          inputValue={regionInputValue}
+          onInputChange={(_, newInputValue) => handleChangeRegions(newInputValue)}
+          options={
+            Regions
+              ? Regions.map((item: any) => ({
+                  id: item.region,
+                  region: item.region,
+                  label: item.region,
+                }))
+              : []
+          }
+          // disabled={IsLoadingRegions}
+          isLoading={IsLoadingRegions}
+          error={Regions?.length === 0 && regionInputValue.length !== 0 ? 'No regions' : ''}
+        />
+        <FromSelectSearch<{
+          city: string;
+        }>
+          label={'City'}
+          id={'city'}
+          onChange={(_, newValue) => {
+            handleLocationChange('location', 'city', newValue?.city);
+            setSelectedCity(newValue);
+            setCityInputValue(newValue?.label ?? '');
+          }}
+          value={selectedCity}
+          inputValue={cityInputValue}
+          onInputChange={(_, newInputValue) => setCityInputValue(newInputValue)}
+          options={
+            citiesList
+              ? citiesList.map((item: any) => ({
+                  city: item.city,
+                  label: item.label,
+                }))
+              : []
+          }
+          disabled={!Regions || Regions?.length === 0}
+          // isLoading={IsLoadingCities}
+          error={Cities?.length === 0 && cityInputValue.length !== 0 ? 'No cities' : ''}
         />
 
         <div className={styles.item_option_block}>

@@ -8,10 +8,10 @@ import {
 } from "../../entities/user/userAPI"
 import { useNavigate } from "react-router"
 import style from "./UserData.module.css"
-import FormInput from "../../shared/FormInput/FormInput"
+import FormInput from "../../shared/components/FormInput/FormInput"
 import ImageContainer from "./ui/ImageContainer"
 import Actions from "./ui/Actions"
-import FormError from "../../shared/FormError/FormError"
+import FormError from "../../shared/components/FormError/FormError"
 import { Paper } from "@mui/material"
 import { type User } from "../../entities/user/user.type"
 

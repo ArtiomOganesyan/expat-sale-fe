@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router';
-import ListingCard from '../../shared/ListingCard/ListingCard';
+import ListingCard from '../../shared/components/ListingCard/ListingCard';
 import styles from './ListingMasonry.module.css';
 import { useGetListingMasonryQuery } from '../../entities/items/itemsAPI';
 

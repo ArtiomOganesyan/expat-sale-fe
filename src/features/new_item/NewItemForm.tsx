@@ -51,7 +51,9 @@ function NewItemForm() {
 
     if (result.data) {
       const itemId = result.data.id;
-      const addFilesResult = await Promise.allSettled(files.map(file => addImage({ itemId, file })));
+      console.log('FILES BEFORE UPLOAD:', files);
+      const addFilesResult = await addImage({ itemId, files });;
+
     }
   };
 
@@ -89,7 +91,7 @@ function NewItemForm() {
     }[] = [];
 
     categories.forEach(category => {
-      category.children.forEach(child => {
+      category?.children?.forEach(child => {
         sub_cat.push({
           category: category.name,
           subcategory: child.name,
@@ -196,7 +198,7 @@ function NewItemForm() {
 
         <FormFiles
           files={files}
-          setFiles={files => setFiles(files)}
+          setFiles={setFiles}
         />
 
         <Button

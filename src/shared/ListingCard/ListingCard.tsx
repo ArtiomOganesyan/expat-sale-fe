@@ -1,6 +1,7 @@
 import Carousel from 'react-material-ui-carousel';
 import { Link } from 'react-router';
 import { type Item } from '../../entities/items/items.type';
+import styles from './ListingCard.module.css';
 
 function ListingCard({ item }: { item: Item }) {
   return (

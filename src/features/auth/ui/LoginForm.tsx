@@ -2,8 +2,8 @@ import React, { useEffect } from "react"
 import styles from "./AuthForm.module.css"
 import { useLoginMutation } from "../../../entities/user/authAPI"
 import { useNavigate } from "react-router"
-import FormInput from "../../../shared/FormInput/FormInput"
-import FormError from "../../../shared/FormError/FormError"
+import FormInput from "../../../shared/components/FormInput/FormInput"
+import FormError from "../../../shared/components/FormError/FormError"
 import { Button } from "@mui/material"
 
 function LoginForm() {

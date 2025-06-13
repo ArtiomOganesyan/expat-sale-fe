@@ -14,6 +14,16 @@ export const formChangeHandler = (setter: any) => {
     }))
   }
 
+  const handleLocationChange = (parentKey: string, childKey: string, value: any) => {
+  setter((prev: any) => ({
+    ...prev,
+    [parentKey]: {
+      ...prev[parentKey],
+      [childKey]: value,
+    },
+  }))
+}
+
   const handleCheckboxChange = (key: string, checked: boolean) => {
     setter((prev: any) => ({
       ...prev,
@@ -24,6 +34,7 @@ export const formChangeHandler = (setter: any) => {
   return {
     handleInputChange,
     handleSelectChange,
+    handleLocationChange,
     handleCheckboxChange,
   }
 }

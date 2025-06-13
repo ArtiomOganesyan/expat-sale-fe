@@ -1,4 +1,4 @@
-import InitialLoad from "./shared/InitialLoad"
+import InitialLoad from "./shared/components/InitialLoad"
 
 import "./assets/styles/global.css"
 import "./assets/styles/variables.css"

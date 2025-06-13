@@ -1,42 +1,42 @@
-import { listingApi } from "./api"
+import { listingApi } from './api';
 
 export const itemAPI = listingApi.injectEndpoints({
   endpoints: builder => ({
     getItemById: builder.query<any, any>({
       query: ({ skip, limit, category, isFree }) => {
-        const params = new URLSearchParams()
+        const params = new URLSearchParams();
 
-        if (skip !== undefined) params.set("skip", skip)
-        if (limit !== undefined) params.set("limit", limit)
-        if (category) params.set("category", category)
-        if (isFree) params.set("is_free", isFree)
+        if (skip !== undefined) params.set('skip', skip);
+        if (limit !== undefined) params.set('limit', limit);
+        if (category) params.set('category', category);
+        if (isFree) params.set('is_free', isFree);
 
-        return `/items?${params.toString()}`
+        return `/items?${params.toString()}`;
       },
     }),
     createItem: builder.mutation<any, any>({
       query: body => ({
         url: `/items`,
-        method: "POST",
+        method: 'POST',
         body: body,
-        credentials: "include",
+        credentials: 'include',
       }),
     }),
     addImageToItem: builder.mutation<any, any>({
-      query: ({ itemId, file }) => {
-        const formData = new FormData()
-
-        formData.append("image", file)
+      query: ({ itemId, files }) => {
+        const formData = new FormData();
+        files.forEach((file: File) => {
+          formData.append('files', file);
+        });
 
         return {
-          url: `/items/upload/image/${itemId}`,
-          method: "POST",
+          url: `/media/item/${itemId}`,
+          method: 'POST',
           body: formData,
-          credentials: "include",
-        }
+        };
       },
     }),
   }),
-})
+});
 
-export const { useCreateItemMutation, useAddImageToItemMutation } = itemAPI
+export const { useCreateItemMutation, useAddImageToItemMutation } = itemAPI;

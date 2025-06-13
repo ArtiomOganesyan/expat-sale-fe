@@ -31,7 +31,7 @@ export default function InputFileUpload({
       startIcon={<CloudUploadIcon />}
       onClick={() => {
         setError("")
-        setFiles([])
+        // setFiles([])
       }}
       sx={{
         width: "100%",

@@ -7,13 +7,18 @@ function ListingMasonry() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const categoryId = searchParams.get('categoryId');
+  const title = searchParams.get('title');
+
+  console.log(title);
+
   const isFree = searchParams.get('is_free');
 
   const { data, isError, error, isLoading, isFetching } = useGetListingMasonryQuery({
-    limit: 100,
+    limit: 10,
     offset: 0,
-    categoryId: categoryId,
-    isFree: isFree,
+    categoryId,
+    isFree,
+    title,
   });
 
   if (isLoading) return <div>Loading...</div>;

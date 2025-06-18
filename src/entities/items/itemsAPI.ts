@@ -11,20 +11,22 @@ export const itemsAPI = listingApi.injectEndpoints({
         limit?: number | undefined;
         categoryId?: string | null;
         isFree?: string | null;
+        title?: string | null;
       }
     >({
-      query: ({ offset, limit, categoryId, isFree }) => {
+      query: ({ offset, limit, categoryId, isFree, title }) => {
         const params = new URLSearchParams();
 
         if (offset !== undefined) params.set('offset', `${offset}`);
         if (limit !== undefined) params.set('limit', `${limit}`);
         if (categoryId) params.set('categoryId', categoryId);
         if (isFree) params.set('is_free', isFree);
+        if (title && title.length > 3) params.set('title', title);
 
         return `/items?${params.toString()}`;
       },
-      providesTags: (_result, _error, { offset, limit, categoryId, isFree }) => [
-        { type: TAG_TYPES.LISTING_MASONRY, id: `${limit}-${offset}-${categoryId}-${isFree}` },
+      providesTags: (_result, _error, { offset, limit, categoryId, isFree, title }) => [
+        { type: TAG_TYPES.LISTING_MASONRY, id: `${limit}-${offset}-${categoryId}-${isFree}-${title}` },
       ],
     }),
     getItemsByUserId: builder.query<any, any>({

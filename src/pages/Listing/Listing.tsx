@@ -1,11 +1,15 @@
-import ListingMasonry from "../../features/items/ListingMasonry"
+import { Outlet } from 'react-router';
+import ItemFilter from '../../features/ItemFilter/ItemFilter';
 
 function Listing() {
   return (
     <div>
-      <ListingMasonry />
+      <div style={{ margin: '1rem' }}>
+        <ItemFilter />
+      </div>
+      <Outlet />
     </div>
-  )
+  );
 }
 
-export default Listing
+export default Listing;

@@ -1,6 +1,5 @@
-import { Link } from 'react-router';
-import { type Category } from '../../entities/categories/categories.type';
 import { useGetParentCategoriesQuery } from '../../entities/categories/categoriesAPI';
+import CategoryItem from './components/CategoryItem';
 
 function ListingMenu() {
   const { data: categories, isLoading } = useGetParentCategoriesQuery();
@@ -10,28 +9,6 @@ function ListingMenu() {
     return <div>No categories available</div>;
   }
 
-  const renderCategoryItem = (category: Category) => {
-    return (
-      <div
-        key={category.id}
-        style={{ padding: '1rem', position: 'relative', width: '50%' }}
-      >
-        <Link to={`/listing?categoryId=${category.id}`}>
-          <div
-            style={{
-              border: '1px solid grey',
-              borderRadius: '8px',
-              padding: '1rem',
-              cursor: 'pointer',
-            }}
-          >
-            {category.name}
-          </div>
-        </Link>
-      </div>
-    );
-  };
-
   return (
     <div
       style={{
@@ -40,7 +17,12 @@ function ListingMenu() {
         flexWrap: 'wrap',
       }}
     >
-      {categories.map(category => renderCategoryItem(category))}
+      {categories.map(category => (
+        <CategoryItem
+          key={category.id}
+          category={category}
+        />
+      ))}
     </div>
   );
 }

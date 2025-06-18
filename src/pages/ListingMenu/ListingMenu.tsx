@@ -12,7 +12,10 @@ function ListingMenu() {
 
   const renderCategoryItem = (category: Category) => {
     return (
-      <div style={{ padding: '1rem', position: 'relative', width: '50%' }}>
+      <div
+        key={category.id}
+        style={{ padding: '1rem', position: 'relative', width: '50%' }}
+      >
         <Link to={`/listing?categoryId=${category.id}`}>
           <div
             style={{

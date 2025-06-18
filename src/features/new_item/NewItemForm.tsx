@@ -138,6 +138,7 @@ function NewItemForm() {
     setRegionInputValue(value);
     setCitiesList([]);
     setCityInputValue('');
+    setFormData(prev => ({ ...prev, location: { ...prev.location, region: value, city: '' } }));
     // setSelectedCity(null);
   };
 

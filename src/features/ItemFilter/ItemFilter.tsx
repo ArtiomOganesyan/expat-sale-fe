@@ -45,8 +45,14 @@ function ItemFilter() {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setFilters((prev: any) => ({ ...prev, title: inputValue }));
-    }, 500); // 500ms debounce
+      setFilters((prev: any) => {
+        const state = { ...prev };
+        if (inputValue) {
+          state.title = inputValue;
+        }
+        return state;
+      });
+    }, 500);
 
     return () => clearTimeout(handler);
   }, [inputValue]);
@@ -71,15 +77,22 @@ function ItemFilter() {
             name='categoryId'
             onChange={handleChange}
             value={filters.categoryId}
+            defaultValue={''}
           >
             <option
               value=''
-              selected
               disabled
             >
               Category filter
             </option>
-            {categories?.map(category => <option value={category.id}>{category.name}</option>)}
+            {categories?.map(category => (
+              <option
+                key={category.id}
+                value={category.id}
+              >
+                {category.name}
+              </option>
+            ))}
           </select>
         </div>
       </AccordionSummary>

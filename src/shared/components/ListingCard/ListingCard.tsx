@@ -1,7 +1,6 @@
 import Carousel from 'react-material-ui-carousel';
 import { Link } from 'react-router';
 import { type Item } from '../../../entities/items/items.type';
-import styles from './ListingCard.module.css';
 
 function ListingCard({ item }: { item: Item }) {
   return (
@@ -15,6 +14,7 @@ function ListingCard({ item }: { item: Item }) {
         >
           {item.images.map(image => (
             <img
+              key={image.public_url}
               style={{
                 objectFit: 'contain',
                 height: '200px',

@@ -9,8 +9,6 @@ function ListingMasonry() {
   const categoryId = searchParams.get('categoryId');
   const title = searchParams.get('title');
 
-  console.log(title);
-
   const isFree = searchParams.get('is_free');
 
   const { data, isError, error, isLoading, isFetching } = useGetListingMasonryQuery({

@@ -3,7 +3,12 @@ import { Link } from 'react-router';
 import { type Item } from '../../../entities/items/items.type';
 import styles from './ListingCard.module.css';
 
-function ListingCard({ item }: { item: Item }) {
+interface ListingCardProps{
+  item: Item;
+  url: string;
+}
+
+function ListingCard({ item, url }: ListingCardProps) {
   return (
     <div style={{ borderBottom: '1px solid #ccc' }}>
       {item.images?.length ? (
@@ -27,7 +32,7 @@ function ListingCard({ item }: { item: Item }) {
         </Carousel>
       ) : null}
       <div style={{ marginTop: '1rem' }}>
-        <Link to={`/listing/${item.id}`}>
+        <Link to={`${url}/${item.id}`}>
           <div>{item.title}</div>
           <div>
             {item.price} {item.currency}

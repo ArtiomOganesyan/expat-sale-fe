@@ -33,6 +33,7 @@ function ListingMasonry() {
         <ListingCard
           key={listing.id}
           item={listing}
+          url={'/listing'}
         />
       ))}
     </div>

@@ -30,7 +30,7 @@ export const itemsAPI = listingApi.injectEndpoints({
       ],
     }),
     getItemsByUserId: builder.query<any, any>({
-      query: ({ user_id }) => `/items/user/${user_id}`,
+      query: ({ user_id }) => `/items?userId=${user_id}`,
       providesTags: (_result, _error, { user_id }) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `items-user-${user_id}` }],
     }),
     checkStoreNameUniqueness: builder.query<any, any>({

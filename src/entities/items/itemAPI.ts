@@ -1,17 +1,11 @@
 import { listingApi } from './api';
+import { EditItem, Item } from './items.type';
 
 export const itemAPI = listingApi.injectEndpoints({
   endpoints: builder => ({
-    getItemById: builder.query<any, any>({
-      query: ({ skip, limit, category, isFree }) => {
-        const params = new URLSearchParams();
-
-        if (skip !== undefined) params.set('skip', skip);
-        if (limit !== undefined) params.set('limit', limit);
-        if (category) params.set('category', category);
-        if (isFree) params.set('is_free', isFree);
-
-        return `/items?${params.toString()}`;
+    getItemById: builder.query<Item, any>({
+      query: ({ itemId }) => {
+        return `/items/${itemId}`;
       },
     }),
     createItem: builder.mutation<any, any>({
@@ -36,7 +30,15 @@ export const itemAPI = listingApi.injectEndpoints({
         };
       },
     }),
+    updateItem: builder.mutation<EditItem, { id: string; data: Partial<EditItem> }>({
+      query: ({ id, data }) => ({
+        url: `/items/${id}`,
+        method: 'PATCH',
+        body: data,
+        credentials: 'include',
+      }),
+    }),
   }),
 });
 
-export const { useCreateItemMutation, useAddImageToItemMutation } = itemAPI;
+export const { useCreateItemMutation, useAddImageToItemMutation, useUpdateItemMutation, useGetItemByIdQuery } = itemAPI;

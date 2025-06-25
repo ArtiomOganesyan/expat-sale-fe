@@ -26,3 +26,19 @@ export type Item = {
   is_new: boolean;
   published: boolean;
 };
+
+export interface ItemFilter {
+  offset?: number;
+  limit?: number;
+  categoryId?: string | null;
+  isFree?: boolean | null;
+  title?: string | null;
+  isNew?: boolean | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  country?: string | null;
+  region?: string | null;
+  city?: string | null;
+  radius?: number | null;
+  userId?: string | null;
+}

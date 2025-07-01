@@ -1,9 +1,10 @@
 export const formChangeHandler = (setter: any) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+    const parsedValue = name === 'price' ? Number(value) : value;
     setter((prev: any) => ({
       ...prev,
-      [name]: value,
+      [name]: parsedValue,
     }))
   }
 

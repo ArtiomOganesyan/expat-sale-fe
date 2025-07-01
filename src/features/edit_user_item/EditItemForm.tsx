@@ -1,4 +1,4 @@
-import { type ChangeEvent, useEffect, useRef, useState } from 'react';
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useLazyLogoutQuery } from '../../entities/user/authAPI';
 import { useAppSelector } from '../../hooks/hooks';
 import { selectUser } from '../../entities/user/userSlice';
@@ -15,12 +15,40 @@ import { useGetItemByIdQuery, useUpdateItemMutation } from '../../entities/items
 import { EditItem, Item } from '../../entities/items/items.type';
 import FormCheckBox from '../../shared/components/FormCheck/FormCheckBox';
 import FormSelect from '../../shared/components/FormSelect/FormSelect';
+import { getCategories } from '../../entities/categories/categoriesSlice';
+import { prepareCategoryText } from '../../utils/prepareCategoryText';
+import { formChangeHandler } from './utils/formChangeHandler';
 
 function EditItemData() {
   const params = useParams();
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState('');
   const [updatedItem, setUpdatedItem] = useState<EditItem | undefined>();
+  const { handleInputChange, handleSelectChange, handleCheckboxChange, handleLocationChange } = formChangeHandler(setUpdatedItem);
+  const categories = useAppSelector(getCategories);
+  const subcategories = useMemo(() => {
+    const sub_cat: {
+      category: string;
+      subcategory: string;
+      subcategoryId: string;
+      groupBy: string;
+      label: string;
+    }[] = [];
+
+    categories.forEach(category => {
+      category?.children?.forEach(child => {
+        sub_cat.push({
+          category: category.name,
+          subcategory: child.name,
+          subcategoryId: child.id,
+          groupBy: prepareCategoryText(category.name),
+          label: prepareCategoryText(child.name),
+        });
+      });
+    });
+
+    return sub_cat;
+  }, [categories]);
 
   const { data: item, isLoading, isError } = useGetItemByIdQuery({ itemId: params.id });
   const editItem: EditItem = {
@@ -35,6 +63,7 @@ function EditItemData() {
     is_free: item?.is_free,
     is_new: item?.is_new,
     published: item?.published,
+    categoryId: item?.categoryId,
   };
   const [updateItemMutation, updateMeta] = useUpdateItemMutation();
   const [updateUserAvatarMutation, updateAvatarMeta] = useUpdateUserAvatarMutation();
@@ -75,23 +104,16 @@ function EditItemData() {
     delete data.updated_at;
     // delete data.image;
     // delete data.role;
+    console.log(data)
 
     if (item) {
       updateItemMutation({ id: item?.id, data });
     }
   };
 
-  const handleUpdateItem = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    const parsedValue = name === 'price' ? Number(value) : value;
-
-    setUpdatedItem(prev => (prev ? { ...prev, [name]: parsedValue } : prev));
-  };
-
-  const handleUpdateUserContacts = (e: ChangeEvent<HTMLInputElement>) => {
-    setUpdatedItem(prev => (prev ? { ...prev, contact_platforms: { [e.target.name]: e.target.value } } : prev));
-  };
+  // const handleUpdateUserContacts = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setUpdatedItem(prev => (prev ? { ...prev, contact_platforms: { [e.target.name]: e.target.value } } : prev));
+  // };
 
   const handleFileInputClick = () => {
     if (fileInputRef.current) {
@@ -151,7 +173,7 @@ function EditItemData() {
             placeholder='Title'
             value={updatedItem?.title || ''}
             disabled={!edit}
-            onChange={handleUpdateItem}
+            onChange={handleInputChange}
           />
 
           <Actions
@@ -171,7 +193,7 @@ function EditItemData() {
             name='description'
             value={updatedItem?.description || ''}
             disabled={!edit}
-            onChange={handleUpdateItem}
+            onChange={handleInputChange}
           />
           <FormInput
             label={'Price'}
@@ -180,19 +202,17 @@ function EditItemData() {
             name={'price'}
             disabled={!edit}
             value={updatedItem?.price || ''}
-            onChange={handleUpdateItem}
+            onChange={handleInputChange}
           />
-          {/* <FormSelect<{
-            category: string;
-            subcategoryId: string;
-          }>
-            label={'Category'}
-            id={'category'}
+          <FormSelect
+            label='Category'
+            id='category'
             onChange={(_, newValue) => {
-              handleSelectChange('categoryId', newValue?.subcategoryId || 'Other');
-            }}
+            handleSelectChange('categoryId', newValue?.subcategoryId || 'Other');
+          }}
             options={subcategories}
-          /> */}
+            disabled={!edit}
+          />
           {/* <FormSelect
             label={'Condition'}
             id={'condition'}

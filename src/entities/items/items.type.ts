@@ -25,6 +25,8 @@ export type Item = {
   is_free: boolean;
   is_new: boolean;
   published: boolean;
+  categoryId?: string;
+  category?: CategoryItem;
 };
 
 export interface EditItem {
@@ -39,4 +41,14 @@ export interface EditItem {
   is_free?: boolean;
   is_new?: boolean;
   published?: boolean;
+  categoryId?: string;
+  category?: CategoryItem;
 };
+
+export interface CategoryItem{
+  id: string;
+  name: string;
+  slug: string;
+  created_at: string;
+  updated_at: string;
+}

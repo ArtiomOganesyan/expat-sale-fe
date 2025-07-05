@@ -4,7 +4,7 @@ import { useAppSelector } from '../../hooks/hooks';
 import { selectUser } from '../../entities/user/userSlice';
 import { useUpdateUserAvatarMutation, useUpdateUserMutation } from '../../entities/user/userAPI';
 import { useNavigate, useParams } from 'react-router';
-import style from './EditItemForm.module.css';
+import styles from './EditItemForm.module.css';
 import FormInput from '../../shared/components/FormInput/FormInput';
 import ImageContainer from './ui/ImageContainer';
 import Actions from './ui/Actions';
@@ -18,9 +18,21 @@ import FormSelect from '../../shared/components/FormSelect/FormSelect';
 import { getCategories } from '../../entities/categories/categoriesSlice';
 import { prepareCategoryText } from '../../utils/prepareCategoryText';
 import { formChangeHandler } from './utils/formChangeHandler';
+import { CONDITION } from '../../utils/constants/Item';
+import FromSelectSearch from '../../shared/components/FormSelectSearch/FromSelectSearch';
+import { useGetCitiesQuery, useGetRegionsQuery } from '../../entities/places/placesAPI';
+import { useDebouncedValue } from '../../shared/hooks/useDebouncedValue';
 
 function EditItemData() {
   const params = useParams();
+  const [regionInputValue, setRegionInputValue] = useState<string>('');
+  const [citiesList, setCitiesList] = useState<{ city: string; label: string }[]>();
+  const [selectedCity, setSelectedCity] = useState<{ city: string; label: string; groupBy?: string } | null>(null);
+  const [cityInputValue, setCityInputValue] = useState<string>('');
+  const debouncedRegionInputValue = useDebouncedValue(regionInputValue, 1000);
+  const debouncedCityInputValue = useDebouncedValue(cityInputValue, 1000);
+  const skipRegionsQuery = debouncedRegionInputValue.length < 3;
+  const skipCitiesQuery = debouncedCityInputValue.length < 3;
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState('');
   const [updatedItem, setUpdatedItem] = useState<EditItem | undefined>();
@@ -50,21 +62,32 @@ function EditItemData() {
     return sub_cat;
   }, [categories]);
 
+  const {
+    data: Regions,
+    isLoading: IsLoadingRegions,
+    error: RegionsError,
+  } = useGetRegionsQuery({ query: debouncedRegionInputValue }, { skip: skipRegionsQuery });
+  const {
+    data: Cities,
+    isLoading: IsLoadingCities,
+    error: CitiesError,
+  } = useGetCitiesQuery({ query: debouncedCityInputValue }, { skip: skipCitiesQuery });
+
+  useEffect(() => {
+    const regionCities = Regions?.reduce<{ city: string; label: string }[]>((acc, item) => {
+      const citiesOptions = item.cities.map(city => ({
+        city: city,
+        label: city,
+      }));
+
+      return acc.concat(citiesOptions);
+    }, []);
+    setCitiesList(regionCities);
+    setCityInputValue('');
+    setSelectedCity(null);
+  }, [Regions]);
+
   const { data: item, isLoading, isError } = useGetItemByIdQuery({ itemId: params.id });
-  const editItem: EditItem = {
-    location: item?.location,
-    id: item?.id,
-    created_at: item?.created_at,
-    updated_at: item?.updated_at,
-    title: item?.title,
-    description: item?.description,
-    price: Number(item?.price),
-    currency: item?.currency,
-    is_free: item?.is_free,
-    is_new: item?.is_new,
-    published: item?.published,
-    categoryId: item?.categoryId,
-  };
   const [updateItemMutation, updateMeta] = useUpdateItemMutation();
   const [updateUserAvatarMutation, updateAvatarMeta] = useUpdateUserAvatarMutation();
 
@@ -72,8 +95,36 @@ function EditItemData() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    setUpdatedItem(editItem);
+    if (item) {
+      setUpdatedItem({
+        location: item.location,
+        id: item.id,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+        title: item.title,
+        description: item.description,
+        price: Number(item.price),
+        currency: item.currency,
+        is_free: item.is_free,
+        is_new: item.is_new,
+        published: item.published,
+        categoryId: item.category?.id,
+      });
+    }
   }, [item]);
+  const selectedCategory = useMemo(() => {
+    if (!updatedItem?.categoryId) return null;
+    return subcategories.find(cat => cat.subcategoryId === updatedItem.categoryId) || null;
+  }, [subcategories, updatedItem?.categoryId]);
+
+  const selectedCondition = useMemo(() => {
+    if (updatedItem?.is_new === undefined) return null;
+    const value = updatedItem.is_new ? CONDITION.NEW : CONDITION.USED;
+    return {
+      value,
+      label: prepareCategoryText(value),
+    };
+  }, [updatedItem?.is_new]);
 
   useEffect(() => {
     if (updateMeta.isError) {
@@ -88,7 +139,7 @@ function EditItemData() {
   const handleEdit = () => {
     setEdit(bool => {
       if (bool) {
-        setUpdatedItem(() => editItem);
+        setUpdatedItem(() => updatedItem);
       }
       return !bool;
     });
@@ -104,7 +155,7 @@ function EditItemData() {
     delete data.updated_at;
     // delete data.image;
     // delete data.role;
-    console.log(data)
+    console.log(data);
 
     if (item) {
       updateItemMutation({ id: item?.id, data });
@@ -143,6 +194,25 @@ function EditItemData() {
     }
   };
 
+  const handleChangeRegions = (value: string) => {
+    setRegionInputValue(value);
+    setCitiesList([]);
+    setCityInputValue('');
+    setUpdatedItem(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        location: {
+          ...prev.location,
+          region: value,
+          city: '',
+          radius: prev.location?.radius ?? 0,
+          country: prev.location?.country ?? '',
+        },
+      };
+    });
+  };
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -154,10 +224,10 @@ function EditItemData() {
   return (
     <Paper
       elevation={10}
-      className={style.container}
+      className={styles.container}
     >
       <form>
-        <div className={style.header}>
+        <div className={styles.header}>
           <ImageContainer
             image={item?.images[0].public_url ?? ''}
             updateItemImage={updateItemImage}
@@ -183,8 +253,8 @@ function EditItemData() {
             handleEditSave={handleEditSave}
           />
         </div>
-        <div className={style.break_line} />
-        <div className={style.user_data}>
+        <div className={styles.break_line} />
+        <div className={styles.user_data}>
           <FormInput
             id='description'
             type='text'
@@ -205,15 +275,17 @@ function EditItemData() {
             onChange={handleInputChange}
           />
           <FormSelect
+            value={selectedCategory}
             label='Category'
             id='category'
             onChange={(_, newValue) => {
-            handleSelectChange('categoryId', newValue?.subcategoryId || 'Other');
-          }}
+              handleSelectChange('categoryId', newValue?.subcategoryId || 'Other');
+            }}
             options={subcategories}
             disabled={!edit}
           />
-          {/* <FormSelect
+          <FormSelect
+            value={selectedCondition}
             label={'Condition'}
             id={'condition'}
             onChange={(_, newValue) => {
@@ -224,10 +296,19 @@ function EditItemData() {
               value: c,
               label: prepareCategoryText(c),
             }))}
-          /> */}
-          {/* <FromSelectSearch<{
+            disabled={!edit}
+          />
+          <FromSelectSearch<{
             region: string;
           }>
+            value={
+              updatedItem?.location?.region
+                ? {
+                    region: updatedItem.location.region,
+                    label: updatedItem.location.region,
+                  }
+                : null
+            }
             label={'Region'}
             id={'region'}
             onChange={(_, newValue) => {
@@ -246,10 +327,19 @@ function EditItemData() {
             }
             isLoading={IsLoadingRegions}
             error={Regions?.length === 0 && regionInputValue.length !== 0 ? 'No regions' : ''}
+            disabled={!edit}
           />
           <FromSelectSearch<{
             city: string;
           }>
+            value={
+              updatedItem?.location?.city
+                ? {
+                    city: updatedItem.location.city,
+                    label: updatedItem.location.city,
+                  }
+                : null
+            }
             label={'City'}
             id={'city'}
             onChange={(_, newValue) => {
@@ -257,7 +347,7 @@ function EditItemData() {
               setSelectedCity(newValue);
               setCityInputValue(newValue?.label ?? '');
             }}
-            value={selectedCity}
+            // value={selectedCity}
             inputValue={cityInputValue}
             onInputChange={(_, newInputValue) => setCityInputValue(newInputValue)}
             options={
@@ -268,26 +358,30 @@ function EditItemData() {
                   }))
                 : []
             }
-            disabled={!Regions || Regions?.length === 0}
+            disabled={!Regions || Regions?.length === 0 || !edit}
             error={Cities?.length === 0 && cityInputValue.length !== 0 ? 'No cities' : ''}
-          /> */}
+          />
 
-          {/* <div className={styles.item_option_block}>
-            <FormCheckBox
-              label={'Free'}
-              id={'is_free'}
-              name={'is_free'}
-              checked={formData.is_free}
-              onChange={(_, checked) => handleCheckboxChange('is_free', checked)}
-            />
-            <FormCheckBox
-              label={'Published'}
-              id={'published'}
-              name={'published'}
-              checked={formData.published}
-              onChange={(_, checked) => handleCheckboxChange('published', checked)}
-            />
-          </div> */}
+          {updatedItem && (
+            <div className={styles.item_option_block}>
+              <FormCheckBox
+                label={'Free'}
+                id={'is_free'}
+                name={'is_free'}
+                checked={updatedItem.is_free}
+                onChange={(_, checked) => handleCheckboxChange('is_free', checked)}
+                disabled={!edit}
+              />
+              <FormCheckBox
+                label={'Published'}
+                id={'published'}
+                name={'published'}
+                checked={updatedItem.published}
+                onChange={(_, checked) => handleCheckboxChange('published', checked)}
+                disabled={!edit}
+              />
+            </div>
+          )}
         </div>
         <FormError error={error} />
       </form>

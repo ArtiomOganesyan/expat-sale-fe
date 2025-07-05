@@ -8,11 +8,13 @@ type FormSelectProps<TOption> = {
   onChange: (e: React.SyntheticEvent<Element, Event>, newValue: (TOption & { label: string; groupBy?: string }) | null) => void;
   options: (TOption & { label: string; groupBy?: string })[];
   sx?: any;
+  value?: (TOption & { label: string; groupBy?: string }) | null;
 };
 
-function FormSelect<TOption>({ label, id, onChange, disabled, options, sx, }: FormSelectProps<TOption>) {
+function FormSelect<TOption>({ label, id, onChange, disabled, options, sx, value }: FormSelectProps<TOption>) {
   return (
     <Autocomplete
+      value={value || null}
       disablePortal
       id={id}
       onChange={onChange}

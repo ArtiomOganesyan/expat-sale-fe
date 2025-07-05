@@ -130,3 +130,10 @@
 .phone_data > :nth-child(2) {
   width: 25%;
 }
+
+.item_option_block {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}

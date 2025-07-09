@@ -11,6 +11,8 @@ const LoginForm = lazy(() => import('../features/auth/ui/LoginForm'));
 const RegisterForm = lazy(() => import('../features/auth/ui/RegisterForm'));
 const Auth = lazy(() => import('../pages/Auth/Auth'));
 const ProfilePage = lazy(() => import('../pages/Profile/ProfilePage'));
+const UserItemsList = lazy(() => import('../pages/UserItemsList/UserItemsList'));
+const UserItemEdit = lazy(() => import('../pages/UserItemEdit/UserItemEdit'));
 
 function AppRouter() {
   return (
@@ -58,6 +60,14 @@ function AppRouter() {
           <Route
             path='item/new'
             element={<NewItem />}
+          />
+          <Route
+            path='profile/userItemsList'
+            element={<UserItemsList />}
+          />
+          <Route
+            path='profile/userItemsList/:id'
+            element={<UserItemEdit />}
           />
         </Route>
       </Routes>

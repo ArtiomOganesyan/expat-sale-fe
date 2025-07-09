@@ -1,0 +1,139 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 90vw;
+  padding: 1rem;
+  margin: 1rem auto;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.container > form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.container > form input:disabled {
+  border: 1px solid var(--color-invisible);
+  border-bottom: 1px solid var(--color-info);
+  border-radius: 0px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.image_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.image_container > div {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--color-info);
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.header > div > img {
+  border-radius: 16px;
+  object-fit: cover;
+  width: 150px;
+  height: 150px;
+}
+.header_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--color-accent);
+  border-radius: 8px;
+}
+
+.actions {
+  display: flex;
+  width: 60%;
+  justify-content: space-around;
+}
+
+.actions > button {
+  padding: 0.5rem;
+  transition: all 0.3s;
+  width: 30%;
+  border-radius: 8px;
+}
+
+.action_save {
+  background-color: var(--color-success);
+  color: var(--color-bg-main);
+}
+
+.action_save:disabled {
+  background-color: var(--color-invisible);
+  color: var(--color-success);
+}
+
+.action_logout {
+  background-color: var(--color-error);
+  color: var(--color-bg-main);
+}
+
+.header > div > input {
+  padding: 0.75rem;
+}
+
+.break_line {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+
+.user_data {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.user_data > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.phone_data {
+  /* flex-direction: column; */
+  flex-wrap: wrap;
+}
+
+.phone_data > p {
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.phone_data > div {
+  width: 70%;
+}
+
+.phone_data > :nth-child(2) {
+  width: 25%;
+}
+
+.item_option_block {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}

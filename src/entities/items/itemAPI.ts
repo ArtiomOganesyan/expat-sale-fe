@@ -1,3 +1,4 @@
+import TAG_TYPES from '../../store/constants/TagTypes';
 import { listingApi } from './api';
 import { EditItem, Item } from './items.type';
 
@@ -7,6 +8,7 @@ export const itemAPI = listingApi.injectEndpoints({
       query: ({ itemId }) => {
         return `/items/${itemId}`;
       },
+      providesTags: (result, error, { itemId }) => [{ type: TAG_TYPES.ITEM_BY_ID, id: itemId }],
     }),
     createItem: builder.mutation<any, any>({
       query: body => ({
@@ -30,6 +32,23 @@ export const itemAPI = listingApi.injectEndpoints({
         };
       },
     }),
+    updateImageToItem: builder.mutation<any, { id: string; formData: FormData }>({
+      query: ({ id, formData }) => ({
+        url: `/media/item/${id}`,
+        headers: {},
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      }),
+    }),
+    deleteImageInItem: builder.mutation<any, any>({
+      query: ({ imageId }) => {
+        return {
+          url: `/media/item/${imageId}`,
+          method: 'DELETE',
+        };
+      },
+    }),
     updateItem: builder.mutation<EditItem, { id: string; data: Partial<EditItem> }>({
       query: ({ id, data }) => ({
         url: `/items/${id}`,
@@ -37,8 +56,16 @@ export const itemAPI = listingApi.injectEndpoints({
         body: data,
         credentials: 'include',
       }),
+      invalidatesTags: (result, error, { id }) => [{ type: TAG_TYPES.ITEM_BY_ID, id }],
     }),
   }),
 });
 
-export const { useCreateItemMutation, useAddImageToItemMutation, useUpdateItemMutation, useGetItemByIdQuery } = itemAPI;
+export const {
+  useCreateItemMutation,
+  useAddImageToItemMutation,
+  useUpdateImageToItemMutation,
+  useUpdateItemMutation,
+  useDeleteImageInItemMutation,
+  useGetItemByIdQuery,
+} = itemAPI;

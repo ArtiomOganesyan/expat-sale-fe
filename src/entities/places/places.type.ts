@@ -1,3 +1,8 @@
+export interface Country{
+    country: string;
+    regions: string[];
+}
+
 export interface Region{
     cities: string[];
     country_code: string;

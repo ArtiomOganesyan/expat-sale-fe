@@ -32,6 +32,7 @@ import { EditCurrencyBlock } from './ui/EditCurrencyBlock/EditCurrencyBlock';
 import { EditCategoryBlock } from './ui/EditCategoryBlock/EditCategoryBlock';
 import { EditConditionBlock } from './ui/EditConditionBlock/EditConditionBlock';
 import { EditLocationBlockBlock } from './ui/EditLocationBlock/EditLocationBlock';
+import { EditDistanceBlock } from './ui/EditDistanceBlock/EditDistanceBlock';
 
 function EditItemData() {
   const params = useParams();
@@ -184,6 +185,12 @@ function EditItemData() {
             handleLocationChange={handleLocationChange}
             edit={edit}
           />
+
+          {updatedItem && <EditDistanceBlock
+            updatedItem={updatedItem}
+            handleLocationChange={handleLocationChange}
+            edit={edit}
+          />}
 
           {updatedItem && (
             <div className={styles.item_option_block}>

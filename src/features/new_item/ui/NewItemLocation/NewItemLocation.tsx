@@ -1,46 +1,35 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import styles from './EditLocationBlock.module.css';
-import { EditItem } from '../../../../entities/items/items.type';
 import FromSelectSearch from '../../../../shared/components/FormSelectSearch/FromSelectSearch';
+import { useGetCountriesQuery, useGetRegionsQuery } from '../../../../entities/places/placesAPI';
 import { useDebouncedValue } from '../../../../shared/hooks/useDebouncedValue';
-import { useGetCitiesQuery, useGetCountriesQuery, useGetRegionsQuery } from '../../../../entities/places/placesAPI';
 
-interface EditLocationBlockProps {
+interface NewItemLocationProps {
   className?: string;
-  updatedItem?: EditItem;
   handleLocationChange: (parentKey: string, childKey: string, value: any) => void;
-  edit: boolean;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export const EditLocationBlockBlock: FC<EditLocationBlockProps> = ({ updatedItem, handleLocationChange, edit }) => {
+export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLocationChange, setFormData }) => {
   const [countryInputValue, setCountryInputValue] = useState<string>('');
   const [regionInputValue, setRegionInputValue] = useState<string>('');
   const [regionsList, setRegionsList] = useState<{ region: string; label: string }[]>();
+  const [selectedRegion, setSelectedRegion] = useState<{ region: string; label: string; groupBy?: string } | null>(null);
   const [citiesList, setCitiesList] = useState<{ city: string; label: string }[]>();
+  const [selectedCity, setSelectedCity] = useState<{ city: string; label: string; groupBy?: string } | null>(null);
   const [cityInputValue, setCityInputValue] = useState<string>('');
   const debouncedCountryInputValue = useDebouncedValue(countryInputValue, 1000);
   const debouncedRegionInputValue = useDebouncedValue(regionInputValue, 1000);
-  const debouncedCityInputValue = useDebouncedValue(cityInputValue, 1000);
   const skipCountriesQuery = debouncedCountryInputValue.length < 3;
   const skipRegionsQuery = debouncedRegionInputValue.length < 3;
-  const skipCitiesQuery = debouncedCityInputValue.length < 3;
 
   const {
     data: Countries,
     isLoading: IsLoadingCountries,
-    error: CountriesError,
   } = useGetCountriesQuery({ query: debouncedCountryInputValue }, { skip: skipCountriesQuery });
   const {
     data: Regions,
     isLoading: IsLoadingRegions,
-    error: RegionsError,
   } = useGetRegionsQuery({ query: debouncedRegionInputValue }, { skip: skipRegionsQuery });
-  const {
-    data: Cities,
-    isLoading: IsLoadingCities,
-    error: CitiesError,
-  } = useGetCitiesQuery({ query: debouncedCityInputValue }, { skip: skipCitiesQuery });
-
   useEffect(() => {
     const countryRegions = Countries?.reduce<{ region: string; label: string }[]>((acc, item) => {
       const regionsOptions = item.regions.map(region => ({
@@ -52,78 +41,46 @@ export const EditLocationBlockBlock: FC<EditLocationBlockProps> = ({ updatedItem
     }, []);
     setRegionsList(countryRegions);
     setRegionInputValue('');
+    setSelectedRegion(null);
   }, [Countries]);
 
   useEffect(() => {
-    if (!Regions || !regionInputValue) {
-      setCitiesList([]);
-      return;
-    }
-
-    const matchedRegion = Regions.find(region => region.region.toLowerCase() === regionInputValue.toLowerCase());
-
+    const matchedRegion = Regions?.find(r => r.region === selectedRegion?.region);
     if (matchedRegion) {
-      const cityOptions = matchedRegion.cities.map(city => ({
-        city,
-        label: city,
-      }));
-      setCitiesList(cityOptions);
+      const filteredCities = matchedRegion.cities
+        .filter(city => city.toLowerCase().includes(cityInputValue.toLowerCase()))
+        .map(city => ({
+          city: city,
+          label: city,
+        }));
+      setCitiesList(filteredCities);
     } else {
       setCitiesList([]);
     }
+  }, [selectedRegion, cityInputValue, Regions]);
 
-    setCityInputValue('');
-  }, [Regions, regionInputValue]);
-
-  const filteredRegions = useMemo(() => {
-    if (!Regions || regionInputValue.length < 1) return [];
-
-    return Regions.map(r => r.region)
-      .filter(region => region.toLowerCase().includes(regionInputValue.toLowerCase()))
-      .map(region => ({
-        region,
-        label: region,
-      }));
-  }, [Regions, regionInputValue]);
-
-  const filteredCities = useMemo(() => {
-    if (!Regions || regionInputValue.length < 3 || cityInputValue.length < 1) return [];
-
-    const matchedRegion = Regions.find(region => region.region.toLowerCase() === regionInputValue.toLowerCase());
-
-    if (!matchedRegion) return [];
-
-    return matchedRegion.cities
-      .filter(city => city.toLowerCase().includes(cityInputValue.toLowerCase()))
-      .map(city => ({
-        city,
-        label: city,
-      }));
-  }, [Regions, regionInputValue, cityInputValue]);
+  const filteredRegionsList = useMemo(() => {
+    if (!regionsList) return [];
+    return regionsList.filter(region => region.label.toLowerCase().includes(regionInputValue.toLowerCase()));
+  }, [regionsList, regionInputValue]);
 
   const handleChangeCountry = (value: string) => {
     setCountryInputValue(value);
     setRegionsList([]);
     setRegionInputValue('');
+    setFormData((prev: any) => ({ ...prev, location: { ...prev.location, country: value, region: '' } }));
   };
   const handleChangeRegions = (value: string) => {
     setRegionInputValue(value);
     setCitiesList([]);
     setCityInputValue('');
+    setFormData((prev: any) => ({ ...prev, location: { ...prev.location, region: value, city: '' } }));
   };
   return (
     <React.Fragment>
       <FromSelectSearch<{
         country: string;
       }>
-        value={
-          updatedItem?.location?.country
-            ? {
-                country: updatedItem.location.country,
-                label: updatedItem.location.country,
-              }
-            : null
-        }
         label={'Country'}
         id={'country'}
         onChange={(_, newValue) => {
@@ -141,55 +98,53 @@ export const EditLocationBlockBlock: FC<EditLocationBlockProps> = ({ updatedItem
               }))
             : []
         }
-        disabled={!edit}
+        // disabled={IsLoadingRegions}
         isLoading={IsLoadingCountries}
         error={Countries?.length === 0 && countryInputValue.length !== 0 ? 'No countries' : ''}
       />
       <FromSelectSearch<{
         region: string;
       }>
-        value={
-          updatedItem?.location?.region
-            ? {
-                region: updatedItem.location.region,
-                label: updatedItem.location.region,
-              }
-            : null
-        }
         label={'Region'}
         id={'region'}
         onChange={(_, newValue) => {
+          setSelectedRegion(newValue || null);
           handleLocationChange('location', 'region', newValue?.region);
         }}
         inputValue={regionInputValue}
         onInputChange={(_, newInputValue) => handleChangeRegions(newInputValue)}
-        options={filteredRegions}
-        error={regionsList?.length === 0 && regionInputValue.length !== 0 ? 'No regions' : ''}
-        disabled={!edit || Countries?.length === 0}
+        options={filteredRegionsList.map(item => ({
+          id: item.region,
+          region: item.region,
+          label: item.label,
+        }))}
+        disabled={!Countries || Countries?.length === 0}
+        isLoading={IsLoadingRegions}
+        error={Regions?.length === 0 && regionInputValue.length !== 0 ? 'No regions' : ''}
       />
       <FromSelectSearch<{
         city: string;
       }>
-        value={
-          updatedItem?.location?.city
-            ? {
-                city: updatedItem.location.city,
-                label: updatedItem.location.city,
-              }
-            : null
-        }
         label={'City'}
         id={'city'}
         onChange={(_, newValue) => {
           handleLocationChange('location', 'city', newValue?.city);
+          setSelectedCity(newValue || null);
           setCityInputValue(newValue?.label ?? '');
         }}
-        // value={selectedCity}
+        value={selectedCity}
         inputValue={cityInputValue}
         onInputChange={(_, newInputValue) => setCityInputValue(newInputValue)}
-        options={filteredCities}
-        disabled={!Regions || Regions?.length === 0 || !edit}
-        error={Cities?.length === 0 && cityInputValue.length !== 0 ? 'No cities' : ''}
+        options={
+          citiesList
+            ? citiesList.map((item: any) => ({
+                city: item.city,
+                label: item.label,
+              }))
+            : []
+        }
+        disabled={!selectedRegion}
+        error={cityInputValue.length !== 0 ? 'No cities' : ''}
       />
     </React.Fragment>
   );

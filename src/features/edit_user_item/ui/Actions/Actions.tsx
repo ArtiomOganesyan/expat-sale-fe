@@ -1,4 +1,4 @@
-import style from "../EditItemForm.module.css"
+import style from "../../EditItemForm.module.css"
 
 function Actions({
   edit,

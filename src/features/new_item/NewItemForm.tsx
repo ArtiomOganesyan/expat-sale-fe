@@ -1,19 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { CATEGORIES, categoryToSubcategoriesMapping, CONDITION, SUBCATEGORIES } from '../../utils/constants/Item';
+import { useState } from 'react';
+import { CATEGORIES } from '../../utils/constants/Item';
 import { useAddImageToItemMutation, useCreateItemMutation } from '../../entities/items/itemAPI';
 
 import styles from './NewItem.module.css';
-import { prepareCategoryText } from '../../utils/prepareCategoryText';
 import FormInput from '../../shared/components/FormInput/FormInput';
-import FormSelect from '../../shared/components/FormSelect/FormSelect';
 import FormCheckBox from '../../shared/components/FormCheck/FormCheckBox';
 import { formChangeHandler } from './utils/formChangeHandler';
-import { useAppSelector } from '../../hooks/hooks';
-import { getRates } from '../../entities/currency/currencySlice';
 import FormFiles from '../../shared/components/FormFiles/FormFiles';
 import Button from '@mui/material/Button';
-import { getCategories } from '../../entities/categories/categoriesSlice';
-import { getSelectedOption } from '../../utils/getSelectedOption';
 import { NewItemLocation } from './ui/NewItemLocation/NewItemLocation';
 import { NewItemCondition } from './ui/NewItemCondition/NewItemCondition';
 import { NewItemCategory } from './ui/NewItemCategory/NewItemCategory';

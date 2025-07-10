@@ -1,32 +1,17 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useAppSelector } from '../../hooks/hooks';
-import { useNavigate, useParams } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import styles from './EditItemForm.module.css';
 import FormInput from '../../shared/components/FormInput/FormInput';
-import ImageContainer from './ui/ImageContainer/ImageContainer';
 import Actions from './ui/Actions/Actions';
 import FormError from '../../shared/components/FormError/FormError';
-import { IconButton, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import {
-  useDeleteImageInItemMutation,
   useGetItemByIdQuery,
-  useUpdateImageToItemMutation,
   useUpdateItemMutation,
 } from '../../entities/items/itemAPI';
-import { EditItem, Item } from '../../entities/items/items.type';
+import { EditItem } from '../../entities/items/items.type';
 import FormCheckBox from '../../shared/components/FormCheck/FormCheckBox';
-import FormSelect from '../../shared/components/FormSelect/FormSelect';
-import { getCategories } from '../../entities/categories/categoriesSlice';
-import { prepareCategoryText } from '../../utils/prepareCategoryText';
 import { formChangeHandler } from './utils/formChangeHandler';
-import { CONDITION } from '../../utils/constants/Item';
-import FromSelectSearch from '../../shared/components/FormSelectSearch/FromSelectSearch';
-import { useGetCitiesQuery, useGetCountriesQuery, useGetRegionsQuery } from '../../entities/places/placesAPI';
-import { useDebouncedValue } from '../../shared/hooks/useDebouncedValue';
-import { getRates } from '../../entities/currency/currencySlice';
-import { getSelectedOption } from '../../utils/getSelectedOption';
-
-import { GradientCircularProgress } from '../../widget/Loading/LoadingCircle';
 import { EditImageBlock } from './ui/EditImageBlock/EditImageBlock';
 import { EditCurrencyBlock } from './ui/EditCurrencyBlock/EditCurrencyBlock';
 import { EditCategoryBlock } from './ui/EditCategoryBlock/EditCategoryBlock';

@@ -23,7 +23,7 @@ export const itemsAPI = listingApi.injectEndpoints({
         const params = new URLSearchParams();
 
         if (offset !== undefined) params.set('offset', `${offset}`);
-        if (limit) params.set('limit', `${limit}`);
+        if (limit !== undefined) params.set('limit', `${limit}`);
         if (categoryId) params.set('categoryId', categoryId);
         if (isFree) params.set('isFree', `${isFree ? 'true' : 'false'}`);
         if (isNew) params.set('isNew', `${isNew ? 'true' : 'false'}`);

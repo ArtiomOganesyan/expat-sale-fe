@@ -1,5 +1,5 @@
 import { listingApi } from './api';
-import { EditItem, Item } from './items.type';
+import { type EditItem, type Item } from './items.type';
 
 export const itemAPI = listingApi.injectEndpoints({
   endpoints: builder => ({

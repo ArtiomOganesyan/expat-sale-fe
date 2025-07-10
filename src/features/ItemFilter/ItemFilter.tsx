@@ -2,12 +2,13 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useGetParentCategoriesQuery } from '../../entities/categories/categoriesAPI';
 import { useLocation, useNavigate } from 'react-router';
 import MainFilter from './components/MainFilter';
 import PriceFilter from './components/PriceFilter';
 import ConditionFilter from './components/ConditionFilter';
 import LocationFilter from './components/LocationFilter';
+import { getCategories } from '../../entities/categories/categoriesSlice';
+import { useAppSelector } from '../../hooks/hooks';
 
 function ItemFilter() {
   const [filters, setFilters] = useState<Record<string, any>>({});
@@ -15,7 +16,7 @@ function ItemFilter() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { data: categories, isLoading } = useGetParentCategoriesQuery();
+  const categories = useAppSelector(getCategories);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

@@ -16,8 +16,6 @@ function PriceFilter() {
     skip: !categoryId,
   });
 
-  console.log('Max price query result:', data);
-
   useEffect(() => {
     if (data && data.maxPrice) {
       setValue([0, data.maxPrice]);
@@ -28,8 +26,6 @@ function PriceFilter() {
 
   const handleChange = (event: Event, newValue: number[]) => {
     setValue(newValue);
-
-    console.log(`Selected price range: ${newValue[0]} - ${newValue[1]}`);
   };
 
   if (!categoryId) {

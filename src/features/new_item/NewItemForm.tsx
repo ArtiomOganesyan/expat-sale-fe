@@ -14,16 +14,24 @@ import { getRates } from '../../entities/currency/currencySlice';
 import FormFiles from '../../shared/components/FormFiles/FormFiles';
 import Button from '@mui/material/Button';
 import { getCategories } from '../../entities/categories/categoriesSlice';
-import { useGetCitiesQuery, useGetRegionsQuery } from '../../entities/places/placesAPI';
+import { useGetCitiesQuery, useGetCountriesQuery, useGetRegionsQuery } from '../../entities/places/placesAPI';
 import { useDebouncedValue } from '../../shared/hooks/useDebouncedValue';
+import { useNavigate } from 'react-router';
+import { getSelectedOption } from '../../utils/getSelectedOption';
 
 function NewItemForm() {
+  const navigate = useNavigate();
+  const [countryInputValue, setCountryInputValue] = useState<string>('');
   const [regionInputValue, setRegionInputValue] = useState<string>('');
+  const [regionsList, setRegionsList] = useState<{ region: string; label: string }[]>();
+  const [selectedRegion, setSelectedRegion] = useState<{ region: string; label: string; groupBy?: string } | null>(null);
   const [citiesList, setCitiesList] = useState<{ city: string; label: string }[]>();
   const [selectedCity, setSelectedCity] = useState<{ city: string; label: string; groupBy?: string } | null>(null);
   const [cityInputValue, setCityInputValue] = useState<string>('');
+  const debouncedCountryInputValue = useDebouncedValue(countryInputValue, 1000);
   const debouncedRegionInputValue = useDebouncedValue(regionInputValue, 1000);
   const debouncedCityInputValue = useDebouncedValue(cityInputValue, 1000);
+  const skipCountriesQuery = debouncedCountryInputValue.length < 3;
   const skipRegionsQuery = debouncedRegionInputValue.length < 3;
   const skipCitiesQuery = debouncedCityInputValue.length < 3;
   const [create, createMeta] = useCreateItemMutation();
@@ -32,15 +40,20 @@ function NewItemForm() {
   const currencyRates = useAppSelector(getRates);
   const categories = useAppSelector(getCategories);
   const {
+    data: Countries,
+    isLoading: IsLoadingCountries,
+    error: CountriesError,
+  } = useGetCountriesQuery({ query: debouncedCountryInputValue }, { skip: skipCountriesQuery });
+  const {
     data: Regions,
     isLoading: IsLoadingRegions,
     error: RegionsError,
   } = useGetRegionsQuery({ query: debouncedRegionInputValue }, { skip: skipRegionsQuery });
-  const {
-    data: Cities,
-    isLoading: IsLoadingCities,
-    error: CitiesError,
-  } = useGetCitiesQuery({ query: debouncedCityInputValue }, { skip: skipCitiesQuery });
+  // const {
+  //   data: Cities,
+  //   isLoading: IsLoadingCities,
+  //   error: CitiesError,
+  // } = useGetCitiesQuery({ query: debouncedCityInputValue }, { skip: skipCitiesQuery });
 
   const [formData, setFormData] = useState({
     title: '',
@@ -73,18 +86,18 @@ function NewItemForm() {
       // price: +priceInEUR,
       location: {
         radius: 0,
-        country: '',
+        country: formData.location.country,
         region: formData.location.region,
         city: formData.location.city,
       },
       price: Number(formData.price),
-      currency: 'EUR',
+      currency: formData.currency,
     });
 
     if (result.data) {
       const itemId = result.data.id;
-      console.log('FILES BEFORE UPLOAD:', files);
       const addFilesResult = await addImage({ itemId, files });
+      window.location.assign('/profile/userItemsList');
     }
   };
 
@@ -121,6 +134,20 @@ function NewItemForm() {
   }, [categories]);
 
   useEffect(() => {
+    const countryRegions = Countries?.reduce<{ region: string; label: string }[]>((acc, item) => {
+      const regionsOptions = item.regions.map(region => ({
+        region: region,
+        label: region,
+      }));
+
+      return acc.concat(regionsOptions);
+    }, []);
+    setRegionsList(countryRegions);
+    setRegionInputValue('');
+    setSelectedRegion(null);
+  }, [Countries]);
+
+  useEffect(() => {
     const regionCities = Regions?.reduce<{ city: string; label: string }[]>((acc, item) => {
       const citiesOptions = item.cities.map(city => ({
         city: city,
@@ -134,6 +161,13 @@ function NewItemForm() {
     setSelectedCity(null);
   }, [Regions]);
 
+  const handleChangeCountry = (value: string) => {
+    setCountryInputValue(value);
+    setRegionsList([]);
+    setRegionInputValue('');
+    setFormData(prev => ({ ...prev, location: { ...prev.location, country: value, region: '' } }));
+    // setSelectedCity(null);
+  };
   const handleChangeRegions = (value: string) => {
     setRegionInputValue(value);
     setCitiesList([]);
@@ -178,23 +212,32 @@ function NewItemForm() {
             value={formData.price}
             onChange={handleInputChange}
           />
-          {/* <FormSelect
-            label="Currency"
-            id={"currency"}
+          <FormSelect
+            value={getSelectedOption(
+              currencyRates.map(r => ({
+                value: r.iso,
+                label: r.symbol,
+              })),
+              'value',
+              formData.currency
+            )}
+            label='Currency'
+            id={'currency'}
             onChange={(_, newValue) => {
-              handleSelectChange("currency", newValue?.value || "EUR")
+              handleSelectChange('currency', newValue?.value || 'EUR');
             }}
             options={currencyRates.map(r => ({
-              value: r[0],
-              label: r[0],
+              value: r.iso,
+              label: r.symbol,
             }))}
-          /> */}
+          />
           {/* <div>EUR Price: {getEURPrice(formData.price, formData.currency)}</div> */}
         </div>
         <FormSelect<{
           category: string;
           subcategoryId: string;
         }>
+          value={getSelectedOption(subcategories, 'subcategoryId', formData.categoryId)}
           label={'Category'}
           id={'category'}
           onChange={(_, newValue) => {
@@ -204,6 +247,14 @@ function NewItemForm() {
         />
 
         <FormSelect
+          value={getSelectedOption(
+            Object.values(CONDITION).map(c => ({
+              value: c,
+              label: prepareCategoryText(c),
+            })),
+            'value',
+            formData.is_new ? 'new' : 'used'
+          )}
           label={'Condition'}
           id={'condition'}
           onChange={(_, newValue) => {
@@ -214,6 +265,30 @@ function NewItemForm() {
             value: c,
             label: prepareCategoryText(c),
           }))}
+        />
+        <FromSelectSearch<{
+          country: string;
+        }>
+          label={'Country'}
+          id={'country'}
+          onChange={(_, newValue) => {
+            handleLocationChange('location', 'country', newValue?.country);
+            // setRegionInputValue(newValue?.region || '');
+          }}
+          inputValue={countryInputValue}
+          onInputChange={(_, newInputValue) => handleChangeCountry(newInputValue)}
+          options={
+            Countries
+              ? Countries.map((item: any) => ({
+                  id: item.country,
+                  country: item.country,
+                  label: item.country,
+                }))
+              : []
+          }
+          // disabled={IsLoadingRegions}
+          isLoading={IsLoadingCountries}
+          error={Countries?.length === 0 && countryInputValue.length !== 0 ? 'No countries' : ''}
         />
         <FromSelectSearch<{
           region: string;
@@ -227,8 +302,8 @@ function NewItemForm() {
           inputValue={regionInputValue}
           onInputChange={(_, newInputValue) => handleChangeRegions(newInputValue)}
           options={
-            Regions
-              ? Regions.map((item: any) => ({
+            regionsList
+              ? regionsList.map((item: any) => ({
                   id: item.region,
                   region: item.region,
                   label: item.region,
@@ -236,6 +311,7 @@ function NewItemForm() {
               : []
           }
           // disabled={IsLoadingRegions}
+          disabled={!Countries || Countries?.length === 0}
           isLoading={IsLoadingRegions}
           error={Regions?.length === 0 && regionInputValue.length !== 0 ? 'No regions' : ''}
         />
@@ -262,7 +338,7 @@ function NewItemForm() {
           }
           disabled={!Regions || Regions?.length === 0}
           // isLoading={IsLoadingCities}
-          error={Cities?.length === 0 && cityInputValue.length !== 0 ? 'No cities' : ''}
+          error={cityInputValue.length !== 0 ? 'No cities' : ''}
         />
 
         <div className={styles.item_option_block}>

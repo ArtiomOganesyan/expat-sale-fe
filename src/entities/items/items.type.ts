@@ -9,6 +9,8 @@ type Location = {
 
 type Image = {
   public_url: string;
+  id: string;
+  full_path?: string;
 };
 
 export type Item = {

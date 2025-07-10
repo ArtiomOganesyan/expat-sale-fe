@@ -1,7 +1,6 @@
 import Carousel from 'react-material-ui-carousel';
 import { Link } from 'react-router';
 import { type Item } from '../../../entities/items/items.type';
-import styles from './ListingCard.module.css';
 
 interface ListingCardProps {
   item: Item;
@@ -20,7 +19,7 @@ function ListingCard({ item, url }: ListingCardProps) {
         >
           {item.images.map(image => (
             <img
-              key={item.id}
+              key={image.public_url}
               style={{
                 objectFit: 'contain',
                 height: '200px',

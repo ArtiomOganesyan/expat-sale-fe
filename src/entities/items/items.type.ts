@@ -31,6 +31,22 @@ export type Item = {
   category?: CategoryItem;
 };
 
+export interface ItemFilter {
+  offset?: number;
+  limit?: number;
+  categoryId?: string | null;
+  isFree?: boolean | null;
+  title?: string | null;
+  isNew?: boolean | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  country?: string | null;
+  region?: string | null;
+  city?: string | null;
+  radius?: number | null;
+  userId?: string | null;
+}
+
 export interface EditItem {
   location?: Location;
   id?: string;
@@ -45,9 +61,9 @@ export interface EditItem {
   published?: boolean;
   categoryId?: string;
   category?: CategoryItem;
-};
+}
 
-export interface CategoryItem{
+export interface CategoryItem {
   id: string;
   name: string;
   slug: string;

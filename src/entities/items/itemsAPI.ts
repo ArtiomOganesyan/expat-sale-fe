@@ -1,33 +1,73 @@
 import TAG_TYPES from '../../store/constants/TagTypes';
 import { listingApi } from './api';
-import { type Item } from './items.type';
+import { type ItemFilter, type Item } from './items.type';
 
 export const itemsAPI = listingApi.injectEndpoints({
   endpoints: builder => ({
-    getListingMasonry: builder.query<
-      Item[],
-      {
-        offset?: number | undefined;
-        limit?: number | undefined;
-        categoryId?: string | null;
-        isFree?: string | null;
-        title?: string | null;
-      }
-    >({
-      query: ({ offset, limit, categoryId, isFree, title }) => {
+    getListingMasonry: builder.query<Item[], ItemFilter>({
+      query: ({
+        offset,
+        limit,
+        categoryId,
+        title,
+        isFree,
+        isNew,
+        minPrice,
+        maxPrice,
+        country,
+        region,
+        city,
+        radius,
+        userId,
+      }: ItemFilter) => {
         const params = new URLSearchParams();
 
         if (offset !== undefined) params.set('offset', `${offset}`);
         if (limit !== undefined) params.set('limit', `${limit}`);
         if (categoryId) params.set('categoryId', categoryId);
-        if (isFree) params.set('is_free', isFree);
+        if (isFree) params.set('isFree', `${isFree ? 'true' : 'false'}`);
+        if (isNew) params.set('isNew', `${isNew ? 'true' : 'false'}`);
         if (title && title.length > 3) params.set('title', title);
+        if (minPrice) params.set('minPrice', `${minPrice}`);
+        if (maxPrice) params.set('maxPrice', `${maxPrice}`);
+        if (country) params.set('country', country);
+        if (region) params.set('region', region);
+        if (city) params.set('city', city);
+        if (radius) params.set('radius', `${radius}`);
+        if (userId) params.set('userId', userId);
 
         return `/items?${params.toString()}`;
       },
-      providesTags: (_result, _error, { offset, limit, categoryId, isFree, title }) => [
-        { type: TAG_TYPES.LISTING_MASONRY, id: `${limit}-${offset}-${categoryId}-${isFree}-${title}` },
-      ],
+      providesTags: (
+        _result,
+        _error,
+        { offset, limit, categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId }
+      ) => {
+        console.log(
+          `Fetching items with params: ${JSON.stringify({
+            offset,
+            limit,
+            categoryId,
+            title,
+            isFree,
+            isNew,
+            minPrice,
+            maxPrice,
+            country,
+            region,
+            city,
+            radius,
+            userId,
+          })}`
+        );
+
+        return [
+          {
+            type: TAG_TYPES.LISTING_MASONRY,
+            id: `${limit}-${offset}-${categoryId}-${isFree}-${title}-${isNew}-${minPrice}-${maxPrice}-${country}-${region}-${city}-${radius}-${userId}`,
+          },
+        ];
+      },
     }),
     getItemsByUserId: builder.query<any, any>({
       query: ({ user_id }) => `/users/${user_id}/items`,
@@ -70,7 +110,11 @@ export const itemsAPI = listingApi.injectEndpoints({
       }),
       //   invalidatesTags: ["Store", "StoreList"],
     }),
+    getMaxPrice: builder.query<{ maxPrice: number }, string>({
+      query: categoryId => `/items/max-price/${categoryId}`,
+      providesTags: (_result, _error, categoryId) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `max-price-${categoryId}` }],
+    }),
   }),
 });
 
-export const { useGetListingMasonryQuery, useGetItemsByUserIdQuery } = itemsAPI;
+export const { useGetListingMasonryQuery, useGetItemsByUserIdQuery, useGetMaxPriceQuery } = itemsAPI;

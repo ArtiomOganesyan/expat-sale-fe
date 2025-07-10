@@ -1,18 +1,24 @@
-import { Accordion, AccordionDetails, AccordionSummary, Paper, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useGetParentCategoriesQuery } from '../../entities/categories/categoriesAPI';
 import { useLocation, useNavigate } from 'react-router';
+import MainFilter from './components/MainFilter';
+import PriceFilter from './components/PriceFilter';
+import ConditionFilter from './components/ConditionFilter';
+import LocationFilter from './components/LocationFilter';
+import { getCategories } from '../../entities/categories/categoriesSlice';
+import { useAppSelector } from '../../hooks/hooks';
 
 function ItemFilter() {
-  const [filters, setFilters] = useState<any>({});
+  const [filters, setFilters] = useState<Record<string, any>>({});
   const [inputValue, setInputValue] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { data: categories, isLoading } = useGetParentCategoriesQuery();
+  const categories = useAppSelector(getCategories);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === 'title') {
       setInputValue(value);
@@ -45,8 +51,14 @@ function ItemFilter() {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setFilters((prev: any) => ({ ...prev, title: inputValue }));
-    }, 500); // 500ms debounce
+      setFilters((prev: any) => {
+        const state = { ...prev };
+        if (inputValue) {
+          state.title = inputValue;
+        }
+        return state;
+      });
+    }, 500);
 
     return () => clearTimeout(handler);
   }, [inputValue]);
@@ -54,37 +66,20 @@ function ItemFilter() {
   return (
     <Accordion sx={{ width: '100%' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <div
-          onClick={e => e.stopPropagation()}
-          style={{ width: '100%', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '4px' }}
-        >
-          <input
-            id='title'
-            type='text'
-            placeholder='What are you looking for?'
-            name='title'
-            value={inputValue}
-            onChange={handleChange}
-          />
-          <select
-            id='categoryId'
-            name='categoryId'
-            onChange={handleChange}
-            value={filters.categoryId}
-          >
-            <option
-              value=''
-              selected
-              disabled
-            >
-              Category filter
-            </option>
-            {categories?.map(category => <option value={category.id}>{category.name}</option>)}
-          </select>
-        </div>
+        <MainFilter
+          inputValue={inputValue}
+          filters={filters}
+          categories={categories}
+          handleChange={handleChange}
+        />
       </AccordionSummary>
       <AccordionDetails>
-        <Typography>Filter contents go here</Typography>
+        <PriceFilter />
+        <ConditionFilter
+          filters={filters}
+          handleChange={handleChange}
+        />
+        <LocationFilter />
       </AccordionDetails>
     </Accordion>
   );

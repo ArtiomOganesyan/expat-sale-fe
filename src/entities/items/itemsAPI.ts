@@ -22,11 +22,6 @@ export const itemsAPI = listingApi.injectEndpoints({
       }: ItemFilter) => {
         const params = new URLSearchParams();
 
-        console.log(params.get('isFree'));
-        console.log(isFree);
-        console.log(params.get('isNew'));
-        console.log(isNew);
-
         if (offset !== undefined) params.set('offset', `${offset}`);
         if (limit !== undefined) params.set('limit', `${limit}`);
         if (categoryId) params.set('categoryId', categoryId);
@@ -41,12 +36,6 @@ export const itemsAPI = listingApi.injectEndpoints({
         if (radius) params.set('radius', `${radius}`);
         if (userId) params.set('userId', userId);
 
-        const call = params.toString();
-
-        console.log(call);
-
-        console.log(call);
-
         return `/items?${params.toString()}`;
       },
       providesTags: (
@@ -54,24 +43,6 @@ export const itemsAPI = listingApi.injectEndpoints({
         _error,
         { offset, limit, categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId }
       ) => {
-        console.log(
-          `Fetching items with params: ${JSON.stringify({
-            offset,
-            limit,
-            categoryId,
-            title,
-            isFree,
-            isNew,
-            minPrice,
-            maxPrice,
-            country,
-            region,
-            city,
-            radius,
-            userId,
-          })}`
-        );
-
         return [
           {
             type: TAG_TYPES.LISTING_MASONRY,

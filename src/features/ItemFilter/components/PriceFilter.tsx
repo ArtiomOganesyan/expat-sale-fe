@@ -22,7 +22,6 @@ function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
     skip: !categoryId,
   });
 
-  // Debounced function to update filters
   const debouncedPriceChange = useCallback(
     (() => {
       let timeoutId: number;
@@ -36,14 +35,12 @@ function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
     [onPriceChange]
   );
 
-  // Initialize from URL params
   useEffect(() => {
     const minPrice = filters.minPrice ? parseInt(filters.minPrice) : 0;
     const maxPrice = filters.maxPrice ? parseInt(filters.maxPrice) : data?.maxPrice && data.maxPrice > 0 ? data.maxPrice : 1000;
     setValue([minPrice, maxPrice]);
   }, [filters.minPrice, filters.maxPrice, data?.maxPrice]);
 
-  // Update when data changes
   useEffect(() => {
     if (data && data.maxPrice && data.maxPrice > 0) {
       const currentMax = filters.maxPrice ? parseInt(filters.maxPrice) : data.maxPrice;

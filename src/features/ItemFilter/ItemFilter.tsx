@@ -72,8 +72,6 @@ function ItemFilter() {
     return () => clearTimeout(handler);
   }, [inputValue]);
 
-  console.log(filters);
-
   return (
     <Accordion sx={{ width: '100%' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>

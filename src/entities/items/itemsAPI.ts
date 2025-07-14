@@ -43,24 +43,6 @@ export const itemsAPI = listingApi.injectEndpoints({
         _error,
         { offset, limit, categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId }
       ) => {
-        console.log(
-          `Fetching items with params: ${JSON.stringify({
-            offset,
-            limit,
-            categoryId,
-            title,
-            isFree,
-            isNew,
-            minPrice,
-            maxPrice,
-            country,
-            region,
-            city,
-            radius,
-            userId,
-          })}`
-        );
-
         return [
           {
             type: TAG_TYPES.LISTING_MASONRY,

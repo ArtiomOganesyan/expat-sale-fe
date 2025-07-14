@@ -8,6 +8,7 @@ function ListingMasonry() {
   const searchParams = new URLSearchParams(location.search);
   const categoryId = searchParams.get('categoryId');
   const title = searchParams.get('title');
+  const isFree = searchParams.get('isFree');
   const isNew = searchParams.get('isNew');
   const minPrice = searchParams.get('minPrice');
   const maxPrice = searchParams.get('maxPrice');
@@ -16,8 +17,6 @@ function ListingMasonry() {
   const city = searchParams.get('city');
   const radius = searchParams.get('radius');
   const userId = searchParams.get('userId');
-
-  const isFree = searchParams.get('is_free');
 
   const { data, isError, error, isLoading, isFetching } = useGetListingMasonryQuery({
     limit: 10,

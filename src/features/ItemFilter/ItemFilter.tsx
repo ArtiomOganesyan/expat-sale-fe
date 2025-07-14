@@ -1,9 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useLocation, useNavigate } from 'react-router';
 import MainFilter from './components/MainFilter';
+import CategoryFilter from './components/CategoryFilter';
 import PriceFilter from './components/PriceFilter';
 import ConditionFilter from './components/ConditionFilter';
 import LocationFilter from './components/LocationFilter';
@@ -18,13 +19,21 @@ function ItemFilter() {
 
   const categories = useAppSelector(getCategories);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     if (name === 'title') {
       setInputValue(value);
     } else {
       setFilters((prev: any) => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handlePriceChange = (minPrice: number, maxPrice: number) => {
+    setFilters((prev: any) => ({
+      ...prev,
+      minPrice: minPrice.toString(),
+      maxPrice: maxPrice.toString(),
+    }));
   };
 
   useEffect(() => {
@@ -63,23 +72,33 @@ function ItemFilter() {
     return () => clearTimeout(handler);
   }, [inputValue]);
 
+  console.log(filters);
+
   return (
     <Accordion sx={{ width: '100%' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <MainFilter
           inputValue={inputValue}
-          filters={filters}
-          categories={categories}
           handleChange={handleChange}
         />
       </AccordionSummary>
       <AccordionDetails>
-        <PriceFilter />
-        <ConditionFilter
-          filters={filters}
-          handleChange={handleChange}
-        />
-        <LocationFilter />
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <CategoryFilter
+            filters={filters}
+            categories={categories}
+            handleChange={handleChange}
+          />
+          <PriceFilter
+            filters={filters}
+            onPriceChange={handlePriceChange}
+          />
+          <ConditionFilter
+            filters={filters}
+            handleChange={handleChange}
+          />
+          <LocationFilter />
+        </Box>
       </AccordionDetails>
     </Accordion>
   );

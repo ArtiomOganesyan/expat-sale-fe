@@ -1,12 +1,27 @@
 import { Outlet } from 'react-router';
 import ItemFilter from '../../features/ItemFilter/ItemFilter';
+import { Box } from '@mui/material';
 
 function Listing() {
   return (
-    <div>
-      <div style={{ margin: '1rem' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0rem',
+        marginBottom: '5rem',
+      }}
+    >
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          paddingBottom: 1,
+        }}
+      >
         <ItemFilter />
-      </div>
+      </Box>
       <Outlet />
     </div>
   );

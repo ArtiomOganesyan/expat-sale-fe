@@ -13,6 +13,7 @@ const Auth = lazy(() => import('../pages/Auth/Auth'));
 const ProfilePage = lazy(() => import('../pages/Profile/ProfilePage'));
 const UserItemsList = lazy(() => import('../pages/UserItemsList/UserItemsList'));
 const UserItemEdit = lazy(() => import('../pages/UserItemEdit/UserItemEdit'));
+const SettingsPage = lazy(() => import('../pages/Settings/SettingsPage'))
 
 function AppRouter() {
   return (
@@ -51,6 +52,11 @@ function AppRouter() {
             element={<RegisterForm />}
           />
         </Route>
+            
+            <Route
+            path='settings'
+            element={<SettingsPage />}
+          />
 
         <Route element={<PrivateRoute />}>
           <Route

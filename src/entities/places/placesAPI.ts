@@ -1,6 +1,6 @@
 import TAG_TYPES from '../../store/constants/TagTypes';
 import { placesApi } from './api';
-import { City, Country, Region } from './places.type';
+import type { City, Country, Region } from './places.type';
 
 export const placesForItemsAPI = placesApi.injectEndpoints({
   endpoints: builder => ({

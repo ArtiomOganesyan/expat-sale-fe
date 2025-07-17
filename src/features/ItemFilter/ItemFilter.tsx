@@ -28,6 +28,11 @@ function ItemFilter() {
     }
   };
 
+  const handleLocationChange = (name: string, value: string) => {
+    console.log({ name, value });
+    setFilters((prev: any) => ({ ...prev, [name]: value }));
+  };
+
   const handlePriceChange = (minPrice: number, maxPrice: number) => {
     setFilters((prev: any) => ({
       ...prev,
@@ -95,7 +100,10 @@ function ItemFilter() {
             filters={filters}
             handleChange={handleChange}
           />
-          <LocationFilter />
+          <LocationFilter
+            filters={filters}
+            handleLocationChange={handleLocationChange}
+          />
         </Box>
       </AccordionDetails>
     </Accordion>

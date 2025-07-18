@@ -1,0 +1,7 @@
+.container {
+  margin: 3rem 1rem;
+}
+
+.container > h2 {
+  padding: 1rem;
+}

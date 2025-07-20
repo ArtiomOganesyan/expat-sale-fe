@@ -47,7 +47,6 @@ function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
   }, [filters.minPrice, filters.maxPrice, data?.maxPrice]);
 
   useEffect(() => {
-    console.log(data);
     if (data && data.maxPrice && data.maxPrice > 0) {
       const currentMax = filters.maxPrice ? parseInt(filters.maxPrice) : data.maxPrice;
       setValue([value[0], Math.min(currentMax, data.maxPrice)]);

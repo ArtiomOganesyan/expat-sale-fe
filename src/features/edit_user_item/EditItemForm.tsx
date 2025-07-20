@@ -5,10 +5,7 @@ import FormInput from '../../shared/components/FormInput/FormInput';
 import Actions from './ui/Actions/Actions';
 import FormError from '../../shared/components/FormError/FormError';
 import { Paper } from '@mui/material';
-import {
-  useGetItemByIdQuery,
-  useUpdateItemMutation,
-} from '../../entities/items/itemAPI';
+import { useGetItemByIdQuery, useUpdateItemMutation } from '../../entities/items/itemAPI';
 import { EditItem } from '../../entities/items/items.type';
 import FormCheckBox from '../../shared/components/FormCheck/FormCheckBox';
 import { formChangeHandler } from './utils/formChangeHandler';
@@ -81,7 +78,6 @@ function EditItemData() {
     delete data.updated_at;
     // delete data.image;
     // delete data.role;
-    console.log(data);
 
     if (item) {
       updateItemMutation({ id: item?.id, data });
@@ -171,11 +167,13 @@ function EditItemData() {
             edit={edit}
           />
 
-          {updatedItem && <EditDistanceBlock
-            updatedItem={updatedItem}
-            handleLocationChange={handleLocationChange}
-            edit={edit}
-          />}
+          {updatedItem && (
+            <EditDistanceBlock
+              updatedItem={updatedItem}
+              handleLocationChange={handleLocationChange}
+              edit={edit}
+            />
+          )}
 
           {updatedItem && (
             <div className={styles.item_option_block}>

@@ -29,7 +29,6 @@ function ItemFilter() {
   };
 
   const handleLocationChange = (name: string, value: string) => {
-    console.log({ name, value });
     setFilters((prev: any) => ({ ...prev, [name]: value }));
   };
 

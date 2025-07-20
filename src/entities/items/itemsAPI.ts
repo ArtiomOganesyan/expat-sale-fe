@@ -92,9 +92,10 @@ export const itemsAPI = listingApi.injectEndpoints({
       }),
       //   invalidatesTags: ["Store", "StoreList"],
     }),
-    getMaxPrice: builder.query<{ maxPrice: number }, string>({
-      query: categoryId => `/items/max-price/${categoryId}`,
+    getMaxPrice: builder.query<{ maxPrice: number }, { categoryId: string }>({
+      query: ({ categoryId }) => `/items/max-price/${categoryId}`,
       providesTags: (_result, _error, categoryId) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `max-price-${categoryId}` }],
+      transformResponse: (response: { max_price: number }) => ({ maxPrice: response.max_price }),
     }),
   }),
 });

@@ -15,12 +15,17 @@ type PriceFilterProps = {
 };
 
 function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
-  const [value, setValue] = useState<[number, number]>([0, 1000]);
+  const [value, setValue] = useState<[number, number]>([0, 0]);
   const { search } = useLocation();
   const categoryId = new URLSearchParams(search).get('categoryId');
-  const { data } = useGetMaxPriceQuery(categoryId || '', {
-    skip: !categoryId,
-  });
+  const { data } = useGetMaxPriceQuery(
+    {
+      categoryId: categoryId || '',
+    },
+    {
+      skip: !categoryId,
+    }
+  );
 
   const debouncedPriceChange = useCallback(
     (() => {
@@ -42,11 +47,12 @@ function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
   }, [filters.minPrice, filters.maxPrice, data?.maxPrice]);
 
   useEffect(() => {
+    console.log(data);
     if (data && data.maxPrice && data.maxPrice > 0) {
       const currentMax = filters.maxPrice ? parseInt(filters.maxPrice) : data.maxPrice;
       setValue([value[0], Math.min(currentMax, data.maxPrice)]);
     } else {
-      setValue([value[0], 1000]);
+      setValue([0, 0]);
     }
   }, [data]);
 

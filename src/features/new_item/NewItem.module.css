@@ -28,7 +28,7 @@
 
   .price_block {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     gap: 1rem;
 
     > div {

@@ -3,6 +3,7 @@ import FormSelect from '../../../../shared/components/FormSelect/FormSelect';
 import { getSelectedOption } from '../../../../utils/getSelectedOption';
 import { useAppSelector } from '../../../../hooks/hooks';
 import { getRates } from '../../../../entities/currency/currencySlice';
+import { LOCAL_STORAGE_KEY } from '../../../../utils/constants/Item';
 
 interface NewItemCurrencyProps {
   className?: string;
@@ -10,7 +11,6 @@ interface NewItemCurrencyProps {
   handleSelectChange: (key: string, value: any) => void;
 }
 
-const LOCAL_STORAGE_KEY = 'userCurrency';
 const DEFAULT_CURRENCY = 'usd';
 
 export const NewItemCurrency: FC<NewItemCurrencyProps> = ({ className, formData, handleSelectChange }) => {

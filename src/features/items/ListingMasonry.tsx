@@ -17,8 +17,9 @@ function ListingMasonry() {
   const city = searchParams.get('city');
   const radius = searchParams.get('radius');
   const userId = searchParams.get('userId');
+  const favorite = searchParams.get('favorite');
 
-  const { data, isError, error, isLoading, isFetching } = useGetListingMasonryQuery({
+  const { data, isError, error, isFetching } = useGetListingMasonryQuery({
     limit: 10,
     offset: 0,
     categoryId,
@@ -32,9 +33,10 @@ function ListingMasonry() {
     city,
     radius: radius ? parseFloat(radius) : null,
     userId,
+    favorite: favorite === 'true',
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isFetching) return <div>Loading...</div>;
   if (isError) {
     console.error(error);
     return <div>Error: {(error as any)?.message || (error as any)?.error || 'error'}</div>;

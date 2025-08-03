@@ -84,6 +84,10 @@ function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
     return null;
   }
 
+  if (value[0] === value[1]) {
+    return null;
+  }
+
   return (
     <Box sx={{ width: '100%', maxWidth: '350px', px: 2, py: 1 }}>
       <Typography

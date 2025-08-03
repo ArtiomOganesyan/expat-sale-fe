@@ -10,6 +10,8 @@ import ConditionFilter from './components/ConditionFilter';
 import LocationFilter from './components/LocationFilter';
 import { getCategories } from '../../entities/categories/categoriesSlice';
 import { useAppSelector } from '../../hooks/hooks';
+import FavoriteFilter from './components/FavoriteFilter';
+import { selectUser } from '../../entities/user/userSlice';
 
 function ItemFilter() {
   const [filters, setFilters] = useState<Record<string, any>>({});
@@ -18,6 +20,7 @@ function ItemFilter() {
   const location = useLocation();
 
   const categories = useAppSelector(getCategories);
+  const user = useAppSelector(selectUser);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -38,6 +41,11 @@ function ItemFilter() {
       minPrice: minPrice.toString(),
       maxPrice: maxPrice.toString(),
     }));
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFilters((prev: any) => ({ ...prev, [name]: checked }));
   };
 
   useEffect(() => {
@@ -86,6 +94,13 @@ function ItemFilter() {
       </AccordionSummary>
       <AccordionDetails>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {user && (
+            <FavoriteFilter
+              filters={filters}
+              handleChange={handleCheckboxChange}
+            />
+          )}
+
           <CategoryFilter
             filters={filters}
             categories={categories}

@@ -18,6 +18,16 @@ function ListingCard({ item, url }: ListingCardProps) {
     onSwipedRight: () => setIndex(prev => prev - 1),
     trackMouse: true,
   });
+
+  const imagesToShow = item.images?.length
+    ? item.images
+    : [
+        {
+          public_url:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT__ALALbxeQ1J6lQcoC8BFLMZt0sWAy7J2vEDC3fO4Lj1bJCorR9TbehXdcTuaa9XytRM&usqp=CAU',
+        },
+      ];
+
   return (
     <div
       className={styles.block}
@@ -32,24 +42,14 @@ function ListingCard({ item, url }: ListingCardProps) {
         height={173}
         indicators={true}
       >
-        {item.images?.length ? (
-          item.images.map(image => (
-            <img
-              key={image.public_url}
-              className={styles.image}
-              src={image.public_url}
-              alt='product'
-            />
-          ))
-        ) : (
+        {imagesToShow.map(image => (
           <img
+            key={image.public_url}
             className={styles.image}
-            src={
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT__ALALbxeQ1J6lQcoC8BFLMZt0sWAy7J2vEDC3fO4Lj1bJCorR9TbehXdcTuaa9XytRM&usqp=CAU'
-            }
+            src={image.public_url}
             alt='product'
           />
-        )}
+        ))}
       </Carousel>
 
       <div>

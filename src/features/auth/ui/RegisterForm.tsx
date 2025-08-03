@@ -1,20 +1,20 @@
-import React, { useEffect } from "react"
-import styles from "./AuthForm.module.css"
-import { useNavigate } from "react-router"
-import { useRegisterMutation } from "../../../entities/user/authAPI"
-import FormInput from "../../../shared/components/FormInput/FormInput"
-import { Button } from "@mui/material"
-import FormError from "../../../shared/components/FormError/FormError"
+import React, { useEffect } from 'react';
+import styles from './AuthForm.module.css';
+import { useNavigate } from 'react-router';
+import { useRegisterMutation } from '../../../entities/user/authAPI';
+import FormInput from '../../../shared/components/FormInput/FormInput';
+import { Button } from '@mui/material';
+import FormError from '../../../shared/components/FormError/FormError';
 
 function RegisterForm() {
-  const [username, setUsername] = React.useState("")
-  const [password, setPassword] = React.useState("")
-  const [confirmPassword, setConfirmPassword] = React.useState("")
-  const [error, setError] = React.useState("")
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [error, setError] = React.useState('');
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [register, meta] = useRegisterMutation()
+  const [register, meta] = useRegisterMutation();
 
   useEffect(() => {
     // <div
@@ -32,67 +32,64 @@ function RegisterForm() {
     //     </div>
 
     if (password !== confirmPassword || meta.isError) {
-      setError(
-        (meta?.error as any)?.data?.error ||
-          (meta.isError && "An error occurred.") ||
-          "Passwords do not match",
-      )
+      setError((meta?.error as any)?.data?.error || (meta.isError && 'An error occurred.') || 'Passwords do not match');
 
       setTimeout(() => {
-        setError("")
-      }, 3000)
+        setError('');
+      }, 3000);
     }
-  }, [password, confirmPassword, meta])
+  }, [password, confirmPassword, meta]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const res = await register({ username, password })
+    event.preventDefault();
+    const res = await register({ username, password });
 
     if (res?.data?.id) {
-      navigate("/")
+      navigate('/');
     }
-  }
+  };
 
   return (
     <div className={styles.container}>
-      <h3>Register</h3>
-      <form onSubmit={handleSubmit}>
+      <div className={styles.title}>Create an account</div>
+      <div className={styles.subtitle}>Let’s create your account!</div>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <FormInput
-          label="Username"
-          placeholder="Create a unique username"
-          id="username"
-          type="text"
-          name="username"
+          label='Username'
+          placeholder='Create a unique username'
+          id='username'
+          type='text'
+          name='username'
           onChange={e => setUsername(e.target.value)}
         />
         <FormInput
-          label="Password"
-          placeholder="Pick a strong password"
-          type="password"
-          id="password"
-          name="password"
+          label='Password'
+          placeholder='Pick a strong password'
+          type='password'
+          id='password'
+          name='password'
           onChange={e => setPassword(e.target.value)}
         />
         <FormInput
-          label="Confirm Password"
-          placeholder="Confirm your password"
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
+          label='Confirm Password'
+          placeholder='Confirm your password'
+          type='password'
+          id='confirmPassword'
+          name='confirmPassword'
           onChange={e => setConfirmPassword(e.target.value)}
         />
 
         <FormError error={error} />
 
         <Button
-          type="submit"
+          type='submit'
           disabled={!password || !username || password !== confirmPassword}
         >
-          {meta.isLoading ? "Loading..." : "Register"}
+          {meta.isLoading ? 'Loading...' : 'Register'}
         </Button>
       </form>
     </div>
-  )
+  );
 }
 
-export default RegisterForm
+export default RegisterForm;

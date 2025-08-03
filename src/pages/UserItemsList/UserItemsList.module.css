@@ -5,7 +5,33 @@
   gap: 24px;
 }
 
+.header_container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+}
+
+.arrow{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.title {
+  color: var(--color-text-primary);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 100%;
+  letter-spacing: -1.2px;
+}
+
 .count {
+  border-radius: 12px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;

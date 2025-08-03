@@ -1,14 +1,13 @@
-import { Outlet } from "react-router"
+import { Outlet } from 'react-router';
 
-import style from "./Auth.module.css"
+import styles from './Auth.module.css';
 
 function Auth() {
   return (
-    <div className={style.container}>
-      <h2>Authentication</h2>
+    <div className={styles.container}>
       <Outlet />
     </div>
-  )
+  );
 }
 
-export default Auth
+export default Auth;

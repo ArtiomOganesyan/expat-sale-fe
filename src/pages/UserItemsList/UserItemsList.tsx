@@ -4,8 +4,12 @@ import { selectUser } from '../../entities/user/userSlice';
 import { useAppSelector } from '../../hooks/hooks';
 import styles from './UserItemsList.module.css';
 import ListingCard from '../../shared/components/ListingCard/ListingCard';
+import { IconButton, Paper } from '@mui/material';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useNavigate } from 'react-router';
 
 function UserItemsList() {
+  const navigate = useNavigate();
   const user = useAppSelector(selectUser);
   const { data, isLoading, isFetching, isError } = useGetItemsByUserIdQuery({ user_id: user?.id });
 
@@ -26,10 +30,22 @@ function UserItemsList() {
 
   return (
     <div className={styles.block}>
-      <div className={styles.count}>
+      <div className={styles.header_container}>
+        <IconButton
+          onClick={() => navigate('/profile')}
+          className={styles.arrow}
+        >
+          <ArrowBackIosNewIcon />
+        </IconButton>
+        <div className={styles.title}>My Products</div>
+      </div>
+      <Paper
+        elevation={10}
+        className={styles.count}
+      >
         <div className={styles.stat}> Total items: {totalCount}</div>
         <div className={styles.stat}> Published: {publishedCount}</div>
-      </div>
+      </Paper>
       <div>
         <div className={styles.container}>
           {data?.map((listing: any) => (

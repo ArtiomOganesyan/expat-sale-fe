@@ -5,11 +5,11 @@ export default function Layout() {
   return (
     <Box mb={'50px'}>
 
-      <AppBar position="static">
+      {/* <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6">Bazzar</Typography>
+          <Typography variant="h2">Bazzar</Typography>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
 
       {/* Контент */}
       <Container sx={{ mt: 3 }}>

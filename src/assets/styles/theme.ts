@@ -33,7 +33,7 @@ export const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: 'var(--color-bg-secondary)',
+          backgroundColor: 'var(--color-white)',
           color: 'var(--color-text-primary)',
         },
       },
@@ -46,6 +46,18 @@ export const theme = createTheme({
         },
       },
     },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            backgroundColor: '#f0f0f0', 
+            '&:hover': {
+              backgroundColor: '#e0e0e0',
+            },
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -53,10 +65,10 @@ export const theme = createTheme({
             fill: 'var(--color-white)',
           },
           '&.Mui-disabled': {
-            backgroundColor: 'var(--color-gray-light)', // фон кнопки в disabled
-            color: 'var(--color-text-secondary)', // цвет текста в disabled
+            backgroundColor: 'var(--color-gray-light)',
+            color: 'var(--color-text-secondary)',
             '& .MuiSvgIcon-root': {
-              fill: 'var(--color-text-secondary)', // цвет иконки в disabled
+              fill: 'var(--color-text-secondary)',
             },
           },
           width: '100%',
@@ -73,12 +85,22 @@ export const theme = createTheme({
     },
     MuiOutlinedInput: {
       styleOverrides: {
-        input: {
-          border: '1px solid var(--color-invisible)',
-          width: '100%',
-          '&.Mui-disabled': {
-            WebkitTextFillColor: 'var(--color-text-primary)',
-            color: 'var(--color-text-primary)',
+        root: {
+          borderRadius: 10,
+          '& .MuiOutlinedInput-input': {
+            border: '1px solid var(--color-invisible)',
+            width: '100%',
+            fontWeight: 500,
+            fontSize: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            '&.Mui-disabled': {
+              WebkitTextFillColor: 'var(--color-text-primary)',
+              color: 'var(--color-text-primary)',
+            },
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#070732',
           },
         },
       },
@@ -93,10 +115,14 @@ export const theme = createTheme({
           borderRadius: 4,
           '&.Mui-disabled': {
             transition: '0.2s',
-            fontSize: '1rem',
+            // fontSize: '1rem',
             background: 'var(--color-bg-main)',
             padding: '0 6px',
-            color: 'var(--color-text-primary)',
+            color: 'var(--color-text-secondary)',
+            opacity: 0.6,
+          },
+          '&.Mui-focused.Mui-focused': {
+            color: '#070732',
           },
         },
       },

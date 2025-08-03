@@ -5,7 +5,7 @@ import { useGetItemsByUserIdQuery } from '../../entities/items/itemsAPI';
 import { useAppSelector } from '../../hooks/hooks';
 import { selectUser } from '../../entities/user/userSlice';
 
-function UserItems() {
+function UserItemsButton() {
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
 
@@ -27,10 +27,10 @@ function UserItems() {
   }
 
   return (
-    <div style={{ width: '100%', padding: '0 1rem' }}>
+    <div style={{ width: '100%' }}>
       <Button onClick={moveToUserItems}>My Products</Button>
     </div>
   );
 }
 
-export default UserItems;
+export default UserItemsButton;

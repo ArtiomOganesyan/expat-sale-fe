@@ -1,36 +1,26 @@
 .container {
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 1rem;
+  margin-top: 24px;
 }
 
-.container > h3 {
-  font-size: 1.5rem;
-  font-weight: 500;
-  text-align: right;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid var(--color-accent);
-}
-
-.container > form {
+.form {
+  margin-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 16px;
 }
 
-.container > form > div {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.title {
+  color: var(--color-text-primary);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 100%;
+  letter-spacing: -1.2px;
+}
 
-  > label {
-    font-weight: 500;
-    padding-left: 0.5rem;
-  }
-
-  > input {
-    padding: 0.5rem;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-  }
+.subtitle {
+  margin-top: 8px;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 140%;
 }

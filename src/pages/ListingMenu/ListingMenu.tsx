@@ -1,5 +1,6 @@
 import { useGetParentCategoriesQuery } from '../../entities/categories/categoriesAPI';
 import CategoryItem from './components/CategoryItem';
+import styles from './ListingMenu.module.css';
 
 function ListingMenu() {
   const { data: categories, isLoading } = useGetParentCategoriesQuery();
@@ -11,11 +12,7 @@ function ListingMenu() {
 
   return (
     <div
-      style={{
-        display: 'flex',
-        padding: '1rem',
-        flexWrap: 'wrap',
-      }}
+      className={styles.container}
     >
       {categories.map(category => (
         <CategoryItem

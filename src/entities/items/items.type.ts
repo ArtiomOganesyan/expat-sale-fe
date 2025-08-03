@@ -45,6 +45,7 @@ export interface ItemFilter {
   city?: string | null;
   radius?: number | null;
   userId?: string | null;
+  favorite?: boolean | null;
 }
 
 export interface EditItem {

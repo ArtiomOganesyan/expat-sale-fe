@@ -15,10 +15,15 @@ import { EditCategoryBlock } from './ui/EditCategoryBlock/EditCategoryBlock';
 import { EditConditionBlock } from './ui/EditConditionBlock/EditConditionBlock';
 import { EditLocationBlockBlock } from './ui/EditLocationBlock/EditLocationBlock';
 import { EditDistanceBlock } from './ui/EditDistanceBlock/EditDistanceBlock';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../../entities/user/userSlice';
+import { listingApi } from '../../entities/items/api';
 
 function EditItemData() {
   const params = useParams();
+  const dispatch = useDispatch();
   const { data: item, isLoading, isError } = useGetItemByIdQuery({ itemId: params.id });
+  const user = useSelector(selectUser);
   const [updatedItem, setUpdatedItem] = useState<EditItem | undefined>();
   const { handleInputChange, handleSelectChange, handleCheckboxChange, handleLocationChange } = formChangeHandler(setUpdatedItem);
   const [updateItemMutation, updateMeta] = useUpdateItemMutation();
@@ -68,7 +73,7 @@ function EditItemData() {
     });
   };
 
-  const handleEditSave = () => {
+  const handleEditSave = async () => {
     setEdit(false);
 
     const data = { ...updatedItem };
@@ -80,7 +85,13 @@ function EditItemData() {
     // delete data.role;
 
     if (item) {
-      updateItemMutation({ id: item?.id, data });
+      const res = await updateItemMutation({ id: item?.id, data });
+
+      if (!('error' in res)) {
+        if (user?.id) {
+          dispatch(listingApi.util.invalidateTags([{ type: 'ListingMasonry', id: `items-user-${user.id}` }]));
+        }
+      }
     }
   };
 

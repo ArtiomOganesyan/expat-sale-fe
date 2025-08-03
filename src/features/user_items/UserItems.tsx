@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { IconButton, Paper } from '@mui/material';
+import { Button, IconButton, Paper } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { useGetItemsByUserIdQuery } from '../../entities/items/itemsAPI';
 import { useAppSelector } from '../../hooks/hooks';
@@ -27,34 +27,9 @@ function UserItems() {
   }
 
   return (
-    <Paper
-      elevation={10}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        width: '90vw',
-        padding: '1rem',
-        margin: '1rem auto',
-        border: '1px solid #ccc',
-        borderRadius: 10,
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <p onClick={moveToUserItems}>My Listings: {data.length}</p>
-        <IconButton onClick={createNewItem}>
-          <AddBoxIcon />
-        </IconButton>
-      </div>
-    </Paper>
+    <div style={{ width: '100%', padding: '0 1rem' }}>
+      <Button onClick={moveToUserItems}>My Products</Button>
+    </div>
   );
 }
 

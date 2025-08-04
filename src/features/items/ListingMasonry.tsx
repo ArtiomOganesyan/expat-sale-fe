@@ -44,13 +44,9 @@ function ListingMasonry() {
 
   return (
     <div className={styles.container}>
-      {data?.map(listing => (
-        <ListingCard
-          key={listing.id}
-          item={listing}
-          url={'/listing'}
-        />
-      ))}
+      {data?.map(listing => 
+      <ListingCard key={listing.id} item={listing} url="/listing" />
+      )}
     </div>
   );
 }

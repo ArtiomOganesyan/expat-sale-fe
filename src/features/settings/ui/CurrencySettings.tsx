@@ -7,8 +7,7 @@ import {
 import type { SelectChangeEvent } from "@mui/material"
 import { useState } from "react"
 import { useGetCurrencyRateQuery } from "../../../entities/currency/currencyAPI"
-
-const LOCAL_STORAGE_KEY = "userCurrency"
+import { LOCAL_STORAGE_KEY } from '../../../utils/constants/Item'
 
 const CurrencySettings = () => {
   const { data: rates = [] } = useGetCurrencyRateQuery(undefined)

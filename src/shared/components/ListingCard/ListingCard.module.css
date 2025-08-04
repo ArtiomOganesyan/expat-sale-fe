@@ -26,3 +26,32 @@
   width: 100%;
 }
 
+.cardContainer {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 1rem;
+}
+
+.carouselImage {
+  object-fit: contain;
+  height: 200px;
+  width: 100%;
+}
+
+.cardContent {
+  margin-top: 1rem;
+}
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.mainPrice {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.convertedPrice {
+  font-size: 0.85rem;
+  color: #777;
+}

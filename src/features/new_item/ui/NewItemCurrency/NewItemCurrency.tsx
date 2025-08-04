@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import FormSelect from '../../../../shared/components/FormSelect/FormSelect';
 import { getSelectedOption } from '../../../../utils/getSelectedOption';
 import { useAppSelector } from '../../../../hooks/hooks';
 import { getRates } from '../../../../entities/currency/currencySlice';
+import { LOCAL_STORAGE_KEY } from '../../../../utils/constants/Item';
 
 interface NewItemCurrencyProps {
   className?: string;
@@ -10,27 +11,40 @@ interface NewItemCurrencyProps {
   handleSelectChange: (key: string, value: any) => void;
 }
 
+const DEFAULT_CURRENCY = 'usd';
+
 export const NewItemCurrency: FC<NewItemCurrencyProps> = ({ className, formData, handleSelectChange }) => {
   const currencyRates = useAppSelector(getRates);
+
+  const savedCurrency = localStorage.getItem(LOCAL_STORAGE_KEY);
+  const currentCurrency =
+    formData.currency || savedCurrency || DEFAULT_CURRENCY;
+
+  const currentRate = currencyRates.find(rate => rate.iso === currentCurrency);
+
+  const allOptions = currencyRates.map(rate => ({
+    value: rate.iso,
+    label: `${rate.symbol}`,
+  }));
+
+  const fallbackSymbol =
+    currencyRates.find(rate => rate.iso === savedCurrency)?.symbol ||
+    currencyRates.find(rate => rate.iso === DEFAULT_CURRENCY)?.symbol ||
+    '$';
+
+  const selectedOption = currentRate
+    ? getSelectedOption(allOptions, 'value', currentCurrency)
+    : { value: currentCurrency, label: fallbackSymbol };
+
   return (
     <FormSelect
-      value={getSelectedOption(
-        currencyRates.map(r => ({
-          value: r.iso,
-          label: r.symbol,
-        })),
-        'value',
-        formData.currency
-      )}
-      label='Currency'
+      value={selectedOption}
       id={'currency'}
       onChange={(_, newValue) => {
-        handleSelectChange('currency', newValue?.value || 'EUR');
+        const selectedCurrency = newValue?.value || DEFAULT_CURRENCY;
+        handleSelectChange('currency', selectedCurrency);
       }}
-      options={currencyRates.map(r => ({
-        value: r.iso,
-        label: r.symbol,
-      }))}
+      options={allOptions}
     />
   );
 };

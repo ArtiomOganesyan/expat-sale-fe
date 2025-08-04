@@ -112,3 +112,5 @@ export const CONDITION = {
   NEW: "new",
   USED: "used",
 }
+
+export const LOCAL_STORAGE_KEY = 'userCurrency';

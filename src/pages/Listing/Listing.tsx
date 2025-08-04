@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router';
 import ItemFilter from '../../features/ItemFilter/ItemFilter';
 import { Box } from '@mui/material';
-import styles from './Listing.module.css';
 
 function Listing() {
   return (
@@ -13,10 +12,9 @@ function Listing() {
         marginBottom: '5rem',
       }}
     >
-      <div className={styles.title}>Discover</div>
       <Box
         sx={{
-          mt: '16px',
+          // mt: '16px',
           position: 'sticky',
           top: 0,
           zIndex: 1000,

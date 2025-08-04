@@ -1,6 +1,7 @@
 import TAG_TYPES from '../../store/constants/TagTypes';
 import { listingApi } from './api';
 import { type ItemFilter, type Item } from './items.type';
+import { ItemData } from './types/items';
 
 export const itemsAPI = listingApi.injectEndpoints({
   endpoints: builder => ({
@@ -19,6 +20,7 @@ export const itemsAPI = listingApi.injectEndpoints({
         city,
         radius,
         userId,
+        favorite,
       }: ItemFilter) => {
         const params = new URLSearchParams();
 
@@ -35,23 +37,24 @@ export const itemsAPI = listingApi.injectEndpoints({
         if (city) params.set('city', city);
         if (radius) params.set('radius', `${radius}`);
         if (userId) params.set('userId', userId);
+        if (favorite) params.set('isFavorite', `${favorite ? 'true' : 'false'}`);
 
         return `/items?${params.toString()}`;
       },
       providesTags: (
         _result,
         _error,
-        { offset, limit, categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId }
+        { offset, limit, categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId, favorite }
       ) => {
         return [
           {
             type: TAG_TYPES.LISTING_MASONRY,
-            id: `${limit}-${offset}-${categoryId}-${isFree}-${title}-${isNew}-${minPrice}-${maxPrice}-${country}-${region}-${city}-${radius}-${userId}`,
+            id: `${limit}-${offset}-${categoryId}-${isFree}-${title}-${isNew}-${minPrice}-${maxPrice}-${country}-${region}-${city}-${radius}-${userId}-${favorite}`,
           },
         ];
       },
     }),
-    getItemsByUserId: builder.query<any, any>({
+    getItemsByUserId: builder.query<ItemData[], any>({
       query: ({ user_id }) => `/users/${user_id}/items`,
       providesTags: (_result, _error, { user_id }) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `items-user-${user_id}` }],
     }),
@@ -92,9 +95,10 @@ export const itemsAPI = listingApi.injectEndpoints({
       }),
       //   invalidatesTags: ["Store", "StoreList"],
     }),
-    getMaxPrice: builder.query<{ maxPrice: number }, string>({
-      query: categoryId => `/items/max-price/${categoryId}`,
+    getMaxPrice: builder.query<{ maxPrice: number }, { categoryId: string }>({
+      query: ({ categoryId }) => `/items/max-price/${categoryId}`,
       providesTags: (_result, _error, categoryId) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `max-price-${categoryId}` }],
+      transformResponse: (response: { max_price: number }) => ({ maxPrice: response.max_price }),
     }),
   }),
 });

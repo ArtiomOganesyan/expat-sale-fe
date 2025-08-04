@@ -6,6 +6,8 @@ import { BrowserRouter } from "react-router"
 import App from "./App"
 import { ThemeProvider } from "@mui/material/styles"
 import { theme } from "./assets/styles/theme"
+import './assets/fonts/GeneralSans/index.css'
+import './assets/fonts/VelaSans/index.css'
 
 const container = document.getElementById("root")
 

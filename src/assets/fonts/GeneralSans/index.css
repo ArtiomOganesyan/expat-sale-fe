@@ -1,0 +1,42 @@
+
+@font-face {
+  font-family: GeneralSans;
+  src: url('./GeneralSans-Bold.otf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: GeneralSans;
+  src: url('./GeneralSans-Semibold.otf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: GeneralSans;
+  src: url('./GeneralSans-Medium.otf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: GeneralSans;
+  src: url('./GeneralSans-Regular.otf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: GeneralSans;
+  src: url('./GeneralSans-Light.otf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: GeneralSans;
+  src: url('./GeneralSans-Extralight.otf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}

@@ -5,10 +5,7 @@ import FormInput from '../../shared/components/FormInput/FormInput';
 import Actions from './ui/Actions/Actions';
 import FormError from '../../shared/components/FormError/FormError';
 import { Paper } from '@mui/material';
-import {
-  useGetItemByIdQuery,
-  useUpdateItemMutation,
-} from '../../entities/items/itemAPI';
+import { useGetItemByIdQuery, useUpdateItemMutation } from '../../entities/items/itemAPI';
 import { EditItem } from '../../entities/items/items.type';
 import FormCheckBox from '../../shared/components/FormCheck/FormCheckBox';
 import { formChangeHandler } from './utils/formChangeHandler';
@@ -18,10 +15,15 @@ import { EditCategoryBlock } from './ui/EditCategoryBlock/EditCategoryBlock';
 import { EditConditionBlock } from './ui/EditConditionBlock/EditConditionBlock';
 import { EditLocationBlockBlock } from './ui/EditLocationBlock/EditLocationBlock';
 import { EditDistanceBlock } from './ui/EditDistanceBlock/EditDistanceBlock';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../../entities/user/userSlice';
+import { listingApi } from '../../entities/items/api';
 
 function EditItemData() {
   const params = useParams();
+  const dispatch = useDispatch();
   const { data: item, isLoading, isError } = useGetItemByIdQuery({ itemId: params.id });
+  const user = useSelector(selectUser);
   const [updatedItem, setUpdatedItem] = useState<EditItem | undefined>();
   const { handleInputChange, handleSelectChange, handleCheckboxChange, handleLocationChange } = formChangeHandler(setUpdatedItem);
   const [updateItemMutation, updateMeta] = useUpdateItemMutation();
@@ -71,7 +73,7 @@ function EditItemData() {
     });
   };
 
-  const handleEditSave = () => {
+  const handleEditSave = async () => {
     setEdit(false);
 
     const data = { ...updatedItem };
@@ -81,10 +83,15 @@ function EditItemData() {
     delete data.updated_at;
     // delete data.image;
     // delete data.role;
-    console.log(data);
 
     if (item) {
-      updateItemMutation({ id: item?.id, data });
+      const res = await updateItemMutation({ id: item?.id, data });
+
+      if (!('error' in res)) {
+        if (user?.id) {
+          dispatch(listingApi.util.invalidateTags([{ type: 'ListingMasonry', id: `items-user-${user.id}` }]));
+        }
+      }
     }
   };
 
@@ -171,11 +178,13 @@ function EditItemData() {
             edit={edit}
           />
 
-          {updatedItem && <EditDistanceBlock
-            updatedItem={updatedItem}
-            handleLocationChange={handleLocationChange}
-            edit={edit}
-          />}
+          {updatedItem && (
+            <EditDistanceBlock
+              updatedItem={updatedItem}
+              handleLocationChange={handleLocationChange}
+              edit={edit}
+            />
+          )}
 
           {updatedItem && (
             <div className={styles.item_option_block}>

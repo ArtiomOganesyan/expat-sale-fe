@@ -5,10 +5,10 @@ import { Paper } from "@mui/material"
 
 function NewItem() {
   return (
-    <Paper elevation={10} className={styles.container}>
+    <div className={styles.container}>
       <NewItemHeader />
       <NewItemForm />
-    </Paper>
+    </div>
   )
 }
 

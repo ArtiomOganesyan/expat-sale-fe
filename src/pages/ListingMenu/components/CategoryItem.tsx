@@ -4,10 +4,11 @@ import { Paper } from '@mui/material';
 
 function CategoryItem({ category }: { category: Category }) {
   return (
-    <div style={{ padding: '0.5rem', position: 'relative', width: '50%' }}>
+    <div style={{ position: 'relative', width: '100%' }}>
       <Link to={`/listing?categoryId=${category.id}`}>
         <Paper
           style={{
+            width: '100%',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',

@@ -1,6 +1,6 @@
 :root {
   /* Backgrounds */
-  --color-bg-main: #e4e4e4;
+  --color-bg-main: #ffffff;
   --color-bg-secondary: #fad6fa;
   --color-bg-secondary-hover: #caaaca;
 
@@ -19,12 +19,46 @@
   --color-error-hover: #cc4b40;
 
   /* Text */
-  --color-text-primary: #292929;
-  --color-text-secondary: #696969;
+  --color-text-primary: #000000;
+  --color-text-secondary: #808080;
 
   /* Borders */
   --color-border: #bcbcbc;
 
   /* Other */
   --color-invisible: rgba(255, 255, 255, 0);
+
+  /* Common Colors */
+  --color-white: #ffffff;
+  --color-white-darken: #f4f5f6;
+  --color-white-dark: #343434;
+  --color-white-black: #1e1e1e;
+  --color-black: #000000;
+  --color-black-light: #1a1a1a;
+  --color-black-lighten: #141414;
+  --color-gray-black: #151515;
+  --color-gray: #969696;
+  --color-gray-dark: #171717;
+  --color-gray-darken: #111111;
+  --color-gray-light: #e9e9e9;
+  --color-blue: #1455ff;
+  --color-blue-light: #599cff;
+  --color-purple: #a77dff;
+  --color-purple-light: #969aff;
+  --color-orange: #ff8e3c;
+  --color-green: #6ecb43;
+  --color-you-tube: #f93c3c;
+  --color-red: #fa5050;
+  --color-skolkovo: #d3e84b;
+  --color-pink: #f974ae;
+  --color-violet: #9643ff;
+  --color-lime: #baec51;
+  --color-orange-black-friday: #ff6f3b;
+  --color-green-black-friday: #d1f657;
+  --color-olive: #00c19d;
+  --color-olive-light: #99e6d8;
+  --color-olive-dark: #00755f;
+  --color-sand: #ffdcb4;
+  --color-brown: #72512b;
+  --color-gold: #ffbd14;
 }

@@ -1,20 +1,12 @@
-import { Outlet } from "react-router";
-import { AppBar, Toolbar, Typography, Box, Container } from "@mui/material";
+import { Outlet } from 'react-router';
+import { Box, Container } from '@mui/material';
 
 export default function Layout() {
   return (
-    <Box mb={'50px'}>
-
-      {/* <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h2">Bazzar</Typography>
-        </Toolbar>
-      </AppBar> */}
-
-      {/* Контент */}
-      <Container sx={{ mt: 3 }}>
+    <Container sx={{ mt: 1, p: 0, mb: '50px' }}>
+      <Box sx={{ px: 1 }}>
         <Outlet />
-      </Container>
-    </Box>
+      </Box>
+    </Container>
   );
 }

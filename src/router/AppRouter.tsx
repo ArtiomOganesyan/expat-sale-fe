@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router';
 import PrivateRoute from './routes/PrivateRoute';
 import ListingMasonry from '../features/items/ListingMasonry';
 import Layout from '../layouts/MainLayout/MainLayout';
+import AboutPage from '../pages/AboutPage/AboutPage';
 
 const ListingMenu = lazy(() => import('../pages/ListingMenu/ListingMenu'));
 const Listing = lazy(() => import('../pages/Listing/Listing'));
@@ -38,7 +39,7 @@ function AppRouter() {
           />
           <Route
             path='about'
-            element={<div>ABOUT</div>}
+            element={<AboutPage />}
           />
 
           <Route

@@ -9,16 +9,17 @@ function Listing() {
         display: 'flex',
         flexDirection: 'column',
         gap: '0rem',
+        paddingTop: '4rem',
         marginBottom: '5rem',
       }}
     >
       <Box
         sx={{
-          // mt: '16px',
-          position: 'sticky',
+          position: 'fixed',
+          width: '100%',
           top: 0,
+          left: 0,
           zIndex: 1000,
-          paddingBottom: 1,
         }}
       >
         <ItemFilter />

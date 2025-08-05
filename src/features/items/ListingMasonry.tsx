@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import ListingCard from '../../shared/components/ListingCard/ListingCard';
 import styles from './ListingMasonry.module.css';
 import { useGetListingMasonryQuery } from '../../entities/items/itemsAPI';
@@ -19,9 +20,15 @@ function ListingMasonry() {
   const userId = searchParams.get('userId');
   const favorite = searchParams.get('favorite');
 
-  const { data, isError, error, isFetching } = useGetListingMasonryQuery({
+  const [offset, setOffset] = useState(0);
+  const [allItems, setAllItems] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadingRef = useRef<HTMLDivElement | null>(null);
+
+  const queryParams = {
     limit: 10,
-    offset: 0,
+    offset,
     categoryId,
     isFree: isFree === 'true',
     title,
@@ -34,9 +41,67 @@ function ListingMasonry() {
     radius: radius ? parseFloat(radius) : null,
     userId,
     favorite: favorite === 'true',
-  });
+  };
 
-  if (isFetching) return <div>Loading...</div>;
+  const { data, isError, error, isFetching } = useGetListingMasonryQuery(queryParams);
+
+  useEffect(() => {
+    setOffset(0);
+    setAllItems([]);
+    setHasMore(true);
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId, favorite]);
+
+  useEffect(() => {
+    if (data) {
+      if (offset === 0) {
+        setAllItems(data);
+      } else {
+        setAllItems(prevItems => [...prevItems, ...data]);
+      }
+
+      if (data.length < 10) {
+        setHasMore(false);
+      }
+    }
+  }, [data, offset]);
+
+  const loadMore = useCallback(() => {
+    if (!isFetching && hasMore) {
+      setOffset(prevOffset => prevOffset + 10);
+    }
+  }, [isFetching, hasMore]);
+
+  useEffect(() => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    observerRef.current = new IntersectionObserver(
+      entries => {
+        const target = entries[0];
+        if (target.isIntersecting && hasMore && !isFetching) {
+          loadMore();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '100px',
+      }
+    );
+
+    if (loadingRef.current) {
+      observerRef.current.observe(loadingRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [loadMore, hasMore, isFetching]);
+
   if (isError) {
     console.error(error);
     return <div>Error: {(error as any)?.message || (error as any)?.error || 'error'}</div>;
@@ -44,9 +109,26 @@ function ListingMasonry() {
 
   return (
     <div className={styles.container}>
-      {data?.map(listing => 
-      <ListingCard key={listing.id} item={listing} url="/listing" />
+      {allItems.map(listing => (
+        <ListingCard
+          key={listing.id}
+          item={listing}
+          url='/listing'
+        />
+      ))}
+
+      {isFetching && <div style={{ textAlign: 'center', padding: '20px' }}>Loading more items...</div>}
+
+      <div
+        ref={loadingRef}
+        style={{ height: '20px', width: '100%' }}
+      />
+
+      {!hasMore && allItems.length > 0 && (
+        <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>No more items to load</div>
       )}
+
+      {isFetching && allItems.length === 0 && <div>Loading...</div>}
     </div>
   );
 }

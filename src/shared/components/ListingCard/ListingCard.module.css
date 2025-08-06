@@ -18,6 +18,11 @@
   line-height: 140%;
 }
 
+.mainPrice {
+  color: var(--color-black);
+  font-size: 15px;
+}
+
 .image {
   background-color: var(--color-gray-light);
   border-radius: 12px;
@@ -50,14 +55,4 @@
 .cardLink {
   text-decoration: none;
   color: inherit;
-}
-
-.mainPrice {
-  font-size: 1.1rem;
-  font-weight: bold;
-}
-
-.convertedPrice {
-  font-size: 0.85rem;
-  color: #777;
 }

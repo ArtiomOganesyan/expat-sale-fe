@@ -6,6 +6,7 @@ import { useSwipeable } from 'react-swipeable';
 import { useState } from 'react';
 import styles from './ListingCard.module.css';
 import { type Item } from '../../../entities/items/types/items';
+import { formatPrice } from '../../../utils/formatPrice';
 
 interface ListingCardProps {
   item: Item;
@@ -51,7 +52,7 @@ function ListingCard({ item, url }: ListingCardProps) {
   const itemPrice = Number(item.price);
   const itemCurrency = item.currency;
 
-  let displayMainPrice = `${itemPrice} ${itemCurrency}`;
+  let displayMainPrice = `${formatPrice(itemPrice, itemCurrency)} ${itemCurrency}`;
   let displayConvertedPrice: string | null = null;
 
   if (!selectedCurrency) {
@@ -67,7 +68,7 @@ function ListingCard({ item, url }: ListingCardProps) {
     const converted = convertPrice(itemPrice, itemCurrency, selectedCurrency);
     if (converted != null) {
       displayMainPrice = `${itemPrice} ${itemCurrency}`;
-      displayConvertedPrice = `(${converted} ${selectedCurrency})`;
+      displayConvertedPrice = `(${formatPrice(converted, selectedCurrency)} ${selectedCurrency})`;
     }
   }
 
@@ -102,8 +103,8 @@ function ListingCard({ item, url }: ListingCardProps) {
           className={styles.cardLink}
         >
           <div className={styles.title}>{item.title}</div>
-          <div className={styles.mainPrice}>{displayMainPrice}</div>
-          {displayConvertedPrice && <div className={styles.convertedPrice}>{displayConvertedPrice}</div>}
+          <div className={`${styles.price} ${styles.mainPrice}`}>{displayMainPrice}</div>
+          {displayConvertedPrice && <div className={styles.price}>{displayConvertedPrice}</div>}
         </Link>
       </div>
     </div>

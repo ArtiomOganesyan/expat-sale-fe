@@ -1,7 +1,7 @@
 import TAG_TYPES from '../../store/constants/TagTypes';
 import { listingApi } from './api';
 import { type ItemFilter, type Item } from './items.type';
-import { ItemData } from './types/items';
+import { type ItemData } from './types/items';
 
 export const itemsAPI = listingApi.injectEndpoints({
   endpoints: builder => ({

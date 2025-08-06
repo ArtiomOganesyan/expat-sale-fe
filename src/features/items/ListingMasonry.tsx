@@ -107,6 +107,7 @@ function ListingMasonry() {
     <div className={styles.container}>
       {allItems.map(listing => (
         <ListingCard
+          key={listing.id}
           item={listing}
           url='/listing'
         />

@@ -29,4 +29,5 @@ export interface ItemData {
   published: boolean;
   title: string;
   updated_at: string;
+  xl: boolean;
 }

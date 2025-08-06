@@ -72,20 +72,24 @@ function ListingCard({ item, url }: ListingCardProps) {
   }
 
   return (
-    <div className={styles.cardContainer} {...handlers}>
+    <div
+      className={styles.cardContainer}
+      style={{ gridColumn: item.xl ? 'span 2' : 'auto', gridRow: item.xl ? 'span 2' : 'auto' }}
+      {...handlers}
+    >
       <Carousel
         index={index}
         // @ts-ignore
         onChange={now => setIndex(now)}
         autoPlay={false}
         animation='slide'
-        height={200}
+        height={item.xl ? 400 : 200}
         indicators={true}
       >
         {imagesToShow.map(image => (
           <img
             key={image.public_url}
-            className={styles.carouselImage}
+            className={styles.carousel_image}
             src={image.public_url}
             alt='product'
           />
@@ -93,7 +97,10 @@ function ListingCard({ item, url }: ListingCardProps) {
       </Carousel>
 
       <div className={styles.cardContent}>
-        <Link to={`${url}/${item.id}`} className={styles.cardLink}>
+        <Link
+          to={`${url}/${item.id}`}
+          className={styles.cardLink}
+        >
           <div className={styles.title}>{item.title}</div>
           <div className={styles.mainPrice}>{displayMainPrice}</div>
           {displayConvertedPrice && <div className={styles.convertedPrice}>{displayConvertedPrice}</div>}

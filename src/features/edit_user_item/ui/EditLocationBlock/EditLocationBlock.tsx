@@ -1,9 +1,8 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
-import styles from './EditLocationBlock.module.css';
-import { EditItem } from '../../../../entities/items/items.type';
+import React, { type FC, useEffect, useMemo, useState } from 'react';
 import FromSelectSearch from '../../../../shared/components/FormSelectSearch/FromSelectSearch';
 import { useDebouncedValue } from '../../../../shared/hooks/useDebouncedValue';
 import { useGetCitiesQuery, useGetCountriesQuery, useGetRegionsQuery } from '../../../../entities/places/placesAPI';
+import { type EditItem } from '../../../../entities/items/types/items';
 
 interface EditLocationBlockProps {
   className?: string;

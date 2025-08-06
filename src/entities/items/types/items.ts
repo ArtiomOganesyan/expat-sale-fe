@@ -1,4 +1,33 @@
-export interface ItemImageData {
+import { type User } from '../../user/user.type';
+
+export type Item = {
+  location: Location;
+  images: Image[];
+  user: User;
+  id: string;
+  created_at: string;
+  updated_at: string;
+  title: string;
+  description: string;
+  price: string;
+  price_usd: string;
+  currency: string;
+  is_free: boolean;
+  is_new: boolean;
+  published: boolean;
+  categoryId?: string;
+  category?: CategoryItem;
+  xl: boolean;
+};
+
+type Location = {
+  city: string;
+  region: string;
+  country: string;
+  radius: number;
+};
+
+type Image = {
   created_at: string;
   full_path: string;
   id: string;
@@ -6,28 +35,45 @@ export interface ItemImageData {
   provider_id: string;
   public_url: string;
   updated_at: string;
-}
+};
 
-export interface ItemLocationData {
-  city: string;
-  country: string;
-  radius: number;
-  region: string;
-}
+export type ItemFilter = {
+  offset?: number;
+  limit?: number;
+  categoryId?: string | null;
+  isFree?: boolean | null;
+  title?: string | null;
+  isNew?: boolean | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  country?: string | null;
+  region?: string | null;
+  city?: string | null;
+  radius?: number | null;
+  userId?: string | null;
+  favorite?: boolean | null;
+};
 
-export interface ItemData {
-  created_at: string;
-  currency: string;
-  description: string;
+export type EditItem = {
+  location?: Location;
+  id?: string;
+  created_at?: string;
+  updated_at?: string;
+  title?: string;
+  description?: string;
+  price?: number;
+  currency?: string;
+  is_free?: boolean;
+  is_new?: boolean;
+  published?: boolean;
+  categoryId?: string;
+  category?: CategoryItem;
+};
+
+export type CategoryItem = {
   id: string;
-  images: ItemImageData[];
-  is_free: string;
-  is_new: string;
-  location: ItemLocationData;
-  price: string;
-  price_usd: string;
-  published: boolean;
-  title: string;
+  name: string;
+  slug: string;
+  created_at: string;
   updated_at: string;
-  xl: boolean;
-}
+};

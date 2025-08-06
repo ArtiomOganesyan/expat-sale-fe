@@ -1,6 +1,6 @@
 import { Box, Slider, Typography } from '@mui/material';
-import { FC, useState } from 'react';
-import { EditItem } from '../../../../entities/items/items.type';
+import { type FC, useState } from 'react';
+import { type EditItem } from '../../../../entities/items/types/items';
 
 interface EditDistanceBlockProps {
   className?: string;
@@ -22,7 +22,7 @@ const marks = [
   },
 ];
 
-export const EditDistanceBlock: FC<EditDistanceBlockProps> = ({className, updatedItem, handleLocationChange, edit}) => {
+export const EditDistanceBlock: FC<EditDistanceBlockProps> = ({ className, updatedItem, handleLocationChange, edit }) => {
   const [val, setVal] = useState<number | number[] | undefined>(updatedItem.location ? updatedItem.location.radius : MIN);
   const handleChange = (_: Event, newValue: number | number[]) => {
     setVal(newValue);

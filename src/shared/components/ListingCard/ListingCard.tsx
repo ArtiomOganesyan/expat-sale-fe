@@ -1,11 +1,11 @@
 import Carousel from 'react-material-ui-carousel';
 import { Link } from 'react-router';
-import { type Item } from '../../../entities/items/items.type';
 import { useGetCurrencyRateQuery } from '../../../entities/currency/currencyAPI';
 import { LOCAL_STORAGE_KEY } from '../../../utils/constants/Item';
 import { useSwipeable } from 'react-swipeable';
 import { useState } from 'react';
 import styles from './ListingCard.module.css';
+import { type Item } from '../../../entities/items/types/items';
 
 interface ListingCardProps {
   item: Item;
@@ -73,7 +73,7 @@ function ListingCard({ item, url }: ListingCardProps) {
 
   return (
     <div
-      className={styles.cardContainer}
+      className={styles.card_container}
       style={{ gridColumn: item.xl ? 'span 2' : 'auto', gridRow: item.xl ? 'span 2' : 'auto' }}
       {...handlers}
     >

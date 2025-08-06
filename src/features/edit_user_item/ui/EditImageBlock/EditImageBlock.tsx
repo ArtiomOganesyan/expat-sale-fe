@@ -1,12 +1,12 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { type FC, useEffect, useRef, useState } from 'react';
 import styles from './EditImageBlock.module.css';
 import clsx from 'clsx';
-import { Item } from '../../../../entities/items/items.type';
 import ImageContainer from '../ImageContainer/ImageContainer';
 import { useDeleteImageInItemMutation, useUpdateImageToItemMutation } from '../../../../entities/items/itemAPI';
 import { GradientCircularProgress } from '../../../../widget/Loading/LoadingCircle';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { IconButton } from '@mui/material';
+import { type Item } from '../../../../entities/items/types/items';
 
 interface EditImageBlockProps {
   className?: string;
@@ -17,7 +17,7 @@ interface EditImageBlockProps {
 export const EditImageBlock: FC<EditImageBlockProps> = ({ className, item, edit }) => {
   const [updateImageToItem] = useUpdateImageToItemMutation();
   const [deleteImageInItemMutation] = useDeleteImageInItemMutation();
-  const [images, setImages] = useState(item?.images || []);
+  const [images, setImages] = useState<Partial<Item['images'][number]>[]>(item?.images || []);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -50,7 +50,7 @@ export const EditImageBlock: FC<EditImageBlockProps> = ({ className, item, edit 
           formData,
         });
 
-        const uploadedImage: Item['images'][number] = {
+        const uploadedImage: Partial<Item['images'][number]> = {
           id: Date.now().toString(),
           public_url: URL.createObjectURL(files[0]),
         };
@@ -70,7 +70,6 @@ export const EditImageBlock: FC<EditImageBlockProps> = ({ className, item, edit 
       await deleteImageInItemMutation({ imageId }).unwrap();
     } catch (err) {
       console.error('Ошибка при удалении изображения:', err);
-    } finally {
     }
   };
   return (
@@ -81,7 +80,7 @@ export const EditImageBlock: FC<EditImageBlockProps> = ({ className, item, edit 
           key={img.id}
           image={img.public_url ?? ''}
           updateItemImage={updateItemImage}
-          handleFileDeleteClick={() => deleteItemImage(img.id)}
+          handleFileDeleteClick={() => deleteItemImage(img.id || '')}
           fileInputRef={fileInputRef}
           handleFileInputClick={handleFileInputClick}
         />

@@ -8,8 +8,6 @@ function FavoriteFilter({
   filters: Record<string, any>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
-  console.log(filters.favorite);
-
   return (
     <Box sx={{ width: '100%', maxWidth: '350px', px: 2 }}>
       <Checkbox

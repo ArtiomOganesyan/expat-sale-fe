@@ -55,17 +55,13 @@ function ListingMasonry() {
 
   useEffect(() => {
     if (data) {
-      if (offset === 0) {
-        setAllItems(data);
-      } else {
-        setAllItems(prevItems => [...prevItems, ...data]);
-      }
+      setAllItems(prevItems => (offset === 0 ? data : [...prevItems, ...data]));
 
       if (data.length < 10) {
         setHasMore(false);
       }
     }
-  }, [data, offset]);
+  }, [data]);
 
   const loadMore = useCallback(() => {
     if (!isFetching && hasMore) {

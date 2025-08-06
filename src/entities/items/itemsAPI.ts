@@ -53,6 +53,7 @@ export const itemsAPI = listingApi.injectEndpoints({
           },
         ];
       },
+      transformResponse: (response: ItemData[]) => response.map(item => ({ ...item, xl: Math.random() * 100 > 80 }) as any),
     }),
     getItemsByUserId: builder.query<ItemData[], any>({
       query: ({ user_id }) => `/users/${user_id}/items`,

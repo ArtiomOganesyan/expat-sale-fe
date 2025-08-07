@@ -6,7 +6,6 @@ import Actions from './ui/Actions/Actions';
 import FormError from '../../shared/components/FormError/FormError';
 import { Paper } from '@mui/material';
 import { useGetItemByIdQuery, useUpdateItemMutation } from '../../entities/items/itemAPI';
-import { EditItem } from '../../entities/items/items.type';
 import FormCheckBox from '../../shared/components/FormCheck/FormCheckBox';
 import { formChangeHandler } from './utils/formChangeHandler';
 import { EditImageBlock } from './ui/EditImageBlock/EditImageBlock';
@@ -15,15 +14,16 @@ import { EditCategoryBlock } from './ui/EditCategoryBlock/EditCategoryBlock';
 import { EditConditionBlock } from './ui/EditConditionBlock/EditConditionBlock';
 import { EditLocationBlockBlock } from './ui/EditLocationBlock/EditLocationBlock';
 import { EditDistanceBlock } from './ui/EditDistanceBlock/EditDistanceBlock';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../../entities/user/userSlice';
 import { listingApi } from '../../entities/items/api';
+import { type EditItem } from '../../entities/items/types/items';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 
 function EditItemData() {
   const params = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { data: item, isLoading, isError } = useGetItemByIdQuery({ itemId: params.id });
-  const user = useSelector(selectUser);
+  const user = useAppSelector(selectUser);
   const [updatedItem, setUpdatedItem] = useState<EditItem | undefined>();
   const { handleInputChange, handleSelectChange, handleCheckboxChange, handleLocationChange } = formChangeHandler(setUpdatedItem);
   const [updateItemMutation, updateMeta] = useUpdateItemMutation();

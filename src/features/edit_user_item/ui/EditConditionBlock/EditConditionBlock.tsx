@@ -1,10 +1,10 @@
-import { FC, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 import styles from './EditConditionBlock.module.css';
 import clsx from 'clsx';
 import FormSelect from '../../../../shared/components/FormSelect/FormSelect';
-import { EditItem } from '../../../../entities/items/items.type';
 import { prepareCategoryText } from '../../../../utils/prepareCategoryText';
 import { CONDITION } from '../../../../utils/constants/Item';
+import { type EditItem } from '../../../../entities/items/types/items';
 
 interface EditConditionBlockProps {
   className?: string;

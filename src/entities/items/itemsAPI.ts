@@ -1,7 +1,6 @@
 import TAG_TYPES from '../../store/constants/TagTypes';
 import { listingApi } from './api';
-import { type ItemFilter, type Item } from './items.type';
-import { ItemData } from './types/items';
+import { type Item, type ItemFilter } from './types/items';
 
 export const itemsAPI = listingApi.injectEndpoints({
   endpoints: builder => ({
@@ -54,7 +53,7 @@ export const itemsAPI = listingApi.injectEndpoints({
         ];
       },
     }),
-    getItemsByUserId: builder.query<ItemData[], any>({
+    getItemsByUserId: builder.query<Item[], any>({
       query: ({ user_id }) => `/users/${user_id}/items`,
       providesTags: (_result, _error, { user_id }) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `items-user-${user_id}` }],
     }),

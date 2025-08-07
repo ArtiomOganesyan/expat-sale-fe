@@ -92,7 +92,13 @@ function ItemFilter() {
           handleChange={handleChange}
         />
       </AccordionSummary>
-      <AccordionDetails>
+      <AccordionDetails
+        sx={{
+          maxHeight: '70vh',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+        }}
+      >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {user && (
             <FavoriteFilter

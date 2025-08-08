@@ -1,10 +1,19 @@
 # Build stage
 FROM node:20-alpine AS build
 WORKDIR /app
+
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
+
+# Copy the environment file into the container
+COPY .env.docker .env
+
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+
+# Load environment variables and build the app
+RUN export $(cat .env | xargs) && npm run build
 
 # Production stage
 FROM nginx:alpine

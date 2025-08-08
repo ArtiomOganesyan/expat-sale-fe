@@ -1,0 +1,10 @@
+# Never bake local env files into the image
+.env
+# .env.*
+
+# Dependencies and build output
+node_modules
+dist
+
+# VCS
+.git

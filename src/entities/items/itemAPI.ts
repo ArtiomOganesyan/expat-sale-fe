@@ -58,6 +58,19 @@ export const itemAPI = listingApi.injectEndpoints({
       }),
       invalidatesTags: (result, error, { id }) => [{ type: TAG_TYPES.ITEM_BY_ID, id }],
     }),
+
+    addToFavorite: builder.mutation<void, { itemId: string }>({
+      query: ({ itemId }) => ({
+        url: `/items/favorite/${itemId}`,
+        method: 'POST',
+      }),
+    }),
+    removeFromFavorite: builder.mutation<void, { itemId: string }>({
+      query: ({ itemId }) => ({
+        url: `/items/favorite/${itemId}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -68,4 +81,6 @@ export const {
   useUpdateItemMutation,
   useDeleteImageInItemMutation,
   useGetItemByIdQuery,
+  useAddToFavoriteMutation,
+  useRemoveFromFavoriteMutation,
 } = itemAPI;

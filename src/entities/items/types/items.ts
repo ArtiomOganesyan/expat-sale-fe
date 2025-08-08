@@ -18,6 +18,7 @@ export type Item = {
   categoryId?: string;
   category?: CategoryItem;
   xl: boolean;
+  is_favorite: boolean;
 };
 
 type Location = {

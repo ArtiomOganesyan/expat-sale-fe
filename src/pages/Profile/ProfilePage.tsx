@@ -1,6 +1,6 @@
-import UserData from "../../features/user_data/UserData"
-import UserItemsButton from "../../features/user_items/UserItemsButton"
-import style from "./ProfilePage.module.css"
+import UserData from '../../features/user_data/UserData';
+import UserItemsButton from '../../features/user_items/UserItemsButton';
+import style from './ProfilePage.module.css';
 
 function ProfilePage() {
   return (
@@ -8,7 +8,7 @@ function ProfilePage() {
       <UserData />
       <UserItemsButton />
     </div>
-  )
+  );
 }
 
-export default ProfilePage
+export default ProfilePage;

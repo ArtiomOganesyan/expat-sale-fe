@@ -53,9 +53,9 @@ export const itemsAPI = listingApi.injectEndpoints({
         ];
       },
     }),
-    getItemsByUserId: builder.query<Item[], any>({
-      query: ({ user_id }) => `/users/${user_id}/items`,
-      providesTags: (_result, _error, { user_id }) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `items-user-${user_id}` }],
+    userProductStat: builder.query<{ total: number; published: number }, void>({
+      query: () => `/users/items`,
+      providesTags: (_result, _error) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `items-user-stat` }],
     }),
     checkStoreNameUniqueness: builder.query<any, any>({
       query: body => ({
@@ -77,23 +77,6 @@ export const itemsAPI = listingApi.injectEndpoints({
         method: 'GET',
       }),
     }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    createStore: builder.mutation<any, FormData>({
-      query: body => ({
-        url: '/stores',
-        method: 'POST',
-        body,
-      }),
-    }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    editStore: builder.mutation({
-      query: ({ storeId, body }) => ({
-        url: `/stores/${storeId}`,
-        method: 'PUT',
-        body,
-      }),
-      //   invalidatesTags: ["Store", "StoreList"],
-    }),
     getMaxPrice: builder.query<{ maxPrice: number }, { categoryId: string }>({
       query: ({ categoryId }) => `/items/max-price/${categoryId}`,
       providesTags: (_result, _error, categoryId) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `max-price-${categoryId}` }],
@@ -102,4 +85,4 @@ export const itemsAPI = listingApi.injectEndpoints({
   }),
 });
 
-export const { useGetListingMasonryQuery, useGetItemsByUserIdQuery, useGetMaxPriceQuery } = itemsAPI;
+export const { useGetListingMasonryQuery, useUserProductStatQuery, useGetMaxPriceQuery } = itemsAPI;

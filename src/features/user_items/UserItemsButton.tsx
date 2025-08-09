@@ -1,19 +1,14 @@
 import { useNavigate } from 'react-router';
-import { Button, IconButton, Paper } from '@mui/material';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import { useGetItemsByUserIdQuery } from '../../entities/items/itemsAPI';
+import { Button } from '@mui/material';
 import { useAppSelector } from '../../hooks/hooks';
 import { selectUser } from '../../entities/user/userSlice';
+import { useUserProductStatQuery } from '../../entities/items/itemsAPI';
 
 function UserItemsButton() {
   const navigate = useNavigate();
-  const user = useAppSelector(selectUser);
 
-  const { data, isLoading, isFetching, isError, error } = useGetItemsByUserIdQuery({ user_id: user?.id });
+  const { isLoading, isFetching, isError, error } = useUserProductStatQuery();
 
-  const createNewItem = () => {
-    navigate('/item/new');
-  };
   const moveToUserItems = () => {
     navigate('/profile/userItemsList');
   };

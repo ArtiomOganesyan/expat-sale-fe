@@ -17,6 +17,7 @@ export const itemAPI = listingApi.injectEndpoints({
         body: body,
         credentials: 'include',
       }),
+      invalidatesTags: (result, error) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `items-user-stat` }],
     }),
     addImageToItem: builder.mutation<any, any>({
       query: ({ itemId, files }) => {
@@ -56,7 +57,10 @@ export const itemAPI = listingApi.injectEndpoints({
         body: data,
         credentials: 'include',
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: TAG_TYPES.ITEM_BY_ID, id }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: TAG_TYPES.ITEM_BY_ID, id },
+        { type: TAG_TYPES.LISTING_MASONRY, id: `items-user-stat` },
+      ],
     }),
   }),
 });

@@ -62,6 +62,19 @@ export const itemAPI = listingApi.injectEndpoints({
         { type: TAG_TYPES.LISTING_MASONRY, id: `items-user-stat` },
       ],
     }),
+
+    addToFavorite: builder.mutation<void, { itemId: string }>({
+      query: ({ itemId }) => ({
+        url: `/items/favorite/${itemId}`,
+        method: 'POST',
+      }),
+    }),
+    removeFromFavorite: builder.mutation<void, { itemId: string }>({
+      query: ({ itemId }) => ({
+        url: `/items/favorite/${itemId}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -72,4 +85,6 @@ export const {
   useUpdateItemMutation,
   useDeleteImageInItemMutation,
   useGetItemByIdQuery,
+  useAddToFavoriteMutation,
+  useRemoveFromFavoriteMutation,
 } = itemAPI;

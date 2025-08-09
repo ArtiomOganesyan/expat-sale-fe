@@ -7,6 +7,7 @@ import { GradientCircularProgress } from '../../../../widget/Loading/LoadingCirc
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { IconButton } from '@mui/material';
 import { type Item } from '../../../../entities/items/types/items';
+import { useSnackbar } from '../../../../shared/hooks/useSnackbar';
 
 interface EditImageBlockProps {
   className?: string;
@@ -20,6 +21,7 @@ export const EditImageBlock: FC<EditImageBlockProps> = ({ className, item, edit 
   const [images, setImages] = useState<Partial<Item['images'][number]>[]>(item?.images || []);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (item?.images) {
@@ -59,6 +61,11 @@ export const EditImageBlock: FC<EditImageBlockProps> = ({ className, item, edit 
       }
     } catch (error) {
       console.error('Error updating avatar:', error);
+      showSnackbar({
+        title: 'Image upload failed',
+        subtitle: 'Something went wrong while uploading. Try again later.',
+        severity: 'error',
+      });
     } finally {
       setIsUploadingImage(false);
     }
@@ -70,6 +77,11 @@ export const EditImageBlock: FC<EditImageBlockProps> = ({ className, item, edit 
       await deleteImageInItemMutation({ imageId }).unwrap();
     } catch (err) {
       console.error('Ошибка при удалении изображения:', err);
+      showSnackbar({
+        title: 'Delete failed',
+        subtitle: 'Could not delete the image. Try again later.',
+        severity: 'error',
+      });
     }
   };
   return (

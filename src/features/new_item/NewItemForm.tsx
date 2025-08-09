@@ -13,11 +13,14 @@ import { NewItemCondition } from './ui/NewItemCondition/NewItemCondition';
 import { NewItemCategory } from './ui/NewItemCategory/NewItemCategory';
 import { NewItemCurrency } from './ui/NewItemCurrency/NewItemCurrency';
 import { NewItemDistance } from './ui/NewItemDistance/NewItemDistance';
+import { useSnackbar } from '../../shared/hooks/useSnackbar';
+import { useNavigate } from 'react-router';
 
 function NewItemForm() {
   const [create, createMeta] = useCreateItemMutation();
   const [addImage, addImageMeta] = useAddImageToItemMutation();
   const isLoading = createMeta.isLoading || addImageMeta.isLoading;
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -42,6 +45,8 @@ function NewItemForm() {
 
   const { handleInputChange, handleSelectChange, handleCheckboxChange, handleLocationChange } = formChangeHandler(setFormData);
 
+  const { showSnackbar } = useSnackbar();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // const priceInEUR = getEURPrice(formData.price, formData.currency)
@@ -58,10 +63,24 @@ function NewItemForm() {
       currency: formData.currency,
     });
 
+    if ('error' in result) {
+      showSnackbar({
+        title: 'Error creating item',
+        subtitle: 'Please check the form or try again later',
+        severity: 'error',
+      });
+      return;
+    }
+
     if (result.data) {
       const itemId = result.data.id;
       const addFilesResult = await addImage({ itemId, files });
-      window.location.assign('/profile/userItemsList');
+      showSnackbar({
+        title: 'Item created',
+        subtitle: 'Your item has been successfully added',
+        severity: 'success',
+      });
+      navigate('/profile/userItemsList');
     }
   };
 
@@ -126,7 +145,7 @@ function NewItemForm() {
           handleLocationChange={handleLocationChange}
           setFormData={setFormData}
         />
-        <NewItemDistance handleLocationChange={handleLocationChange}/>
+        <NewItemDistance handleLocationChange={handleLocationChange} />
         <div className={styles.item_option_block}>
           <FormCheckBox
             label={'Free'}

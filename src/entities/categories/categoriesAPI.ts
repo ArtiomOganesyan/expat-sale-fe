@@ -13,12 +13,6 @@ export const categoriesAPI = createApi({
         url: `/categories`,
         method: 'GET',
       }),
-      transformResponse: (response: Category[]) =>
-        response.sort((a, b) => {
-          if (a.name === 'Others') return 1;
-          if (b.name === 'Others') return -1;
-          return a.name.localeCompare(b.name);
-        }),
       providesTags: result => (result ? [{ type: TAG_TYPES.CATEGORIES, id: 'LIST' }] : []),
     }),
     getParentCategories: builder.query<Category[], void>({
@@ -27,12 +21,6 @@ export const categoriesAPI = createApi({
         method: 'GET',
         credentials: 'include',
       }),
-      transformResponse: (response: Category[]) =>
-        response.sort((a, b) => {
-          if (a.name === 'Others') return 1;
-          if (b.name === 'Others') return -1;
-          return a.name.localeCompare(b.name);
-        }),
       providesTags: result => (result ? [{ type: TAG_TYPES.CATEGORIES, id: 'PARENT-LIST' }] : []),
     }),
   }),

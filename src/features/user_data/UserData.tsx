@@ -11,6 +11,7 @@ import Actions from './ui/Actions';
 import FormError from '../../shared/components/FormError/FormError';
 import { Paper } from '@mui/material';
 import { type User } from '../../entities/user/user.type';
+import { useSnackbar } from '../../shared/hooks/useSnackbar';
 
 function UserData() {
   const [edit, setEdit] = useState(false);
@@ -24,6 +25,7 @@ function UserData() {
 
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     setUpdatedUser(user);
@@ -31,13 +33,20 @@ function UserData() {
 
   useEffect(() => {
     if (updateMeta.isError) {
-      setError((updateMeta?.error as any)?.data?.error || 'An error occurred.');
+      const err = (updateMeta?.error as any)?.data?.error || 'An error occurred.';
+      setError(err);
+
+      showSnackbar({
+        title: 'Update failed',
+        subtitle: err,
+        severity: 'error',
+      });
 
       setTimeout(() => {
         setError('');
       }, 3000);
     }
-  }, [updateMeta]);
+  }, [updateMeta, showSnackbar]);
 
   const handleEdit = () => {
     setEdit(bool => {
@@ -48,7 +57,7 @@ function UserData() {
     });
   };
 
-  const handleEditSave = () => {
+  const handleEditSave = async () => {
     setEdit(false);
 
     const data = { ...updatedUser };
@@ -60,7 +69,14 @@ function UserData() {
     delete data.role;
 
     if (user) {
-      updateUserMutation({ id: user?.id, data });
+      const res = await updateUserMutation({ id: user?.id, data });
+      if (!('error' in res)) {
+        showSnackbar({
+          title: 'Profile updated',
+          subtitle: 'Your information has been saved',
+          severity: 'success',
+        });
+      }
     }
   };
 
@@ -102,6 +118,11 @@ function UserData() {
           id: user.id,
           entity: 'user',
           formData,
+        });
+        showSnackbar({
+          title: 'Avatar updated',
+          subtitle: 'Your avatar has been successfully updated',
+          severity: 'success',
         });
       }
     } catch (error) {

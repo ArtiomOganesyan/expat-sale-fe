@@ -5,12 +5,14 @@ import { useRegisterMutation } from '../../../entities/user/authAPI';
 import FormInput from '../../../shared/components/FormInput/FormInput';
 import { Button } from '@mui/material';
 import FormError from '../../../shared/components/FormError/FormError';
+import { useSnackbar } from '../../../shared/hooks/useSnackbar';
 
 function RegisterForm() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [error, setError] = React.useState('');
+  const { showSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
@@ -45,6 +47,11 @@ function RegisterForm() {
     const res = await register({ username, password });
 
     if (res?.data?.id) {
+      showSnackbar({
+        title: 'Account created',
+        subtitle: 'You can now log in with your credentials',
+        severity: 'success',
+      });
       navigate('/');
     }
   };

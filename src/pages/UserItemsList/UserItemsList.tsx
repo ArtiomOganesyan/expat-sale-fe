@@ -91,7 +91,7 @@ function UserItemsList() {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div className={styles.stat}> Total items: {userStats?.total}</div>
-          <div className={styles.stat}> Published: {userStats?.published}</div>
+          <div className={styles.stat}> Published: {userStats?.published} / 5</div>
         </div>
       </Paper>
       <div>

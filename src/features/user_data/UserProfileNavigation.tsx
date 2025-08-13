@@ -25,7 +25,7 @@ function UserProfileNavigation() {
     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '2rem' }}>
       <Button
         onClick={moveToUserItems}
-        style={{ flex: 3 }}
+        style={{ flex: 2 }}
       >
         My Products
       </Button>

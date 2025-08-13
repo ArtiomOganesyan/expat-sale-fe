@@ -9,9 +9,10 @@ import FormInput from '../../shared/components/FormInput/FormInput';
 import ImageContainer from './ui/ImageContainer';
 import Actions from './ui/Actions';
 import FormError from '../../shared/components/FormError/FormError';
-import { Paper } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import { type User } from '../../entities/user/user.type';
 import { useSnackbar } from '../../shared/hooks/useSnackbar';
+import UserProfileNavigation from './UserProfileNavigation';
 
 function UserData() {
   const [edit, setEdit] = useState(false);
@@ -165,6 +166,9 @@ function UserData() {
           />
         </div>
         <div className={style.break_line} />
+        <UserProfileNavigation />
+        <div className={style.break_line} />
+        <Typography variant='h4'>Contact Information</Typography>
         <div className={style.user_data}>
           <FormInput
             id='email'

@@ -22,14 +22,14 @@ export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLoc
   const skipCountriesQuery = debouncedCountryInputValue.length < 3;
   const skipRegionsQuery = debouncedRegionInputValue.length < 3;
 
-  const {
-    data: Countries,
-    isLoading: IsLoadingCountries,
-  } = useGetCountriesQuery({ query: debouncedCountryInputValue }, { skip: skipCountriesQuery });
-  const {
-    data: Regions,
-    isLoading: IsLoadingRegions,
-  } = useGetRegionsQuery({ query: debouncedRegionInputValue }, { skip: skipRegionsQuery });
+  const { data: Countries, isLoading: IsLoadingCountries } = useGetCountriesQuery(
+    { query: debouncedCountryInputValue },
+    { skip: skipCountriesQuery }
+  );
+  const { data: Regions, isLoading: IsLoadingRegions } = useGetRegionsQuery(
+    { query: debouncedRegionInputValue },
+    { skip: skipRegionsQuery }
+  );
   useEffect(() => {
     const countryRegions = Countries?.reduce<{ region: string; label: string }[]>((acc, item) => {
       const regionsOptions = item.regions.map(region => ({
@@ -85,6 +85,7 @@ export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLoc
         id={'country'}
         onChange={(_, newValue) => {
           handleLocationChange('location', 'country', newValue?.country);
+          // setCountryInputValue(newValue?.label ?? '');
           // setRegionInputValue(newValue?.region || '');
         }}
         inputValue={countryInputValue}
@@ -98,7 +99,6 @@ export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLoc
               }))
             : []
         }
-        // disabled={IsLoadingRegions}
         isLoading={IsLoadingCountries}
         error={Countries?.length === 0 && countryInputValue.length !== 0 ? 'No countries' : ''}
       />
@@ -110,6 +110,7 @@ export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLoc
         onChange={(_, newValue) => {
           setSelectedRegion(newValue || null);
           handleLocationChange('location', 'region', newValue?.region);
+          // setRegionInputValue(newValue?.label ?? '');
         }}
         inputValue={regionInputValue}
         onInputChange={(_, newInputValue) => handleChangeRegions(newInputValue)}
@@ -144,7 +145,7 @@ export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLoc
             : []
         }
         disabled={!selectedRegion}
-        error={cityInputValue.length !== 0 ? 'No cities' : ''}
+        error={cityInputValue.length !== 0 && (citiesList?.length ?? 0) === 0 ? 'No cities' : ''}
       />
     </React.Fragment>
   );

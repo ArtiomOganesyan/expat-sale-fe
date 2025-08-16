@@ -1,7 +1,7 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 type FormSelectProps<TOption> = {
   value?: (TOption & { label: string; groupBy?: string }) | null;
@@ -15,6 +15,7 @@ type FormSelectProps<TOption> = {
   onInputChange?: (event: React.SyntheticEvent, newInputValue: string, reason: string) => void;
   isLoading?: boolean;
   error?: string;
+  onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 };
 
 function FromSelectSearch<TOption>({
@@ -29,25 +30,32 @@ function FromSelectSearch<TOption>({
   onInputChange,
   isLoading,
   error,
+  onBlur
 }: FormSelectProps<TOption>) {
   return (
     <Autocomplete
       disablePortal
+      disabled={disabled}
       noOptionsText={error ? error : 'No options'}
       id={id}
       onChange={onChange}
       options={options}
       getOptionLabel={option => option.label}
+      isOptionEqualToValue={(opt, val) => opt.label === (val as any)?.label}
       value={value}
       inputValue={inputValue}
       onInputChange={onInputChange}
       groupBy={option => option.groupBy || ''}
       filterOptions={x => x}
+      loading={isLoading}
       renderInput={params => (
         <TextField
           {...params}
           label={label}
           disabled={disabled}
+          error={Boolean(error)}
+          helperText={error || ''}
+          onBlur={onBlur}
           slotProps={{
             input: {
               ...params.InputProps,
@@ -67,8 +75,6 @@ function FromSelectSearch<TOption>({
         />
       )}
       sx={{ ...sx, width: '100%' }}
-      disabled={disabled}
-      loading={isLoading}
     />
   );
 }

@@ -1,4 +1,5 @@
 import TextField from "@mui/material/TextField"
+import type { ChangeEvent, FocusEvent, ReactNode, Ref } from "react"
 
 type FormInputProps = {
   id: string
@@ -11,8 +12,12 @@ type FormInputProps = {
   inlineStyles?: React.CSSProperties
   slotProps?: any
   sx?: any
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (e: FocusEvent<HTMLInputElement>) => void
+  error?: boolean
+  helperText?: ReactNode
   options?: any
+  inputRef?: Ref<HTMLInputElement>
 }
 
 function FormInput({
@@ -21,12 +26,16 @@ function FormInput({
   id,
   name,
   onChange,
+  onBlur,
   value,
   placeholder,
   disabled,
   sx,
   slotProps,
+  error,
+  helperText,
   options,
+  inputRef
 }: FormInputProps) {
   return (
     <TextField
@@ -37,10 +46,14 @@ function FormInput({
       name={name}
       value={value}
       onChange={onChange}
+      onBlur={onBlur}
       placeholder={placeholder}
       disabled={disabled}
+      error={error}
+      helperText={helperText}
       sx={{ ...sx, width: "100%" }}
       slotProps={slotProps}
+      inputRef={inputRef}
       {...options}
     />
   )

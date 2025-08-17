@@ -4,6 +4,7 @@ import PrivateRoute from './routes/PrivateRoute';
 import ListingMasonry from '../features/items/ListingMasonry';
 import Layout from '../layouts/MainLayout/MainLayout';
 import AboutPage from '../pages/AboutPage/AboutPage';
+import { LoadingComponent } from '../widget/Loading/LoadingComponent';
 
 const ListingMenu = lazy(() => import('../pages/ListingMenu/ListingMenu'));
 const Listing = lazy(() => import('../pages/Listing/Listing'));
@@ -19,7 +20,7 @@ const SettingsPage = lazy(() => import('../pages/Settings/SettingsPage'));
 
 function AppRouter() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingComponent />}>
       <Routes>
         <Route element={<Layout />}>
           <Route element={<Listing />}>

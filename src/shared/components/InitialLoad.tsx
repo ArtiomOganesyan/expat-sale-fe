@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useAuthCheckQuery } from '../../entities/user/authAPI';
 import { useGetCurrencyRateQuery } from '../../entities/currency/currencyAPI';
 import { useGetCategoriesQuery } from '../../entities/categories/categoriesAPI';
+import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
 
 function InitialLoad() {
   const { error: authError, isLoading: authIsLoading } = useAuthCheckQuery();
@@ -55,7 +56,7 @@ function InitialLoad() {
           background: 'white',
         }}
       >
-        Loading....
+        <LoadingComponent />
       </div>
     );
   }

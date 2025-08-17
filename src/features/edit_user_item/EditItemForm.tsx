@@ -19,6 +19,7 @@ import { listingApi } from '../../entities/items/api';
 import { type EditItem } from '../../entities/items/types/items';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { useSnackbar } from '../../shared/hooks/useSnackbar';
+import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
 
 function EditItemData() {
   const params = useParams();
@@ -109,7 +110,7 @@ function EditItemData() {
   };
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <LoadingComponent />;
   }
 
   if (isError) {
@@ -117,112 +118,107 @@ function EditItemData() {
   }
 
   return (
-    <Paper
-      elevation={10}
-      className={styles.container}
-    >
-      <form>
-        <div className={styles.header}>
-          <EditImageBlock
-            className={styles.images}
-            item={item}
-            edit={edit}
-          />
-          <FormInput
-            id='title'
-            label='Title'
-            type='text'
-            name='title'
-            placeholder='Title'
-            value={updatedItem?.title || ''}
-            disabled={!edit}
-            onChange={handleInputChange}
-          />
+    <form className={styles.container}>
+      <div className={styles.header}>
+        <EditImageBlock
+          className={styles.images}
+          item={item}
+          edit={edit}
+        />
+        <FormInput
+          id='title'
+          label='Title'
+          type='text'
+          name='title'
+          placeholder='Title'
+          value={updatedItem?.title || ''}
+          disabled={!edit}
+          onChange={handleInputChange}
+        />
 
-          <Actions
-            edit={edit}
-            updateMeta={updateMeta}
-            handleEdit={handleEdit}
-            handleEditSave={handleEditSave}
-          />
-        </div>
-        <div className={styles.break_line} />
-        <div className={styles.user_data}>
-          <FormInput
-            id='description'
-            type='text'
-            label='Description'
-            placeholder='Description'
-            name='description'
-            value={updatedItem?.description || ''}
-            disabled={!edit}
-            onChange={handleInputChange}
-          />
-          <FormInput
-            label={'Price'}
-            type={'number'}
-            id={'price'}
-            name={'price'}
-            disabled={!edit}
-            value={updatedItem?.price || ''}
-            onChange={handleInputChange}
-          />
-          <EditCurrencyBlock
-            updatedItem={updatedItem}
-            handleSelectChange={handleSelectChange}
-            edit={edit}
-          />
+        <Actions
+          edit={edit}
+          updateMeta={updateMeta}
+          handleEdit={handleEdit}
+          handleEditSave={handleEditSave}
+        />
+      </div>
+      <div className={styles.break_line} />
+      <div className={styles.user_data}>
+        <FormInput
+          id='description'
+          type='text'
+          label='Description'
+          placeholder='Description'
+          name='description'
+          value={updatedItem?.description || ''}
+          disabled={!edit}
+          onChange={handleInputChange}
+        />
+        <FormInput
+          label={'Price'}
+          type={'number'}
+          id={'price'}
+          name={'price'}
+          disabled={!edit}
+          value={updatedItem?.price || ''}
+          onChange={handleInputChange}
+        />
+        <EditCurrencyBlock
+          updatedItem={updatedItem}
+          handleSelectChange={handleSelectChange}
+          edit={edit}
+        />
 
-          <EditCategoryBlock
-            updatedItem={updatedItem}
-            handleSelectChange={handleSelectChange}
-            edit={edit}
-          />
+        <EditCategoryBlock
+          updatedItem={updatedItem}
+          handleSelectChange={handleSelectChange}
+          edit={edit}
+        />
 
-          <EditConditionBlock
-            updatedItem={updatedItem}
-            handleSelectChange={handleSelectChange}
-            edit={edit}
-          />
+        <EditConditionBlock
+          updatedItem={updatedItem}
+          handleSelectChange={handleSelectChange}
+          edit={edit}
+        />
 
-          <EditLocationBlockBlock
+        <EditLocationBlockBlock
+          updatedItem={updatedItem}
+          handleLocationChange={handleLocationChange}
+          edit={edit}
+        />
+
+        {updatedItem && (
+          <EditDistanceBlock
             updatedItem={updatedItem}
             handleLocationChange={handleLocationChange}
             edit={edit}
           />
+        )}
 
-          {updatedItem && (
-            <EditDistanceBlock
-              updatedItem={updatedItem}
-              handleLocationChange={handleLocationChange}
-              edit={edit}
+        {updatedItem && (
+          <div className={styles.item_option_block}>
+            <FormCheckBox
+              label={'Free'}
+              id={'is_free'}
+              name={'is_free'}
+              checked={updatedItem.is_free}
+              onChange={(_, checked) => handleCheckboxChange('is_free', checked)}
+              disabled={!edit}
             />
-          )}
-
-          {updatedItem && (
-            <div className={styles.item_option_block}>
-              <FormCheckBox
-                label={'Free'}
-                id={'is_free'}
-                name={'is_free'}
-                checked={updatedItem.is_free}
-                onChange={(_, checked) => handleCheckboxChange('is_free', checked)}
-                disabled={!edit}
-              />
-              <FormCheckBox
-                label={'Published'}
-                id={'published'}
-                name={'published'}
-                checked={updatedItem.published}
-                onChange={(_, checked) => handleCheckboxChange('published', checked)}
-                disabled={!edit}
-              />
-            </div>
-          )}
-        </div>
-        <FormError error={error} />
-      </form>
-    </Paper>
+            <FormCheckBox
+              label={'Published'}
+              id={'published'}
+              name={'published'}
+              checked={updatedItem.published}
+              onChange={(_, checked) => handleCheckboxChange('published', checked)}
+              disabled={!edit}
+            />
+          </div>
+        )}
+      </div>
+      <FormError error={error} />
+    </form>
   );
 }
 

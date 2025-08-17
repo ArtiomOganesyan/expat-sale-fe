@@ -3,7 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 
 
-export function GradientCircularProgress() {
+export function LoadingComponent() {
   return (
     <React.Fragment>
       <svg width={0} height={0}>

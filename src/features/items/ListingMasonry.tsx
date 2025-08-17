@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import ListingCard from '../../shared/components/ListingCard/ListingCard';
 import styles from './ListingMasonry.module.css';
 import { useGetListingMasonryQuery } from '../../entities/items/itemsAPI';
+import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
 
 function ListingMasonry() {
   const location = useLocation();
@@ -126,7 +127,7 @@ function ListingMasonry() {
         <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>No more items to load</div>
       )}
 
-      {isFetching && allItems.length === 0 && <div>Loading...</div>}
+      {isFetching && allItems.length === 0 && <LoadingComponent />}
     </div>
   );
 }

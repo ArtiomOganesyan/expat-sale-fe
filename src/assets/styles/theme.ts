@@ -59,29 +59,46 @@ export const theme = createTheme({
       },
     },
     MuiButton: {
+      defaultProps: {
+        variant: 'contained',
+      },
       styleOverrides: {
         root: {
-          '& .MuiSvgIcon-root': {
-            fill: 'var(--color-white)',
-          },
-          '&.Mui-disabled': {
-            backgroundColor: 'var(--color-gray-light)',
-            color: 'var(--color-text-secondary)',
-            '& .MuiSvgIcon-root': {
-              fill: 'var(--color-text-secondary)',
-            },
-          },
           width: '100%',
           height: '54px',
           borderRadius: 10,
           fontWeight: 500,
+        },
+
+        contained: {
           backgroundColor: 'var(--color-black)',
-          '&:hover': {
-            backgroundColor: 'var(--color-gray-black)',
-          },
           color: 'var(--color-white)',
+          '& .MuiSvgIcon-root': { fill: 'var(--color-white)' },
+          '&:hover': { backgroundColor: 'var(--color-gray-black)' },
+          '&.Mui-disabled': {
+            backgroundColor: 'var(--color-gray-light)',
+            color: 'var(--color-text-secondary)',
+            '& .MuiSvgIcon-root': { fill: 'var(--color-text-secondary)' },
+          },
+        },
+
+        outlined: {
+          backgroundColor: 'transparent',
+          color: 'var(--color-black)',
+          border: '2px solid currentColor',
+          '& .MuiSvgIcon-root': { fill: 'currentColor' },
+          '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' },
         },
       },
+      variants: [
+        {
+          props: { variant: 'outlined', disabled: true },
+          style: {
+            color: 'var(--color-gray-light)',
+            borderColor: 'var(--color-gray-light)',
+          },
+        },
+      ],
     },
     MuiOutlinedInput: {
       styleOverrides: {

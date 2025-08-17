@@ -13,6 +13,7 @@
   flex-direction: column;
   padding: 16px;
   border-radius: 0;
+  gap: 16px;
 
   /* the background should be blurry */
   backdrop-filter: blur(20px);
@@ -22,8 +23,13 @@
 }
 
 .title_container {
+  position: relative;
+  width: 100%;
+  height: 40px;
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
 
   .title {
     color: var(--color-text-primary);
@@ -31,8 +37,12 @@
     font-weight: 600;
     line-height: 100%;
     letter-spacing: -1.2px;
-    margin-right: auto;
   }
+}
+.title_icon {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .count {
@@ -51,7 +61,7 @@
 }
 
 .list {
-  padding-top: 100px;
+  padding-top: 200px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 12px;

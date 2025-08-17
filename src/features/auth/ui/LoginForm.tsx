@@ -5,11 +5,13 @@ import { useNavigate } from 'react-router';
 import FormInput from '../../../shared/components/FormInput/FormInput';
 import FormError from '../../../shared/components/FormError/FormError';
 import { Button } from '@mui/material';
+import { useSnackbar } from '../../../shared/hooks/useSnackbar';
 
 function LoginForm() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState('');
+  const { showSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
@@ -17,19 +19,31 @@ function LoginForm() {
 
   useEffect(() => {
     if (meta.isError) {
-      setError((meta?.error as any)?.data?.error || 'An error occurred.');
+      const err = (meta?.error as any)?.data?.error || 'Invalid username or password';
+      setError(err);
+
+      showSnackbar({
+        title: 'Login failed',
+        subtitle: err,
+        severity: 'error',
+      });
 
       setTimeout(() => {
         setError('');
       }, 3000);
     }
-  }, [meta]);
+  }, [meta, showSnackbar]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const res = await login({ username, password });
 
     if (res?.data?.id) {
+      showSnackbar({
+        title: 'Welcome back!',
+        subtitle: 'You have successfully logged in',
+        severity: 'success',
+      });
       navigate('/');
     }
   };

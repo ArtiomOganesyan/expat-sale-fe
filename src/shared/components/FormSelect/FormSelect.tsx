@@ -1,5 +1,6 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import type { ReactNode } from 'react';
 
 type FormSelectProps<TOption> = {
   label?: string;
@@ -9,9 +10,12 @@ type FormSelectProps<TOption> = {
   options: (TOption & { label: string; groupBy?: string })[];
   sx?: any;
   value?: (TOption & { label: string; groupBy?: string }) | null;
+  error?: boolean;
+  helperText?: ReactNode;
+  onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 };
 
-function FormSelect<TOption>({ label, id, onChange, disabled, options, sx, value }: FormSelectProps<TOption>) {
+function FormSelect<TOption>({ label, id, onChange, disabled, options, sx, value, error, helperText, onBlur}: FormSelectProps<TOption>) {
   return (
     <Autocomplete
       value={value || null}
@@ -21,14 +25,17 @@ function FormSelect<TOption>({ label, id, onChange, disabled, options, sx, value
       options={options}
       getOptionLabel={option => option.label}
       groupBy={option => option.groupBy || ''}
+      sx={{ ...sx, width: '100%' }}
+      disabled={disabled}
       renderInput={params => (
         <TextField
           {...params}
           label={label}
+          error={error}
+          helperText={helperText}
+          onBlur={onBlur}
         />
       )}
-      sx={{ ...sx, width: '100%' }}
-      disabled={disabled}
     />
   );
 }

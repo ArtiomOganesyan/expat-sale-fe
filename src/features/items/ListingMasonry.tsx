@@ -26,6 +26,8 @@ function ListingMasonry() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadingRef = useRef<HTMLDivElement | null>(null);
 
+  const limit = 10;
+
   const queryParams = {
     limit: 10,
     offset,
@@ -57,15 +59,15 @@ function ListingMasonry() {
     if (data) {
       setAllItems(prevItems => (offset === 0 ? data : [...prevItems, ...data]));
 
-      if (data.length < 10) {
+      if (data.length < limit) {
         setHasMore(false);
       }
     }
-  }, [data]);
+  }, [data, offset]);
 
   const loadMore = useCallback(() => {
     if (!isFetching && hasMore) {
-      setOffset(prevOffset => prevOffset + 10);
+      setOffset(prevOffset => prevOffset + limit);
     }
   }, [isFetching, hasMore]);
 

@@ -46,11 +46,25 @@ function LocationFilter({ filters, handleLocationChange }: LocationFilterProps) 
     }));
   }, [filters]);
 
-  // Fetch countries when user types (minimum 3 characters)
+  // Decide whether we should fetch countries: either user typed >=3 chars OR we have a pre-filled filter (page reload case)
+  const shouldFetchCountries =
+    (searchInputs.country && searchInputs.country.length >= 3) || (filters.country && searchInputs.country === filters.country);
+
+  // Fetch countries when user types (minimum 3 chars) OR when we need to rehydrate pre-selected country from filters on reload
   const { data: countries = [], isFetching: isLoadingCountries } = useGetCountriesQuery(
     { query: searchInputs.country },
-    { skip: searchInputs.country.length < 3 }
+    { skip: !shouldFetchCountries }
   );
+
+  // When countries load and we have a country filter but no country object selected yet, set it.
+  useEffect(() => {
+    if (!locationState.country && filters.country && countries.length) {
+      const matched = countries.find(c => c.country === filters.country);
+      if (matched) {
+        setLocationState(prev => ({ ...prev, country: matched }));
+      }
+    }
+  }, [countries, filters.country, locationState.country]);
 
   // Get regions from selected country (no API call needed)
   const availableRegions = locationState.country?.regions || [];
@@ -113,6 +127,7 @@ function LocationFilter({ filters, handleLocationChange }: LocationFilterProps) 
   ) => (
     <Autocomplete
       options={options}
+      size='small'
       getOptionLabel={getOptionLabel}
       value={value}
       inputValue={inputValue}
@@ -163,30 +178,33 @@ function LocationFilter({ filters, handleLocationChange }: LocationFilterProps) 
         value => setSearchInputs(prev => ({ ...prev, country: value })),
         'Start typing to search countries...'
       )}
-      {renderAutocomplete(
-        'Region',
-        filteredRegions,
-        locationState.region,
-        searchInputs.region,
-        false, // No loading since we're using pre-filled data
-        !locationState.country, // Disabled if no country selected
-        option => option, // Regions are now strings, not objects
-        handleRegionChange,
-        value => setSearchInputs(prev => ({ ...prev, region: value })),
-        locationState.country ? 'Start typing to search regions...' : 'Select a country first'
-      )}
-      {renderAutocomplete(
-        'City',
-        filteredCities,
-        locationState.city,
-        searchInputs.city,
-        isLoadingRegions,
-        !locationState.region, // Disabled if no region selected
-        option => option, // Cities are now strings, not objects
-        handleCityChange,
-        value => setSearchInputs(prev => ({ ...prev, city: value })),
-        locationState.region ? 'Start typing to search cities...' : 'Select a region first'
-      )}
+      {locationState.country &&
+        renderAutocomplete(
+          'Region',
+          filteredRegions,
+          locationState.region,
+          searchInputs.region,
+          false, // local filter only
+          false,
+          option => option,
+          handleRegionChange,
+          value => setSearchInputs(prev => ({ ...prev, region: value })),
+          'Start typing to search regions...'
+        )}
+      {locationState.country &&
+        locationState.region &&
+        renderAutocomplete(
+          'City',
+          filteredCities,
+          locationState.city,
+          searchInputs.city,
+          isLoadingRegions,
+          false,
+          option => option,
+          handleCityChange,
+          value => setSearchInputs(prev => ({ ...prev, city: value })),
+          'Start typing to search cities...'
+        )}
     </Box>
   );
 }

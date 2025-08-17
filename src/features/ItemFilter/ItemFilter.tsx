@@ -85,7 +85,7 @@ function ItemFilter() {
   }, [inputValue]);
 
   return (
-    <Accordion sx={{ width: '100%' }}>
+    <Accordion sx={{ width: '100%', backdropFilter: 'blur(20px)', backgroundColor: `rgba(255, 255, 255, 0.5)` }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <MainFilter
           inputValue={inputValue}

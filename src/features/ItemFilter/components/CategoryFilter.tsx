@@ -26,7 +26,15 @@ function CategoryFilter({
     ];
 
     categories?.forEach(category => {
-      children.push(<ListSubheader key={category.id}>{category.name}</ListSubheader>);
+      children.push(
+        <MenuItem
+          key={category.id}
+          value={category.id}
+          sx={{ borderBottom: '1px solid grey', borderTop: '4px solid grey' }}
+        >
+          {category.name}
+        </MenuItem>
+      );
       category.children?.map(child =>
         children.push(
           <MenuItem

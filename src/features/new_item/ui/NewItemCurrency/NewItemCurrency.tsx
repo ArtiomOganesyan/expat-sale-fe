@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import FormSelect from '../../../../shared/components/FormSelect/FormSelect';
+import { useEffect } from 'react';
 import { getSelectedOption } from '../../../../utils/getSelectedOption';
 import { useAppSelector } from '../../../../hooks/hooks';
 import { getRates } from '../../../../entities/currency/currencySlice';
@@ -17,8 +18,7 @@ export const NewItemCurrency: FC<NewItemCurrencyProps> = ({ className, formData,
   const currencyRates = useAppSelector(getRates);
 
   const savedCurrency = localStorage.getItem(LOCAL_STORAGE_KEY);
-  const currentCurrency =
-    formData.currency || savedCurrency || DEFAULT_CURRENCY;
+  const currentCurrency = formData.currency || savedCurrency || DEFAULT_CURRENCY;
 
   const currentRate = currencyRates.find(rate => rate.iso === currentCurrency);
 
@@ -35,6 +35,13 @@ export const NewItemCurrency: FC<NewItemCurrencyProps> = ({ className, formData,
   const selectedOption = currentRate
     ? getSelectedOption(allOptions, 'value', currentCurrency)
     : { value: currentCurrency, label: fallbackSymbol };
+
+  useEffect(() => {
+    if (formData.currency?.toUpperCase() !== currentCurrency) {
+      handleSelectChange('currency', currentCurrency);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentCurrency]);
 
   return (
     <FormSelect

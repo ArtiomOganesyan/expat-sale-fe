@@ -18,6 +18,7 @@ import { selectUser } from '../../entities/user/userSlice';
 import { listingApi } from '../../entities/items/api';
 import { type EditItem } from '../../entities/items/types/items';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { useSnackbar } from '../../shared/hooks/useSnackbar';
 
 function EditItemData() {
   const params = useParams();
@@ -29,6 +30,7 @@ function EditItemData() {
   const [updateItemMutation, updateMeta] = useUpdateItemMutation();
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState('');
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (item) {
@@ -91,6 +93,17 @@ function EditItemData() {
         if (user?.id) {
           dispatch(listingApi.util.invalidateTags([{ type: 'ListingMasonry', id: `items-user-${user.id}` }]));
         }
+        showSnackbar({
+          title: 'Item updated',
+          subtitle: 'Your item has been successfully updated',
+          severity: 'success',
+        });
+      } else {
+        showSnackbar({
+          title: 'Failed to update item',
+          subtitle: 'Please try again later',
+          severity: 'error',
+        });
       }
     }
   };

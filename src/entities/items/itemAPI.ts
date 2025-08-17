@@ -17,6 +17,7 @@ export const itemAPI = listingApi.injectEndpoints({
         body: body,
         credentials: 'include',
       }),
+      invalidatesTags: (result, error) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `items-user-stat` }],
     }),
     addImageToItem: builder.mutation<any, any>({
       query: ({ itemId, files }) => {
@@ -56,7 +57,23 @@ export const itemAPI = listingApi.injectEndpoints({
         body: data,
         credentials: 'include',
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: TAG_TYPES.ITEM_BY_ID, id }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: TAG_TYPES.ITEM_BY_ID, id },
+        { type: TAG_TYPES.LISTING_MASONRY, id: `items-user-stat` },
+      ],
+    }),
+
+    addToFavorite: builder.mutation<void, { itemId: string }>({
+      query: ({ itemId }) => ({
+        url: `/items/favorite/${itemId}`,
+        method: 'POST',
+      }),
+    }),
+    removeFromFavorite: builder.mutation<void, { itemId: string }>({
+      query: ({ itemId }) => ({
+        url: `/items/favorite/${itemId}`,
+        method: 'DELETE',
+      }),
     }),
   }),
 });
@@ -68,4 +85,6 @@ export const {
   useUpdateItemMutation,
   useDeleteImageInItemMutation,
   useGetItemByIdQuery,
+  useAddToFavoriteMutation,
+  useRemoveFromFavoriteMutation,
 } = itemAPI;

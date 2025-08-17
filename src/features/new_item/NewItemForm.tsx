@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { CATEGORIES } from '../../utils/constants/Item';
+import { useState, useRef } from 'react';
 import { useAddImageToItemMutation, useCreateItemMutation } from '../../entities/items/itemAPI';
 
 import styles from './NewItem.module.css';
@@ -13,20 +12,26 @@ import { NewItemCondition } from './ui/NewItemCondition/NewItemCondition';
 import { NewItemCategory } from './ui/NewItemCategory/NewItemCategory';
 import { NewItemCurrency } from './ui/NewItemCurrency/NewItemCurrency';
 import { NewItemDistance } from './ui/NewItemDistance/NewItemDistance';
+import { useSnackbar } from '../../shared/hooks/useSnackbar';
+import { useNavigate } from 'react-router';
+import { LOCAL_STORAGE_KEY } from '../../utils/constants/Item';
+import { useNewItemValidation } from '../../shared/hooks/useNewItemValidation';
 
 function NewItemForm() {
   const [create, createMeta] = useCreateItemMutation();
   const [addImage, addImageMeta] = useAddImageToItemMutation();
   const isLoading = createMeta.isLoading || addImageMeta.isLoading;
+  const navigate = useNavigate();
+  const savedCurrency = localStorage.getItem(LOCAL_STORAGE_KEY) || 'usd';
 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     price: 0,
-    currency: 'EUR',
+    currency: savedCurrency,
     is_free: false,
     published: true,
-    categoryId: CATEGORIES.OTHER,
+    categoryId: '',
     // subcategory: SUBCATEGORIES.OTHER,
     // condition: CONDITION.USED,
     is_new: false,
@@ -42,9 +47,53 @@ function NewItemForm() {
 
   const { handleInputChange, handleSelectChange, handleCheckboxChange, handleLocationChange } = formChangeHandler(setFormData);
 
+  const { showSnackbar } = useSnackbar();
+
+  const { errors, validateField, validateAll, setErrors, setFieldOk } = useNewItemValidation(formData);
+
+  const titleRef = useRef<HTMLInputElement | null>(null);
+  const descRef = useRef<HTMLInputElement | null>(null);
+  const priceRef = useRef<HTMLInputElement | null>(null);
+
+  const createOnBlur = (field: keyof typeof errors, extraValue?: any) => () => {
+    const msg = validateField(field, extraValue ?? formData[field]);
+    setErrors(prev => ({ ...prev, [field]: msg }));
+  };
+
+  const onBlurTitle = createOnBlur('title');
+  const onBlurDesc = createOnBlur('description');
+  const onBlurPrice = createOnBlur('price');
+  const onBlurCategoryId = createOnBlur('categoryId', formData.categoryId);
+
+  const handleIsFreeToggle = (_: any, checked: boolean) => {
+    handleCheckboxChange('is_free', checked);
+    setFieldOk('price');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // const priceInEUR = getEURPrice(formData.price, formData.currency)
+    const { ok, firstErrorKey } = validateAll();
+    if (!ok) {
+      showSnackbar({
+        title: 'Missing required fields',
+        subtitle: 'Please fix highlighted inputs',
+        severity: 'warning',
+      });
+
+      const map: Record<string, HTMLInputElement | null> = {
+        title: titleRef.current,
+        description: descRef.current,
+        price: priceRef.current,
+      };
+
+      const el = map[firstErrorKey || 'title'];
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
     const result = await create({
       ...formData,
       // price: +priceInEUR,
@@ -58,10 +107,24 @@ function NewItemForm() {
       currency: formData.currency,
     });
 
+    if ('error' in result) {
+      showSnackbar({
+        title: 'Error creating item',
+        subtitle: 'Please check the form or try again later',
+        severity: 'error',
+      });
+      return;
+    }
+
     if (result.data) {
       const itemId = result.data.id;
-      const addFilesResult = await addImage({ itemId, files });
-      window.location.assign('/profile/userItemsList');
+      await addImage({ itemId, files });
+      showSnackbar({
+        title: 'Item created',
+        subtitle: 'Your item has been successfully added',
+        severity: 'success',
+      });
+      navigate('/profile/userItemsList');
     }
   };
 
@@ -83,6 +146,10 @@ function NewItemForm() {
           name={'title'}
           placeholder={'What do you want to sell?'}
           onChange={handleInputChange}
+          onBlur={onBlurTitle}
+          error={Boolean(errors.title)}
+          helperText={errors.title}
+          inputRef={titleRef}
         />
         <FormInput
           label={'Description'}
@@ -97,6 +164,10 @@ function NewItemForm() {
             minRows: 4,
             maxRows: 8,
           }}
+          onBlur={onBlurDesc}
+          error={Boolean(errors.description)}
+          helperText={errors.description}
+          inputRef={descRef}
         />
         <div className={styles.price_block}>
           <FormInput
@@ -106,6 +177,11 @@ function NewItemForm() {
             name={'price'}
             value={formData.price}
             onChange={handleInputChange}
+            onBlur={onBlurPrice}
+            error={Boolean(errors.price)}
+            helperText={errors.price}
+            disabled={formData.is_free}
+            inputRef={priceRef}
           />
           <NewItemCurrency
             handleSelectChange={handleSelectChange}
@@ -116,24 +192,26 @@ function NewItemForm() {
         <NewItemCategory
           handleSelectChange={handleSelectChange}
           formData={formData}
+          error={Boolean(errors.categoryId)}
+          helperText={errors.categoryId}
+          onBlur={onBlurCategoryId}
         />
         <NewItemCondition
           handleSelectChange={handleSelectChange}
           formData={formData}
         />
-
         <NewItemLocation
           handleLocationChange={handleLocationChange}
           setFormData={setFormData}
         />
-        <NewItemDistance handleLocationChange={handleLocationChange}/>
+        <NewItemDistance handleLocationChange={handleLocationChange} />
         <div className={styles.item_option_block}>
           <FormCheckBox
             label={'Free'}
             id={'is_free'}
             name={'is_free'}
             checked={formData.is_free}
-            onChange={(_, checked) => handleCheckboxChange('is_free', checked)}
+            onChange={handleIsFreeToggle}
           />
           <FormCheckBox
             label={'Published'}

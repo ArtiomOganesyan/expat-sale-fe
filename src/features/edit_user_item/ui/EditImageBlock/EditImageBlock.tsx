@@ -3,7 +3,7 @@ import styles from './EditImageBlock.module.css';
 import clsx from 'clsx';
 import ImageContainer from '../ImageContainer/ImageContainer';
 import { useDeleteImageInItemMutation, useUpdateImageToItemMutation } from '../../../../entities/items/itemAPI';
-import { GradientCircularProgress } from '../../../../widget/Loading/LoadingComponent';
+import { LoadingComponent } from '../../../../widget/Loading/LoadingComponent';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { IconButton } from '@mui/material';
 import { type Item } from '../../../../entities/items/types/items';
@@ -99,7 +99,7 @@ export const EditImageBlock: FC<EditImageBlockProps> = ({ className, item, edit 
       ))}
       {isUploadingImage && (
         <div className={styles.loading}>
-          <GradientCircularProgress />
+          <LoadingComponent />
         </div>
       )}
       {edit && (

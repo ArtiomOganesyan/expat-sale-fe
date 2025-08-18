@@ -6,6 +6,7 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import LiveHelpOutlinedIcon from '@mui/icons-material/LiveHelpOutlined';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivismOutlined';
+import { SvgIcon } from '@mui/material';
 
 import FacebookSVG from '../../assets/svg/facebook.svg';
 import LinkedInSVG from '../../assets/svg/linkedin.svg';
@@ -99,7 +100,11 @@ function AboutPage() {
             sx={{ display: 'flex', justifyContent: 'center' }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '50%' }}>
-              <FacebookSVG style={{ width: 32, height: 32 }} />
+              <SvgIcon
+                component={FacebookSVG as any}
+                inheritViewBox
+                sx={{ fontSize: 32 }}
+              />
               Facebook
             </div>
           </Button>
@@ -112,7 +117,11 @@ function AboutPage() {
             sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '50%' }}>
-              <LinkedInSVG style={{ width: 32, height: 32 }} />
+              <SvgIcon
+                component={LinkedInSVG as any}
+                inheritViewBox
+                sx={{ fontSize: 32 }}
+              />
               LinkedIn
             </div>
           </Button>
@@ -125,7 +134,11 @@ function AboutPage() {
             sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '50%' }}>
-              <TelegramSVG style={{ width: 32, height: 32 }} />
+              <SvgIcon
+                component={TelegramSVG as any}
+                inheritViewBox
+                sx={{ fontSize: 32 }}
+              />
               Telegram
             </div>
           </Button>

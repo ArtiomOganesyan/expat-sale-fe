@@ -3,6 +3,7 @@ import { AppBar, Toolbar, IconButton, Menu, MenuItem, Box } from '@mui/material'
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import CategoryIcon from '@mui/icons-material/Category';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 
 import { useState } from 'react';
 import { useAppSelector } from '../../hooks/hooks';
@@ -63,7 +64,15 @@ function MobileNavbar() {
         >
           <CategoryIcon />
         </IconButton>
-
+        <IconButton
+          color='inherit'
+          edge='start'
+          onClick={() => {
+            navigate('/about');
+          }}
+        >
+          <InfoRoundedIcon />
+        </IconButton>
         <Box>
           <IconButton
             color='inherit'

@@ -1,46 +1,87 @@
 .container {
-  margin: 50px 40px;
+  margin: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 35px;
+  gap: 50px;
 }
 
-.title {
-  color: var(--color-black);
-  text-transform: uppercase;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 32px;
-  letter-spacing: 0.1px;
-}
-
-.description {
-  text-align: left;
-  width: 100%;
-  color: var(--color-gray);
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 30px;
-  letter-spacing: 0.2px;
-}
-
-.buttons{
-    margin-top: 20px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.copyright {
-  margin-top: 80px;
-  width: 100%;
+/* Hero Section */
+.hero {
   text-align: center;
+  max-width: 800px;
+}
+
+.tagline {
+  margin-top: 1rem;
+  font-size: 20px;
+  font-weight: 500;
   color: var(--color-gray);
+  line-height: 30px;
+}
+
+/* Mission Card */
+.mission {
+  width: 100%;
+  max-width: 900px;
+  background: #fafafa;
+  /* border-radius: 16px; */
+  padding: 1rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.mission p {
+  font-size: 18px;
+  color: var(--color-gray);
+  line-height: 28px;
+}
+
+.sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.sections p {
+  font-size: 16px;
+  color: var(--color-gray);
+  line-height: 26px;
+}
+
+/* Support */
+.support {
+  max-width: 700px;
+  text-align: center;
+}
+
+.support h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.support p {
+  font-size: 16px;
+  color: var(--color-gray);
+  margin-bottom: 20px;
+  line-height: 26px;
+}
+
+.buttons {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Footer */
+.footer {
+  margin-top: 60px;
+  text-align: center;
   font-size: 14px;
   font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0.2px;
+  color: var(--color-gray);
 }

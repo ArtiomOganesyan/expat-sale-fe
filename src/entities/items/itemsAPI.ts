@@ -85,4 +85,5 @@ export const itemsAPI = listingApi.injectEndpoints({
   }),
 });
 
-export const { useGetListingMasonryQuery, useUserProductStatQuery, useGetMaxPriceQuery } = itemsAPI;
+export const { useGetListingMasonryQuery, useLazyGetListingMasonryQuery, useUserProductStatQuery, useGetMaxPriceQuery } =
+  itemsAPI;

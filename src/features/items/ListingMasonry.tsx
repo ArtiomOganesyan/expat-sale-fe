@@ -2,8 +2,8 @@ import { useLocation } from 'react-router';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import ListingCard from '../../shared/components/ListingCard/ListingCard';
 import styles from './ListingMasonry.module.css';
-import { useGetListingMasonryQuery } from '../../entities/items/itemsAPI';
 import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
+import { useLazyGetListingMasonryQuery } from '../../entities/items/itemsAPI';
 
 function ListingMasonry() {
   const location = useLocation();
@@ -46,7 +46,7 @@ function ListingMasonry() {
     favorite: favorite === 'true',
   };
 
-  const { data, isError, error, isFetching } = useGetListingMasonryQuery(queryParams);
+  const [triggerLazyQuery, { data, isError, error, isFetching }] = useLazyGetListingMasonryQuery();
 
   useEffect(() => {
     setOffset(0);
@@ -57,6 +57,10 @@ function ListingMasonry() {
   }, [categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId, favorite]);
 
   useEffect(() => {
+    triggerLazyQuery(queryParams);
+  }, [offset]);
+
+  useEffect(() => {
     if (data) {
       setAllItems(prevItems => (offset === 0 ? data : [...prevItems, ...data]));
 
@@ -64,7 +68,7 @@ function ListingMasonry() {
         setHasMore(false);
       }
     }
-  }, [data, offset]);
+  }, [data]);
 
   const loadMore = useCallback(() => {
     if (!isFetching && hasMore) {

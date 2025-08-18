@@ -86,7 +86,9 @@ function UserData() {
   };
 
   const handleUpdateUserContacts = (e: ChangeEvent<HTMLInputElement>) => {
-    setUpdatedUser(prev => (prev ? { ...prev, contact_platforms: { [e.target.name]: e.target.value } } : prev));
+    setUpdatedUser(prev =>
+      prev ? { ...prev, contact_platforms: { ...prev.contact_platforms, [e.target.name]: e.target.value } } : prev
+    );
   };
 
   const handleLogout = async () => {

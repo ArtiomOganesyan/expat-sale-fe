@@ -37,7 +37,6 @@ export function useNewItemValidation(formData: NewItemFormData) {
         case 'price':
           if (formData.is_free) return '';
           if (v === '' || v === null || Number.isNaN(Number(v))) return 'Price is required';
-          if (Number(v) <= 0) return 'Price must be greater than 0';
           return '';
         case 'categoryId':
           if (!v) return 'Category is required';

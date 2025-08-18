@@ -72,7 +72,6 @@ function NewItemForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // const priceInEUR = getEURPrice(formData.price, formData.currency)
     const { ok, firstErrorKey } = validateAll();
     if (!ok) {
       showSnackbar({
@@ -127,14 +126,6 @@ function NewItemForm() {
       navigate('/profile/userItemsList');
     }
   };
-
-  // const getEURPrice = (price: number, currency: string) => {
-  //   const rate = currencyRates.find(r => r[0] === currency)
-  //   if (rate) {
-  //     return (price / rate[1]).toFixed(2)
-  //   }
-  //   return 0
-  // }
 
   return (
     <div className={styles.form_container}>

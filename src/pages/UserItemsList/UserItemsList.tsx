@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useUserProductStatQuery, useGetListingMasonryQuery } from '../../entities/items/itemsAPI';
+import { useUserProductStatQuery, useGetListingMasonryQuery, useLazyGetListingMasonryQuery } from '../../entities/items/itemsAPI';
 import { selectUser } from '../../entities/user/userSlice';
 import { useAppSelector } from '../../hooks/hooks';
 import styles from './UserItemsList.module.css';
 import ListingCard from '../../shared/components/ListingCard/ListingCard';
-import { Button, IconButton, Paper, Typography } from '@mui/material';
+import { Button, IconButton, Paper } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useNavigate } from 'react-router';
 import { Item } from '../../entities/items/types/items';
-import AddBoxIcon from '@mui/icons-material/AddBox';
 import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
 
 function UserItemsList() {
@@ -23,11 +22,7 @@ function UserItemsList() {
   const [collapsed, setCollapsed] = useState(false);
 
   const limit = 10;
-
-  const { data, isError, error, isFetching } = useGetListingMasonryQuery(
-    { userId: user?.id, limit, offset },
-    { skip: !user?.id }
-  );
+  const query = { limit, offset, userId: user?.id };
 
   const { data: userStats, isError: userStatsIsError } = useUserProductStatQuery();
 
@@ -38,14 +33,21 @@ function UserItemsList() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [user?.id]);
 
+  const [triggerLazyQuery, { data, isError, error, isFetching, isLoading }] = useLazyGetListingMasonryQuery();
+
+  useEffect(() => {
+    triggerLazyQuery(query);
+  }, [offset]);
+
   useEffect(() => {
     if (data) {
-      setAllItems(prev => (offset === 0 ? data : [...prev, ...data]));
+      setAllItems(prevItems => (offset === 0 ? data : [...prevItems, ...data]));
+
       if (data.length < limit) {
         setHasMore(false);
       }
     }
-  }, [data, offset]);
+  }, [data]);
 
   useEffect(() => {
     let lastScroll = 0;
@@ -110,9 +112,6 @@ function UserItemsList() {
             <ArrowBackIosNewIcon />
           </IconButton>
           <div className={styles.title}>My Products</div>
-          {/* <IconButton onClick={() => navigate('/item/new')}>
-            <AddBoxIcon sx={{ fontSize: '32px' }} />
-          </IconButton> */}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
           <div className={styles.stat}> Total items: {userStats?.total}</div>
@@ -121,16 +120,25 @@ function UserItemsList() {
         <Button onClick={() => navigate('/item/new')}>Add New Item</Button>
       </Paper>
       <div>
-        <div className={styles.list}>
-          {allItems.map(listing => (
-            <ListingCard
-              key={listing.id}
-              item={listing}
-              url={'/profile/userItemsList'}
-            />
-          ))}
-        </div>
-        {isFetching && <div style={{ textAlign: 'center', padding: '20px' }}>Loading more items...</div>}
+        {allItems.length === 0 && !isLoading ? (
+          <div
+            className={styles.list}
+            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          >
+            No items found
+          </div>
+        ) : (
+          <div className={styles.list}>
+            {allItems.map(listing => (
+              <ListingCard
+                key={listing.id}
+                item={listing}
+                url={'/profile/userItemsList'}
+              />
+            ))}
+          </div>
+        )}
+        {isLoading && <div style={{ textAlign: 'center', padding: '20px' }}>Loading more items...</div>}
         <div
           ref={loadingRef}
           style={{ height: '20px', width: '100%' }}

@@ -178,7 +178,6 @@ function NewItemForm() {
             handleSelectChange={handleSelectChange}
             formData={formData}
           />
-          {/* <div>EUR Price: {getEURPrice(formData.price, formData.currency)}</div> */}
         </div>
         <NewItemCategory
           handleSelectChange={handleSelectChange}

@@ -108,7 +108,7 @@ export const EditImageBlock: FC<EditImageBlockProps> = ({ className, item, edit 
             type='button'
             onClick={handleFileInputClick}
           >
-            <AddPhotoAlternateIcon style={{ width: '100px', height: '100px' }} />
+            <AddPhotoAlternateIcon style={{ width: '48px', height: '48px' }} />
           </IconButton>
           <input
             style={{

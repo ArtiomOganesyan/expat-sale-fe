@@ -4,7 +4,6 @@ import styles from './EditItemForm.module.css';
 import FormInput from '../../shared/components/FormInput/FormInput';
 import Actions from './ui/Actions/Actions';
 import FormError from '../../shared/components/FormError/FormError';
-import { Paper } from '@mui/material';
 import { useGetItemByIdQuery, useUpdateItemMutation } from '../../entities/items/itemAPI';
 import FormCheckBox from '../../shared/components/FormCheck/FormCheckBox';
 import { formChangeHandler } from './utils/formChangeHandler';
@@ -84,8 +83,6 @@ function EditItemData() {
     delete data.id;
     delete data.created_at;
     delete data.updated_at;
-    // delete data.image;
-    // delete data.role;
 
     if (item) {
       const res = await updateItemMutation({ id: item?.id, data });
@@ -154,6 +151,7 @@ function EditItemData() {
           value={updatedItem?.description || ''}
           disabled={!edit}
           onChange={handleInputChange}
+          options={{ multiline: true, minRows: 4, maxRows: 8 }}
         />
         <FormInput
           label={'Price'}

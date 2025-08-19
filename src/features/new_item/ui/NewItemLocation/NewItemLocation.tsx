@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import FromSelectSearch from '../../../../shared/components/FormSelectSearch/FromSelectSearch';
 import { useGetCountriesQuery, useGetRegionsQuery } from '../../../../entities/places/placesAPI';
-import { useDebouncedValue } from '../../../../shared/hooks/useDebouncedValue';
+import type { Country } from '../../../../entities/places/places.type';
 
 interface NewItemLocationProps {
   className?: string;
@@ -10,143 +10,115 @@ interface NewItemLocationProps {
 }
 
 export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLocationChange, setFormData }) => {
-  const [countryInputValue, setCountryInputValue] = useState<string>('');
-  const [regionInputValue, setRegionInputValue] = useState<string>('');
-  const [regionsList, setRegionsList] = useState<{ region: string; label: string }[]>();
-  const [selectedRegion, setSelectedRegion] = useState<{ region: string; label: string; groupBy?: string } | null>(null);
-  const [citiesList, setCitiesList] = useState<{ city: string; label: string }[]>();
-  const [selectedCity, setSelectedCity] = useState<{ city: string; label: string; groupBy?: string } | null>(null);
-  const [cityInputValue, setCityInputValue] = useState<string>('');
-  const debouncedCountryInputValue = useDebouncedValue(countryInputValue, 1000);
-  const debouncedRegionInputValue = useDebouncedValue(regionInputValue, 1000);
-  const skipCountriesQuery = debouncedCountryInputValue.length < 3;
-  const skipRegionsQuery = debouncedRegionInputValue.length < 3;
+  // Internal selection state similar to LocationFilter
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
-  const { data: Countries, isLoading: IsLoadingCountries } = useGetCountriesQuery(
-    { query: debouncedCountryInputValue },
-    { skip: skipCountriesQuery }
-  );
-  const { data: Regions, isLoading: IsLoadingRegions } = useGetRegionsQuery(
-    { query: debouncedRegionInputValue },
-    { skip: skipRegionsQuery }
-  );
-  useEffect(() => {
-    const countryRegions = Countries?.reduce<{ region: string; label: string }[]>((acc, item) => {
-      const regionsOptions = item.regions.map(region => ({
-        region: region,
-        label: region,
-      }));
+  // Input text values for searching
+  const [countryInputValue, setCountryInputValue] = useState('');
+  const [regionInputValue, setRegionInputValue] = useState('');
+  const [cityInputValue, setCityInputValue] = useState('');
 
-      return acc.concat(regionsOptions);
-    }, []);
-    setRegionsList(countryRegions);
-    setRegionInputValue('');
+  // Countries: fetch when typing >= 3 chars
+  const { data: countries = [], isLoading: isLoadingCountries } = useGetCountriesQuery(
+    { query: countryInputValue },
+    { skip: countryInputValue.length < 3 }
+  );
+
+  // Regions: taken from selected country object
+  const availableRegions = selectedCountry?.regions || [];
+  const filteredRegions = useMemo(
+    () => availableRegions.filter(r => r.toLowerCase().includes(regionInputValue.toLowerCase())),
+    [availableRegions, regionInputValue]
+  );
+
+  // Cities: fetch region object only when a region is selected
+  const { data: regions = [], isLoading: isLoadingRegions } = useGetRegionsQuery(
+    { query: selectedRegion || '' },
+    { skip: !selectedRegion }
+  );
+  const selectedRegionObj = useMemo(() => regions.find(r => r.region === selectedRegion), [regions, selectedRegion]);
+  const availableCities = selectedRegionObj?.cities || [];
+  const filteredCities = useMemo(
+    () => availableCities.filter(c => c.toLowerCase().includes(cityInputValue.toLowerCase())),
+    [availableCities, cityInputValue]
+  );
+
+  // Handlers to update both local selection and outer form state
+  const onCountrySelect = (value: Country | null) => {
+    setSelectedCountry(value);
     setSelectedRegion(null);
-  }, [Countries]);
-
-  useEffect(() => {
-    const matchedRegion = Regions?.find(r => r.region === selectedRegion?.region);
-    if (matchedRegion) {
-      const filteredCities = matchedRegion.cities
-        .filter(city => city.toLowerCase().includes(cityInputValue.toLowerCase()))
-        .map(city => ({
-          city: city,
-          label: city,
-        }));
-      setCitiesList(filteredCities);
-    } else {
-      setCitiesList([]);
-    }
-  }, [selectedRegion, cityInputValue, Regions]);
-
-  const filteredRegionsList = useMemo(() => {
-    if (!regionsList) return [];
-    return regionsList.filter(region => region.label.toLowerCase().includes(regionInputValue.toLowerCase()));
-  }, [regionsList, regionInputValue]);
-
-  const handleChangeCountry = (value: string) => {
-    setCountryInputValue(value);
-    setRegionsList([]);
+    setSelectedCity(null);
+    // Update form state
+    handleLocationChange('location', 'country', value?.country || '');
+    handleLocationChange('location', 'region', '');
+    handleLocationChange('location', 'city', '');
+    // Clear dependent inputs
     setRegionInputValue('');
-    setFormData((prev: any) => ({ ...prev, location: { ...prev.location, country: value, region: '' } }));
-  };
-  const handleChangeRegions = (value: string) => {
-    setRegionInputValue(value);
-    setCitiesList([]);
     setCityInputValue('');
-    setFormData((prev: any) => ({ ...prev, location: { ...prev.location, region: value, city: '' } }));
   };
+
+  const onRegionSelect = (value: string | null) => {
+    setSelectedRegion(value);
+    setSelectedCity(null);
+    handleLocationChange('location', 'region', value || '');
+    handleLocationChange('location', 'city', '');
+    setCityInputValue('');
+  };
+
+  const onCitySelect = (value: string | null) => {
+    setSelectedCity(value);
+    handleLocationChange('location', 'city', value || '');
+  };
+
   return (
     <React.Fragment>
-      <FromSelectSearch<{
-        country: string;
-      }>
+      {/* Country */}
+      <FromSelectSearch<{ country: string }>
         label={'Country'}
         id={'country'}
         onChange={(_, newValue) => {
-          handleLocationChange('location', 'country', newValue?.country);
-          // setCountryInputValue(newValue?.label ?? '');
-          // setRegionInputValue(newValue?.region || '');
+          if (!newValue) return onCountrySelect(null);
+          const match = countries.find((c: Country) => c.country === newValue.country);
+          onCountrySelect(match || null);
         }}
         inputValue={countryInputValue}
-        onInputChange={(_, newInputValue) => handleChangeCountry(newInputValue)}
-        options={
-          Countries
-            ? Countries.map((item: any) => ({
-                id: item.country,
-                country: item.country,
-                label: item.country,
-              }))
-            : []
-        }
-        isLoading={IsLoadingCountries}
-        error={Countries?.length === 0 && countryInputValue.length !== 0 ? 'No countries' : ''}
+        onInputChange={(_, newInputValue) => setCountryInputValue(newInputValue)}
+        options={countries.map((c: Country) => ({ id: c.country, country: c.country, label: c.country }))}
+        isLoading={isLoadingCountries}
+        error={countryInputValue.length > 0 && countryInputValue.length < 3 ? 'Type at least 3 characters' : ''}
       />
-      <FromSelectSearch<{
-        region: string;
-      }>
-        label={'Region'}
-        id={'region'}
-        onChange={(_, newValue) => {
-          setSelectedRegion(newValue || null);
-          handleLocationChange('location', 'region', newValue?.region);
-          // setRegionInputValue(newValue?.label ?? '');
-        }}
-        inputValue={regionInputValue}
-        onInputChange={(_, newInputValue) => handleChangeRegions(newInputValue)}
-        options={filteredRegionsList.map(item => ({
-          id: item.region,
-          region: item.region,
-          label: item.label,
-        }))}
-        disabled={!Countries || Countries?.length === 0}
-        isLoading={IsLoadingRegions}
-        error={Regions?.length === 0 && regionInputValue.length !== 0 ? 'No regions' : ''}
-      />
-      <FromSelectSearch<{
-        city: string;
-      }>
-        label={'City'}
-        id={'city'}
-        onChange={(_, newValue) => {
-          handleLocationChange('location', 'city', newValue?.city);
-          setSelectedCity(newValue || null);
-          setCityInputValue(newValue?.label ?? '');
-        }}
-        value={selectedCity}
-        inputValue={cityInputValue}
-        onInputChange={(_, newInputValue) => setCityInputValue(newInputValue)}
-        options={
-          citiesList
-            ? citiesList.map((item: any) => ({
-                city: item.city,
-                label: item.label,
-              }))
-            : []
-        }
-        disabled={!selectedRegion}
-        error={cityInputValue.length !== 0 && (citiesList?.length ?? 0) === 0 ? 'No cities' : ''}
-      />
+
+      {/* Region */}
+      {selectedCountry && (
+        <FromSelectSearch<{ region: string }>
+          label={'Region'}
+          id={'region'}
+          onChange={(_, newValue) => onRegionSelect(newValue?.region || null)}
+          inputValue={regionInputValue}
+          onInputChange={(_, newInputValue) => setRegionInputValue(newInputValue)}
+          options={filteredRegions.map(r => ({ id: r, region: r, label: r }))}
+          disabled={!selectedCountry}
+          isLoading={false}
+          error={regionInputValue && filteredRegions.length === 0 ? 'No regions' : ''}
+        />
+      )}
+
+      {/* City */}
+      {selectedCountry && selectedRegion && (
+        <FromSelectSearch<{ city: string }>
+          label={'City'}
+          id={'city'}
+          onChange={(_, newValue) => onCitySelect(newValue?.city || null)}
+          inputValue={cityInputValue}
+          onInputChange={(_, newInputValue) => setCityInputValue(newInputValue)}
+          options={filteredCities.map(c => ({ id: c, city: c, label: c }))}
+          disabled={!selectedRegion}
+          isLoading={isLoadingRegions}
+          error={cityInputValue && filteredCities.length === 0 ? 'No cities' : ''}
+        />
+      )}
     </React.Fragment>
   );
 };

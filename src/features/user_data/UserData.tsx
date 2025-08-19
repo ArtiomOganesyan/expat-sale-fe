@@ -146,7 +146,6 @@ function UserData() {
             fileInputRef={fileInputRef}
             handleFileInputClick={handleFileInputClick}
           />
-
           <FormInput
             id='username'
             label='Username'
@@ -157,7 +156,6 @@ function UserData() {
             disabled={!edit}
             onChange={handleUpdateUser}
           />
-
           <Actions
             edit={edit}
             updateMeta={updateMeta}

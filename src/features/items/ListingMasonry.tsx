@@ -130,7 +130,6 @@ function ListingMasonry() {
       {!hasMore && allItems.length > 0 && (
         <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>No more items to load</div>
       )}
-
       {isFetching && allItems.length === 0 && <LoadingComponent />}
     </div>
   );

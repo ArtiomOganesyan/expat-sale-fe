@@ -38,6 +38,20 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
     setOpen(false);
   };
 
+  const snackBarSeverity = (color?: SnackbarSeverity) => {
+    // The colors should align with variables.css global colors
+    switch (color) {
+      case 'success':
+        return '#6ca878';
+      case 'error':
+        return '#e45a4d';
+      case 'warning':
+        return '#fad6fa';
+      default:
+        return '#95bfc0';
+    }
+  };
+
   return (
     <SnackbarContext.Provider value={{ showSnackbar }}>
       {children}
@@ -45,7 +59,8 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
         open={open}
         autoHideDuration={message.duration}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        sx={{ marginBottom: '3rem' }}
       >
         <Alert
           onClose={handleClose}
@@ -53,16 +68,9 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
           variant='filled'
           sx={{
             width: '100%',
-            color: '#fff', 
+            color: '#fff',
             fontWeight: 'bold',
-            bgcolor:
-              message.severity === 'success'
-                ? '#5ee628ff'
-                : message.severity === 'error'
-                  ? '#f44336'
-                  : message.severity === 'warning'
-                    ? '#ffa000'
-                    : '#2196f3', 
+            bgcolor: snackBarSeverity(message.severity),
           }}
         >
           <strong>{message.title}</strong>

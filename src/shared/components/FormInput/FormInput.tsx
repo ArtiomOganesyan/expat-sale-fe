@@ -1,24 +1,24 @@
-import TextField from "@mui/material/TextField"
-import type { ChangeEvent, FocusEvent, ReactNode, Ref } from "react"
+import TextField from '@mui/material/TextField';
+import type { ChangeEvent, FocusEvent, ReactNode, Ref } from 'react';
 
 type FormInputProps = {
-  id: string
-  type: string
-  name: string
-  label?: string
-  value?: string | number
-  placeholder?: string
-  disabled?: boolean
-  inlineStyles?: React.CSSProperties
-  slotProps?: any
-  sx?: any
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
-  onBlur?: (e: FocusEvent<HTMLInputElement>) => void
-  error?: boolean
-  helperText?: ReactNode
-  options?: any
-  inputRef?: Ref<HTMLInputElement>
-}
+  id: string;
+  type: string;
+  name: string;
+  label?: string;
+  value?: string | number;
+  placeholder?: string;
+  disabled?: boolean;
+  inlineStyles?: React.CSSProperties;
+  slotProps?: any;
+  sx?: any;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
+  error?: boolean;
+  helperText?: ReactNode;
+  options?: any;
+  inputRef?: Ref<HTMLInputElement>;
+};
 
 function FormInput({
   label,
@@ -35,11 +35,11 @@ function FormInput({
   error,
   helperText,
   options,
-  inputRef
+  inputRef,
 }: FormInputProps) {
   return (
     <TextField
-      variant="outlined"
+      variant='outlined'
       id={id}
       label={label}
       type={type}
@@ -51,12 +51,13 @@ function FormInput({
       disabled={disabled}
       error={error}
       helperText={helperText}
-      sx={{ ...sx, width: "100%" }}
+      sx={{ ...sx, width: '100%' }}
       slotProps={slotProps}
       inputRef={inputRef}
       {...options}
+      size='small'
     />
-  )
+  );
 }
 
-export default FormInput
+export default FormInput;

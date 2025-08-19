@@ -52,12 +52,16 @@ function ListingMasonry() {
     setOffset(0);
     setAllItems([]);
     setHasMore(true);
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Immediately fetch first page for new filters
+    triggerLazyQuery({ ...queryParams, offset: 0 });
   }, [categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId, favorite]);
 
   useEffect(() => {
-    triggerLazyQuery(queryParams);
+    // Fetch subsequent pages when offset increases
+    if (offset > 0) {
+      triggerLazyQuery({ ...queryParams, offset });
+    }
   }, [offset]);
 
   useEffect(() => {
@@ -71,10 +75,10 @@ function ListingMasonry() {
   }, [data]);
 
   const loadMore = useCallback(() => {
-    if (!isFetching && hasMore) {
+    if (!isFetching && hasMore && allItems.length > 0) {
       setOffset(prevOffset => prevOffset + limit);
     }
-  }, [isFetching, hasMore]);
+  }, [isFetching, hasMore, allItems.length]);
 
   useEffect(() => {
     if (observerRef.current) {

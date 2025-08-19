@@ -49,14 +49,14 @@ function ItemFilter() {
   };
 
   useEffect(() => {
-    if (Object.keys(filters).length) {
-      const params = new URLSearchParams();
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value) params.set(key, String(value));
-      });
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      // only set params for non-empty values
+      if (value !== undefined && value !== null && String(value).length > 0) params.set(key, String(value));
+    });
 
-      navigate(`/listing?${params.toString()}`);
-    }
+    const qs = params.toString();
+    navigate(qs ? `/listing?${qs}` : '/listing');
   }, [filters]);
 
   useEffect(() => {
@@ -66,16 +66,24 @@ function ItemFilter() {
       obj[key] = value;
     });
 
-    setFilters(obj);
-    setInputValue(obj.title || '');
+    // Only hydrate local state from URL if local state is effectively empty.
+    // This prevents overwriting user's typing while they interact with the input.
+    if (Object.keys(filters).length === 0 && inputValue === '') {
+      setFilters(obj);
+      setInputValue(obj.title || '');
+    }
   }, [location.search]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
       setFilters((prev: any) => {
         const state = { ...prev };
-        if (inputValue) {
-          state.title = inputValue;
+        const trimmed = inputValue.trim();
+        if (trimmed.length > 0) {
+          state.title = trimmed;
+        } else {
+          // remove title when input cleared
+          delete state.title;
         }
         return state;
       });

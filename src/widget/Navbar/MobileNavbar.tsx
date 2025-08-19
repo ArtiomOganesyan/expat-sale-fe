@@ -44,7 +44,6 @@ function MobileNavbar() {
         <MenuItem onClick={() => handleMenuClose('Login')}>Login</MenuItem>
         <MenuItem onClick={() => handleMenuClose('Register')}>Register</MenuItem>
         <MenuItem onClick={() => handleMenuClose('Settings')}>Settings</MenuItem>
-        <MenuItem onClick={() => handleMenuClose('About')}>About</MenuItem>
       </>
     );
   };

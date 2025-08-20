@@ -56,7 +56,11 @@ function ItemFilter() {
     });
 
     const qs = params.toString();
-    navigate(qs ? `/listing?${qs}` : '/listing');
+    // Only navigate to /listing when there are active filters (query string present).
+    // This prevents redirecting from root (/) to /listing on page refresh.
+    if (qs) {
+      navigate(`/listing?${qs}`);
+    }
   }, [filters]);
 
   useEffect(() => {
@@ -66,13 +70,18 @@ function ItemFilter() {
       obj[key] = value;
     });
 
-    // Only hydrate local state from URL if local state is effectively empty.
-    // This prevents overwriting user's typing while they interact with the input.
     if (Object.keys(filters).length === 0 && inputValue === '') {
       setFilters(obj);
       setInputValue(obj.title || '');
     }
   }, [location.search]);
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setFilters({});
+      setInputValue('');
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const handler = setTimeout(() => {

@@ -1,9 +1,10 @@
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import ListingCard from '../../shared/components/ListingCard/ListingCard';
 import styles from './ListingMasonry.module.css';
 import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
 import { useLazyGetListingMasonryQuery } from '../../entities/items/itemsAPI';
+import { Button, Paper, Typography } from '@mui/material';
 
 function ListingMasonry() {
   const location = useLocation();
@@ -26,6 +27,7 @@ function ListingMasonry() {
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadingRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   const limit = 10;
 
@@ -116,13 +118,39 @@ function ListingMasonry() {
 
   return (
     <div className={styles.container}>
-      {allItems.map(listing => (
-        <ListingCard
-          key={listing.id}
-          item={listing}
-          url='/listing'
-        />
-      ))}
+      {!allItems.length && !isFetching ? (
+        <Paper
+          sx={{
+            backgroundColor: '#f5f5f5',
+            padding: '1rem',
+            marginTop: '1rem',
+            gridColumn: 'span 2',
+          }}
+        >
+          <Typography
+            variant='h4'
+            fontWeight={400}
+            color='error'
+          >
+            No Items Found...
+          </Typography>
+          <Button
+            sx={{ marginTop: '2rem' }}
+            onClick={() => navigate('/item/new')}
+            variant='outlined'
+          >
+            Add Item
+          </Button>
+        </Paper>
+      ) : (
+        allItems.map(listing => (
+          <ListingCard
+            key={listing.id}
+            item={listing}
+            url='/listing'
+          />
+        ))
+      )}
 
       {isFetching && <div style={{ textAlign: 'center', padding: '20px' }}>Loading more items...</div>}
 

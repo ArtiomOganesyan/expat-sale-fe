@@ -1,8 +1,45 @@
 import { Link } from 'react-router';
 import { type Category } from '../../../entities/categories/categories.type';
-import { Paper } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
+import ClothingImage from '../../../assets/images/cloth.jpg';
+import ElectronicsImage from '../../../assets/images/electronics.jpg';
+import FurnitureImage from '../../../assets/images/furniture.jpg';
+import KidsImage from '../../../assets/images/kids.jpg';
+import KitchenImage from '../../../assets/images/kitchen.jpg';
+import OtherImage from '../../../assets/images/other.jpg';
+import PetsImage from '../../../assets/images/pets.jpg';
+import RelocationImage from '../../../assets/images/relocation.jpg';
+import ServicesImage from '../../../assets/images/services.jpg';
+import SportsImage from '../../../assets/images/sports.jpg';
 
 function CategoryItem({ category }: { category: Category }) {
+  const imageUrl = (name: string) => {
+    switch (name) {
+      case 'clothing':
+        return ClothingImage;
+      case 'electronics':
+        return ElectronicsImage;
+      case 'furniture':
+        return FurnitureImage;
+      case 'baby-and-kids':
+        return KidsImage;
+      case 'kitchen-and-dining':
+        return KitchenImage;
+      case 'other':
+        return OtherImage;
+      case 'pets':
+        return PetsImage;
+      case 'relocation':
+        return RelocationImage;
+      case 'services':
+        return ServicesImage;
+      case 'sports-and-fitness':
+        return SportsImage;
+      default:
+        return OtherImage;
+    }
+  };
+
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       <Link to={`/listing?categoryId=${category.id}`}>
@@ -13,23 +50,23 @@ function CategoryItem({ category }: { category: Category }) {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            backgroundImage:
-              "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT__ALALbxeQ1J6lQcoC8BFLMZt0sWAy7J2vEDC3fO4Lj1bJCorR9TbehXdcTuaa9XytRM&usqp=CAU')",
+            backgroundImage: `url(${imageUrl(category.slug)})`,
             backgroundSize: 'cover',
+            backgroundPosition: 'center',
             height: '125px',
           }}
         >
-          <span
-            style={{
-              margin: '.25rem 1rem',
-              width: '50%',
+          <Typography
+            sx={{
               background: 'rgba(255, 255, 255, 0.75)',
-              padding: '1rem',
-              borderRadius: '8px',
+              padding: ' 0 1rem',
+              letterSpacing: '-1px',
             }}
+            variant='h6'
+            fontWeight={300}
           >
             {category.name}
-          </span>
+          </Typography>
         </Paper>
       </Link>
     </div>

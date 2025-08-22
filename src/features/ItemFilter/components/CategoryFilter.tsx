@@ -19,7 +19,7 @@ function CategoryFilter({
     const children = [
       <MenuItem
         value=''
-        key='none'
+        key=''
       >
         <em>All Categories</em>
       </MenuItem>,

@@ -24,6 +24,7 @@ function ItemFilter() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+
     if (name === 'title') {
       setInputValue(value);
     } else {
@@ -56,10 +57,13 @@ function ItemFilter() {
     });
 
     const qs = params.toString();
-    // Only navigate to /listing when there are active filters (query string present).
-    // This prevents redirecting from root (/) to /listing on page refresh.
+    // If there are filters, navigate to /listing with the query string.
+    // If there are no filters and we're already on /listing, navigate to /listing
+    // (this clears the query string). Do not redirect from `/` to `/listing`.
     if (qs) {
       navigate(`/listing?${qs}`);
+    } else if (location.pathname.startsWith('/listing')) {
+      navigate('/listing');
     }
   }, [filters]);
 

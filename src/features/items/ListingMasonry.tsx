@@ -25,6 +25,7 @@ function ListingMasonry() {
   const [offset, setOffset] = useState(0);
   const [allItems, setAllItems] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
+  const [firstRequestTriggered, setFirstRequestTriggered] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadingRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ function ListingMasonry() {
     favorite: favorite === 'true',
   };
 
-  const [triggerLazyQuery, { data, isError, error, isFetching }] = useLazyGetListingMasonryQuery();
+  const [triggerLazyQuery, { data, isError, error, isFetching, isLoading }] = useLazyGetListingMasonryQuery();
 
   useEffect(() => {
     setOffset(0);
@@ -56,6 +57,7 @@ function ListingMasonry() {
     setHasMore(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // Immediately fetch first page for new filters
+    setFirstRequestTriggered(true);
     triggerLazyQuery({ ...queryParams, offset: 0 });
   }, [categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId, favorite]);
 
@@ -73,6 +75,8 @@ function ListingMasonry() {
       if (data.length < limit) {
         setHasMore(false);
       }
+      // mark that first request completed
+      setFirstRequestTriggered(true);
     }
   }, [data]);
 
@@ -118,7 +122,46 @@ function ListingMasonry() {
 
   return (
     <div className={styles.container}>
-      {!allItems.length && !isFetching ? (
+      {allItems.map(listing => (
+        <ListingCard
+          key={listing.id}
+          item={listing}
+          url='/listing'
+        />
+      ))}
+
+      {/* Category-specific empty state */}
+      {!allItems.length && !isFetching && firstRequestTriggered && categoryId ? (
+        <Paper
+          sx={{
+            backgroundColor: '#fff8e1',
+            padding: '1rem',
+            marginTop: '1rem',
+            gridColumn: 'span 2',
+          }}
+        >
+          <Typography
+            variant='h5'
+            fontWeight={500}
+            color='textPrimary'
+          >
+            No items in this category
+          </Typography>
+          <Typography sx={{ marginTop: 1, color: '#666' }}>
+            There are no listings in the selected category yet. You can add the first one.
+          </Typography>
+          <Button
+            sx={{ marginTop: '1rem' }}
+            onClick={() => navigate('/item/new')}
+            variant='contained'
+          >
+            Add Item
+          </Button>
+        </Paper>
+      ) : null}
+
+      {/* Generic empty state when no filters/category */}
+      {!allItems.length && !isFetching && firstRequestTriggered && !categoryId ? (
         <Paper
           sx={{
             backgroundColor: '#f5f5f5',
@@ -142,15 +185,7 @@ function ListingMasonry() {
             Add Item
           </Button>
         </Paper>
-      ) : (
-        allItems.map(listing => (
-          <ListingCard
-            key={listing.id}
-            item={listing}
-            url='/listing'
-          />
-        ))
-      )}
+      ) : null}
 
       {isFetching && <div style={{ textAlign: 'center', padding: '20px' }}>Loading more items...</div>}
 

@@ -26,8 +26,8 @@ export const itemsAPI = listingApi.injectEndpoints({
         if (offset !== undefined) params.set('offset', `${offset}`);
         if (limit !== undefined) params.set('limit', `${limit}`);
         if (categoryId) params.set('categoryId', categoryId);
-        if (isFree) params.set('isFree', `${isFree ? 'true' : 'false'}`);
-        if (isNew) params.set('isNew', `${isNew ? 'true' : 'false'}`);
+        if (isFree === true) params.set('isFree', 'true');
+        if (isNew === true) params.set('isNew', 'true');
         if (title && title.length > 3) params.set('title', title);
         if (minPrice) params.set('minPrice', `${minPrice}`);
         if (maxPrice) params.set('maxPrice', `${maxPrice}`);
@@ -36,19 +36,15 @@ export const itemsAPI = listingApi.injectEndpoints({
         if (city) params.set('city', city);
         if (radius) params.set('radius', `${radius}`);
         if (userId) params.set('userId', userId);
-        if (favorite) params.set('isFavorite', `${favorite ? 'true' : 'false'}`);
+        if (favorite === true) params.set('isFavorite', 'true');
 
         return `/items?${params.toString()}`;
       },
-      providesTags: (
-        _result,
-        _error,
-        { offset, limit, categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId, favorite }
-      ) => {
+      providesTags: (_result, _error, args) => {
         return [
           {
             type: TAG_TYPES.LISTING_MASONRY,
-            id: `${limit}-${offset}-${categoryId}-${isFree}-${title}-${isNew}-${minPrice}-${maxPrice}-${country}-${region}-${city}-${radius}-${userId}-${favorite}`,
+            id: `${JSON.stringify(args)}`,
           },
         ];
       },

@@ -23,13 +23,30 @@ function ItemFilter() {
   const user = useAppSelector(selectUser);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-
+    const { name, value } = e.target as any;
     if (name === 'title') {
       setInputValue(value);
-    } else {
-      setFilters((prev: any) => ({ ...prev, [name]: value }));
+      return;
     }
+
+    setFilters(prev => {
+      const next = { ...prev } as any;
+      if (name === 'isFree') {
+        // value is 'true' or '' from checkbox adapter
+        if (value === 'true') next.isFree = true;
+        else delete next.isFree;
+      } else if (name === 'isNew') {
+        if (value === '') delete next.isNew;
+        else next.isNew = value === 'true';
+      } else if (name === 'favorite') {
+        next.favorite = (e as any).target.checked;
+        if (!next.favorite) delete next.favorite;
+      } else {
+        if (value === '') delete next[name];
+        else next[name] = value;
+      }
+      return next;
+    });
   };
 
   const handleLocationChange = (name: string, value: string) => {
@@ -52,8 +69,12 @@ function ItemFilter() {
   useEffect(() => {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
-      // only set params for non-empty values
-      if (value !== undefined && value !== null && String(value).length > 0) params.set(key, String(value));
+      if (value === undefined || value === null) return;
+      if (typeof value === 'boolean') {
+        if (value) params.set(key, 'true');
+        return; // don't serialize false (treated as no filter)
+      }
+      if (String(value).length > 0) params.set(key, String(value));
     });
 
     const qs = params.toString();
@@ -69,9 +90,12 @@ function ItemFilter() {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const obj: Record<string, string> = {};
+    // Build next state only when initial mount or when URL truly diverges
+    const obj: Record<string, any> = {};
     params.forEach((value, key) => {
-      obj[key] = value;
+      if (value === 'true' && (key === 'isFree' || key === 'favorite')) obj[key] = true;
+      else if (key === 'isNew' && (value === 'true' || value === 'false')) obj[key] = value === 'true';
+      else obj[key] = value;
     });
 
     if (Object.keys(filters).length === 0 && inputValue === '') {
@@ -89,16 +113,12 @@ function ItemFilter() {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setFilters((prev: any) => {
-        const state = { ...prev };
+      setFilters(prev => {
+        const next = { ...prev } as any;
         const trimmed = inputValue.trim();
-        if (trimmed.length > 0) {
-          state.title = trimmed;
-        } else {
-          // remove title when input cleared
-          delete state.title;
-        }
-        return state;
+        if (trimmed.length > 0) next.title = trimmed;
+        else delete next.title;
+        return next;
       });
     }, 500);
 

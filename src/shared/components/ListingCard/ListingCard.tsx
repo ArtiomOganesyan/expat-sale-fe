@@ -7,6 +7,7 @@ import { useState } from 'react';
 import styles from './ListingCard.module.css';
 import { type Item } from '../../../entities/items/types/items';
 import { formatPrice } from '../../../utils/formatPrice';
+import ImageWithSkeleton from '../ImageWithSkeleton/ImageWithSkeleton';
 
 interface ListingCardProps {
   item: Item;
@@ -78,24 +79,26 @@ function ListingCard({ item, url }: ListingCardProps) {
       style={{ gridColumn: item.xl ? 'span 2' : 'auto', gridRow: item.xl ? 'span 2' : 'auto' }}
       {...handlers}
     >
-      <Carousel
-        index={index}
-        // @ts-ignore
-        onChange={now => setIndex(now)}
-        autoPlay={false}
-        animation='slide'
-        height={item.xl ? 400 : 200}
-        indicators={true}
-      >
-        {imagesToShow.map(image => (
-          <img
-            key={image.public_url}
-            className={styles.carousel_image}
-            src={image.public_url}
-            alt='product'
-          />
-        ))}
-      </Carousel>
+      <div style={{ background: '#fafafa', borderRadius: 12, overflow: 'hidden', height: item.xl ? 400 : 200 }}>
+        <Carousel
+          index={index}
+          // @ts-ignore
+          onChange={now => setIndex(now)}
+          autoPlay={false}
+          animation='slide'
+          height={item.xl ? 400 : 200}
+          indicators={true}
+        >
+          {imagesToShow.map(image => (
+            <ImageWithSkeleton
+              key={image.public_url}
+              src={image.public_url}
+              alt={'product'}
+              height={item.xl ? 400 : 200}
+            />
+          ))}
+        </Carousel>
+      </div>
 
       <div className={styles.cardContent}>
         <Link

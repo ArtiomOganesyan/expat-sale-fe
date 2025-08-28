@@ -9,7 +9,8 @@ export const resolveUrl = (platform: PlatformType, contact: string) => {
       window.open(`tel:${contact}`, '_blank');
       break;
     case 'telegram':
-      window.open(`https://t.me/${contact}`, '_blank');
+      const telegramUser = contact.startsWith('@') ? contact.slice(1) : contact;
+      window.open(`https://t.me/${telegramUser}`, '_blank');
       break;
     case 'email':
       window.open(`mailto:${contact}`, '_blank');

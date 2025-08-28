@@ -25,7 +25,8 @@ function ListingMasonry() {
   const [offset, setOffset] = useState(0);
   const [allItems, setAllItems] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const [firstRequestTriggered, setFirstRequestTriggered] = useState(false);
+  // Track when the initial page (offset 0) has completed loading (successfully or empty)
+  const [firstPageLoaded, setFirstPageLoaded] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadingRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
@@ -55,9 +56,9 @@ function ListingMasonry() {
     setOffset(0);
     setAllItems([]);
     setHasMore(true);
+    setFirstPageLoaded(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    // Immediately fetch first page for new filters
-    setFirstRequestTriggered(true);
+    // Immediately fetch first page for new filters (will mark loaded when response arrives)
     triggerLazyQuery({ ...queryParams, offset: 0 });
   }, [categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId, favorite]);
 
@@ -75,8 +76,10 @@ function ListingMasonry() {
       if (data.length < limit) {
         setHasMore(false);
       }
-      // mark that first request completed
-      setFirstRequestTriggered(true);
+      // mark that first page finished (even if empty)
+      if (offset === 0) {
+        setFirstPageLoaded(true);
+      }
     }
   }, [data]);
 
@@ -120,6 +123,15 @@ function ListingMasonry() {
     return <div>Error: {(error as any)?.message || (error as any)?.error || 'error'}</div>;
   }
 
+  // While initial page is loading, suppress empty UI to avoid flicker
+  if (!firstPageLoaded && allItems.length === 0) {
+    return (
+      <div className={styles.container}>
+        <LoadingComponent />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       {allItems.map(listing => (
@@ -131,7 +143,7 @@ function ListingMasonry() {
       ))}
 
       {/* Category-specific empty state */}
-      {!allItems.length && !isFetching && firstRequestTriggered && categoryId ? (
+      {!allItems.length && !isFetching && firstPageLoaded && categoryId ? (
         <Paper
           sx={{
             backgroundColor: '#fff8e1',
@@ -161,7 +173,7 @@ function ListingMasonry() {
       ) : null}
 
       {/* Generic empty state when no filters/category */}
-      {!allItems.length && !isFetching && firstRequestTriggered && !categoryId ? (
+      {!allItems.length && !isFetching && firstPageLoaded && !categoryId ? (
         <Paper
           sx={{
             backgroundColor: '#f5f5f5',

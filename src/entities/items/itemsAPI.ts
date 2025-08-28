@@ -82,8 +82,22 @@ export const itemsAPI = listingApi.injectEndpoints({
       providesTags: (_result, _error, categoryId) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `max-price-${categoryId}` }],
       transformResponse: (response: { max_price: number }) => ({ maxPrice: response.max_price }),
     }),
+    getLatestServices: builder.query<Item[], void>({
+      query: () => `/items/latest/services`,
+      providesTags: (_result, _error) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `latest-services` }],
+    }),
+    getLatestProducts: builder.query<Item[], void>({
+      query: () => `/items/latest/products`,
+      providesTags: (_result, _error) => [{ type: TAG_TYPES.LISTING_MASONRY, id: `latest-products` }],
+    }),
   }),
 });
 
-export const { useGetListingMasonryQuery, useLazyGetListingMasonryQuery, useUserProductStatQuery, useGetMaxPriceQuery } =
-  itemsAPI;
+export const {
+  useGetListingMasonryQuery,
+  useLazyGetListingMasonryQuery,
+  useUserProductStatQuery,
+  useGetMaxPriceQuery,
+  useGetLatestServicesQuery,
+  useGetLatestProductsQuery,
+} = itemsAPI;

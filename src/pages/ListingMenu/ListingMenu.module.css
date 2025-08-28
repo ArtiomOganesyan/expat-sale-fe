@@ -1,7 +1,46 @@
 .container {
   margin-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  column-gap: 12px;
-  row-gap: 24px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px;
+  gap: 24px;
+}
+
+.horizontal-row {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  gap: 16px;
+  padding: 12px 0 20px;
+}
+
+.card-item {
+  flex: 0 0 75vw; /* almost full viewport width */
+  max-width: 520px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 8px;
+}
+
+.price {
+  font-weight: 600;
+  margin: 4px 0 8px;
+}
+
+.actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

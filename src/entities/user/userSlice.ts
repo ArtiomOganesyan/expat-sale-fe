@@ -170,5 +170,6 @@ export const userSlice = createAppSlice({
 })
 
 export const selectUser = (state: RootState) => state.userSlice.user
+export const selectUserLoading = (state: RootState) => state.userSlice.loading
 export const { updateUser } = userSlice.actions
 export const { reducer } = userSlice

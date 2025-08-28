@@ -1,18 +1,18 @@
-import { selectUser } from '../../entities/user/userSlice';
+import { Outlet, useNavigate } from 'react-router';
+import { selectUser, selectUserLoading } from '../../entities/user/userSlice';
 import { useAppSelector } from '../../hooks/hooks';
-import { Navigate, Outlet } from 'react-router';
+import { useEffect } from 'react';
 
 function PrivateRoute() {
   const user = useAppSelector(selectUser);
+  const userLoading = useAppSelector(selectUserLoading);
+  const navigate = useNavigate();
 
-  if (!user?.id) {
-    return (
-      <Navigate
-        to='/auth/login'
-        replace
-      />
-    );
-  }
+  useEffect(() => {
+    if (!userLoading && !user?.id) {
+      navigate('/auth/login');
+    }
+  }, [userLoading, user]);
 
   return <Outlet />;
 }

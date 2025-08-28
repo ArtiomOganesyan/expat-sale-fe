@@ -32,7 +32,7 @@ function LoginForm() {
         setError('');
       }, 3000);
     }
-  }, [meta, showSnackbar]);
+  }, [meta]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

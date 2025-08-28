@@ -83,6 +83,11 @@ function EditItemData() {
     delete data.id;
     delete data.created_at;
     delete data.updated_at;
+    // If price is undefined (user cleared the field), remove it from payload
+    // so backend keeps existing value or treats it as omitted.
+    if (data && typeof (data as any).price === 'undefined') {
+      delete (data as any).price;
+    }
 
     if (item) {
       const res = await updateItemMutation({ id: item?.id, data });
@@ -159,7 +164,7 @@ function EditItemData() {
           id={'price'}
           name={'price'}
           disabled={!edit}
-          value={updatedItem?.price || ''}
+          value={updatedItem?.price ?? ''}
           onChange={handleInputChange}
         />
         <EditCurrencyBlock

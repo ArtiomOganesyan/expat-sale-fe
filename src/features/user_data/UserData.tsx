@@ -155,6 +155,7 @@ function UserData() {
             value={updatedUser?.username || ''}
             disabled={!edit}
             onChange={handleUpdateUser}
+            maxLength={50}
           />
           <Actions
             edit={edit}
@@ -179,6 +180,7 @@ function UserData() {
             value={updatedUser?.contact_platforms.email || ''}
             disabled={!edit}
             onChange={handleUpdateUserContacts}
+            maxLength={50}
           />
           <FormInput
             id='telegram'
@@ -189,6 +191,7 @@ function UserData() {
             value={updatedUser?.contact_platforms.telegram || ''}
             disabled={!edit}
             onChange={handleUpdateUserContacts}
+            maxLength={50}
           />
           <FormInput
             id='zalo'
@@ -199,6 +202,7 @@ function UserData() {
             value={updatedUser?.contact_platforms.zalo || ''}
             disabled={!edit}
             onChange={handleUpdateUserContacts}
+            maxLength={50}
           />
           <FormInput
             id='facebook'
@@ -209,6 +213,7 @@ function UserData() {
             value={updatedUser?.contact_platforms.facebook || ''}
             disabled={!edit}
             onChange={handleUpdateUserContacts}
+            maxLength={100}
           />
           <FormInput
             id='phone'
@@ -219,6 +224,7 @@ function UserData() {
             value={updatedUser?.contact_platforms.phone || ''}
             disabled={!edit}
             onChange={handleUpdateUserContacts}
+            maxLength={20}
           />
         </div>
         <FormError error={error} />

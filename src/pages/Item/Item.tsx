@@ -9,11 +9,9 @@ import {
   AppBar,
   Box,
   CardActionArea,
+  Chip,
   Grid2,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
   Paper,
   Skeleton,
   Stack,
@@ -29,6 +27,11 @@ import FavoriteHeartIcon from '../../shared/icons/FavoriteHeartIcon';
 import { useAppSelector } from '../../hooks/hooks';
 import { selectUser } from '../../entities/user/userSlice';
 import ExpandableDescription from './ExpandebleDescription';
+import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
+import type { PlatformType } from './ResolveIcon';
+import { ResolveIcon } from './ResolveIcon';
+import { resolveUrl } from './utils/resolveUrl';
+import ErrorFallback from '../../shared/components/ErrorComponent/ErrorComponent';
 
 type MyPaperProps = {
   className?: string;
@@ -66,9 +69,14 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
   const navigate = useNavigate();
   const isAuthenticated = !!user?.id;
 
-  console.log(data);
-
   const matches = useMediaQuery('(max-width: 480px)');
+
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
+  if (isError) {
+    return <ErrorFallback />;
+  }
 
   const handleBack = () => navigate(-1);
   return (
@@ -80,6 +88,7 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
         alignItems={'center'}
         sx={{
           marginTop: '40px',
+          marginBottom: '40px',
         }}
       >
         <AppBar color='default'>
@@ -305,16 +314,39 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
                   >
                     <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Contacts`}</Typography>
 
-                    {data?.user?.contact_platforms && data.user.contact_platforms.length > 0 ? (
-                      <List dense={true}>
-                        {data.user.contact_platforms.map((platform: string, index: number) => (
-                          <ListItem key={`platform-${index}`}>
-                            <ListItemText primary={platform} />
-                          </ListItem>
-                        ))}
-                      </List>
+                    {data?.user?.contact_platforms && Object.keys(data.user.contact_platforms).length > 0 ? (
+                      <Box
+                        marginTop={1}
+                        display='flex'
+                        flexDirection='row'
+                        flexWrap='wrap'
+                        gap={1}
+                      >
+                        {Object.entries(data.user.contact_platforms).map(([platform, contact], index: number) => {
+                          return (
+                            <Chip
+                              color={'primary'}
+                              sx={{ cursor: 'pointer' }}
+                              key={`platform-${index}`}
+                              icon={
+                                <Box
+                                  sx={{ padding: '1px' }}
+                                  display={'flex'}
+                                  alignItems={'center'}
+                                  justifyContent={'center'}
+                                >
+                                  <ResolveIcon platform={platform as PlatformType} />
+                                </Box>
+                              }
+                              label={contact}
+                              onClick={() => resolveUrl(platform, contact)}
+                              variant='outlined'
+                            />
+                          );
+                        })}
+                      </Box>
                     ) : (
-                      <Typography variant='body2'>Не указано</Typography>
+                      <Typography variant='body2'>Not specified</Typography>
                     )}
                   </Grid2>
                 </Grid2>

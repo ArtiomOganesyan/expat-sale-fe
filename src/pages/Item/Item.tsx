@@ -32,6 +32,7 @@ import type { PlatformType } from './ResolveIcon';
 import { ResolveIcon } from './ResolveIcon';
 import { resolveUrl } from './utils/resolveUrl';
 import ErrorFallback from '../../shared/components/ErrorComponent/ErrorComponent';
+import { resolveLocation } from './utils/resolveLocation';
 
 type MyPaperProps = {
   className?: string;
@@ -264,7 +265,9 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
                       <Typography
                         sx={{ fontWeight: 'bold', width: '35%', border: 'none', color: 'primary.main' }}
                         variant={'body1'}
-                      >{`${data.price} ${data.currency}`}</Typography>
+                      >
+                        {Number(data?.price ?? 0) > 0 ? `${data.price} ${data.currency}` : 'free'}
+                      </Typography>
                     </Grid2>
                   )}
 
@@ -301,11 +304,7 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
                     sx={{ marginBottom: 2 }}
                   >
                     <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Location`}</Typography>
-                    <Typography variant={'body1'}>
-                      {data?.location
-                        ? `${data.location.country}, ${data.location.region}, ${data.location.city}`
-                        : 'Not specified'}
-                    </Typography>
+                    <Typography variant={'body1'}>{resolveLocation(data?.location)}</Typography>
                   </Grid2>
 
                   <Grid2

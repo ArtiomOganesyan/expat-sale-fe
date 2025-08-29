@@ -179,7 +179,7 @@ function ListingMenu() {
                 <div className={styles.actions}>
                   <Button
                     variant='text'
-                    onClick={() => navigate(`/services/${service.id}`)}
+                    onClick={() => navigate(`/listing/${service.id}`)}
                   >
                     <Typography
                       color='primary'

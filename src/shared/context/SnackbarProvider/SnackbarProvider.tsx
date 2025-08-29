@@ -73,8 +73,10 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
             bgcolor: snackBarSeverity(message.severity),
           }}
         >
-          <strong>{message.title}</strong>
-          {message.subtitle && <div>{message.subtitle}</div>}
+          <strong>{message.title ? message.title.charAt(0).toUpperCase() + message.title.slice(1) : ''}</strong>
+          {message.subtitle && (
+            <div>{message.subtitle.charAt(0).toUpperCase() + message.subtitle.slice(1)}</div>
+          )}
         </Alert>
       </Snackbar>
     </SnackbarContext.Provider>

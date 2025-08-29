@@ -84,10 +84,9 @@ function ListingCard({ item, url }: ListingCardProps) {
           index={index}
           // @ts-ignore
           onChange={now => setIndex(now)}
-          autoPlay={false}
+          autoPlay={true}
           animation='slide'
           height={item.xl ? 400 : 200}
-          indicators={true}
         >
           {imagesToShow.map(image => (
             <ImageWithSkeleton

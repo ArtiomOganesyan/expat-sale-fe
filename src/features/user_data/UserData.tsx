@@ -13,6 +13,7 @@ import { Paper, Typography } from '@mui/material';
 import { type User } from '../../entities/user/user.type';
 import { useSnackbar } from '../../shared/hooks/useSnackbar';
 import UserProfileNavigation from './UserProfileNavigation';
+import { isValidUpdatedUserData } from './utils';
 
 function UserData() {
   const [edit, setEdit] = useState(false);
@@ -47,7 +48,7 @@ function UserData() {
         setError('');
       }, 3000);
     }
-  }, [updateMeta, showSnackbar]);
+  }, [updateMeta]);
 
   const handleEdit = () => {
     setEdit(bool => {
@@ -59,6 +60,17 @@ function UserData() {
   };
 
   const handleEditSave = async () => {
+    const isUpdateValidate = isValidUpdatedUserData(updatedUser);
+
+    if (!isUpdateValidate.isValid) {
+      showSnackbar({
+        title: 'Update failed',
+        subtitle: isUpdateValidate.message,
+        severity: 'error',
+      });
+      return;
+    }
+
     setEdit(false);
 
     const data = { ...updatedUser };

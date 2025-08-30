@@ -20,9 +20,15 @@ function AboutPage() {
           variant='h2'
           sx={{ textAlign: 'end', fontWeight: '400', letterSpacing: '-2px' }}
         >
-          About ExpatSale
+          Pack&Go
         </Typography>
-        <p className={styles.tagline}>Helping people move, settle, and start fresh — anywhere in the world.</p>
+        <Typography
+          variant='h4'
+          sx={{ textAlign: 'end', fontWeight: '400' }}
+        >
+          Arrive Ready
+        </Typography>
+        <Typography className={styles.tagline}>Helping people move, settle, and start fresh — anywhere in the world.</Typography>
       </div>
 
       <Card className={styles.mission}>
@@ -37,7 +43,7 @@ function AboutPage() {
             We’re a small team of passionate developers who have lived through the struggles of relocation — selling everything
             before leaving, landing in a new country, and trying to rebuild from scratch. <br />
             <br />
-            ExpatSale exists to make that journey smoother. Whether you’re moving across the street or across continents, we want
+            Pack&GO exists to make that journey smoother. Whether you’re moving across the street or across continents, we want
             you to feel supported, connected, and ready for your new chapter.
           </p>
         </CardContent>

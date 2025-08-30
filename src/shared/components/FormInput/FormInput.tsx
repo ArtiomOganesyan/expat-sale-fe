@@ -18,6 +18,7 @@ type FormInputProps = {
   helperText?: ReactNode;
   options?: any;
   inputRef?: Ref<HTMLInputElement>;
+  maxLength?: number;
 };
 
 function FormInput({
@@ -36,6 +37,7 @@ function FormInput({
   helperText,
   options,
   inputRef,
+  maxLength,
 }: FormInputProps) {
   return (
     <TextField
@@ -52,7 +54,13 @@ function FormInput({
       error={error}
       helperText={helperText}
       sx={{ ...sx, width: '100%' }}
-      slotProps={slotProps}
+      slotProps={{
+        ...slotProps,
+        htmlInput: {
+          ...(slotProps?.htmlInput ?? {}),
+          maxLength,
+        },
+      }}
       inputRef={inputRef}
       {...options}
       size='small'

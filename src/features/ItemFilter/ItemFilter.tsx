@@ -24,7 +24,7 @@ function ItemFilter() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target as any;
-    if (name === 'title') {
+    if (name === 'search') {
       setInputValue(value);
       return;
     }
@@ -100,7 +100,7 @@ function ItemFilter() {
 
     if (Object.keys(filters).length === 0 && inputValue === '') {
       setFilters(obj);
-      setInputValue(obj.title || '');
+      setInputValue(obj.search || '');
     }
   }, [location.search]);
 
@@ -116,8 +116,8 @@ function ItemFilter() {
       setFilters(prev => {
         const next = { ...prev } as any;
         const trimmed = inputValue.trim();
-        if (trimmed.length > 0) next.title = trimmed;
-        else delete next.title;
+        if (trimmed.length > 0) next.search = trimmed;
+        else delete next.search;
         return next;
       });
     }, 500);
@@ -127,7 +127,10 @@ function ItemFilter() {
 
   return (
     <Accordion sx={{ width: '100%', backdropFilter: 'blur(20px)', backgroundColor: `rgba(255, 255, 255, 0.5)` }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        // onKeyDown={handleKeyDown}
+      >
         <MainFilter
           inputValue={inputValue}
           handleChange={handleChange}

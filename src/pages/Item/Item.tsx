@@ -141,6 +141,7 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
               }}
             >
               <Carousel
+                autoPlay={false}
                 indicators={false}
                 sx={{ width: '100%', height: '100%' }}
                 navButtonsAlwaysInvisible={matches}

@@ -43,7 +43,7 @@ export type ItemFilter = {
   limit?: number;
   categoryId?: string | null;
   isFree?: boolean | null;
-  title?: string | null;
+  search?: string | null;
   isNew?: boolean | null;
   minPrice?: number | null;
   maxPrice?: number | null;

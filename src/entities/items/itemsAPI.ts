@@ -9,7 +9,7 @@ export const itemsAPI = listingApi.injectEndpoints({
         offset,
         limit,
         categoryId,
-        title,
+        search,
         isFree,
         isNew,
         minPrice,
@@ -28,7 +28,7 @@ export const itemsAPI = listingApi.injectEndpoints({
         if (categoryId) params.set('categoryId', categoryId);
         if (isFree === true) params.set('isFree', 'true');
         if (isNew === true) params.set('isNew', 'true');
-        if (title && title.length > 3) params.set('title', title);
+        if (search && search.length >= 3) params.set('search', search);
         if (minPrice) params.set('minPrice', `${minPrice}`);
         if (maxPrice) params.set('maxPrice', `${maxPrice}`);
         if (country) params.set('country', country);

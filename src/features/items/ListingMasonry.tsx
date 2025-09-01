@@ -10,7 +10,7 @@ function ListingMasonry() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const categoryId = searchParams.get('categoryId');
-  const title = searchParams.get('title');
+  const search = searchParams.get('search');
   const isFree = searchParams.get('isFree');
   const isNew = searchParams.get('isNew');
   const minPrice = searchParams.get('minPrice');
@@ -38,7 +38,7 @@ function ListingMasonry() {
     offset,
     categoryId,
     isFree: isFree === 'true',
-    title,
+    search,
     isNew: isNew === 'true',
     minPrice: minPrice ? parseFloat(minPrice) : null,
     maxPrice: maxPrice ? parseFloat(maxPrice) : null,
@@ -60,7 +60,7 @@ function ListingMasonry() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // Immediately fetch first page for new filters (will mark loaded when response arrives)
     triggerLazyQuery({ ...queryParams, offset: 0 });
-  }, [categoryId, title, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId, favorite]);
+  }, [categoryId, search, isFree, isNew, minPrice, maxPrice, country, region, city, radius, userId, favorite]);
 
   useEffect(() => {
     // Fetch subsequent pages when offset increases

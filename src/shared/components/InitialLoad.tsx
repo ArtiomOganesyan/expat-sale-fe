@@ -5,9 +5,9 @@ import { useGetCategoriesQuery } from '../../entities/categories/categoriesAPI';
 import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
 
 function InitialLoad() {
-  const { error: authError, isLoading: authIsLoading } = useAuthCheckQuery();
-  const { error: currencyError, isLoading: currencyIsLoading } = useGetCurrencyRateQuery();
-  const { error: categoriesError, isLoading: categoriesIsLoading } = useGetCategoriesQuery();
+  const { error: authError, isFetching: authIsLoading } = useAuthCheckQuery();
+  const { error: currencyError, isFetching: currencyIsLoading } = useGetCurrencyRateQuery();
+  const { error: categoriesError, isFetching: categoriesIsLoading } = useGetCategoriesQuery();
 
   useEffect(() => {
     if (authError) {
@@ -15,32 +15,15 @@ function InitialLoad() {
     }
     if (currencyError) {
       console.error('Error loading currency', currencyError);
+      throw currencyError;
     }
-  }, [authError, currencyError]);
+    if (categoriesError) {
+      console.error('Error loading categories', categoriesError);
+      throw categoriesError;
+    }
+  }, [authError, currencyError, categoriesError]);
 
-  if (currencyError) {
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          zIndex: 9999,
-          background: 'white',
-          textAlign: 'center',
-        }}
-      >
-        <h1>Error occur while loading. Please try again later.</h1>
-      </div>
-    );
-  }
-
-  if (authIsLoading || currencyIsLoading) {
+  if (authIsLoading || currencyIsLoading || categoriesIsLoading) {
     return (
       <div
         style={{

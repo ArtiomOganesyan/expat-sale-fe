@@ -8,16 +8,26 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './assets/styles/theme';
 import './assets/fonts/GeneralSans/index.css';
 import './assets/fonts/VelaSans/index.css';
+// Register service worker for PWA (Add to Home Screen / standalone)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then(reg => {
+        // eslint-disable-next-line no-console
+        console.log('Service worker registered.', reg);
+      })
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.warn('Service worker registration failed:', err);
+      });
+  });
+}
 
 const container = document.getElementById('root');
 
 if (container) {
   const root = createRoot(container);
-
-  console.log('Root element found, rendering the application...');
-  console.log('Environment variables:', {
-    backendUrl: import.meta.env.VITE_BACKEND_URL,
-  });
 
   root.render(
     <React.StrictMode>

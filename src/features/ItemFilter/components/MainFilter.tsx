@@ -13,12 +13,20 @@ function MainFilter({
       style={{ width: '100%', maxWidth: '350px', display: 'flex', flexDirection: 'column', gap: '4px' }}
     >
       <TextField
-        id='title'
+        id='search'
         type='text'
         placeholder='What are you looking for?'
-        name='title'
+        name='search'
         value={inputValue}
         onChange={handleChange}
+        onKeyDown={e => {
+          if (e.key === ' ') {
+            e.target.value += ' ';
+            e.stopPropagation();
+            e.preventDefault();
+          }
+          handleChange(e as any);
+        }}
         fullWidth
         variant='outlined'
         size='small'

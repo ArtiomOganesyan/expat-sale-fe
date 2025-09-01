@@ -146,100 +146,106 @@ function ListingMenu() {
           )}
         </DialogContent>
       </Dialog>
-      <Typography variant='h4'>Latest New Services</Typography>
-      <div className={styles['horizontal-row']}>
-        {latestServices &&
-          latestServices.map(service => (
-            <Card
-              key={service.id}
-              className={styles['card-item']}
-              variant='outlined'
-            >
-              <CardContent className={styles['card-content']}>
-                {service.images && (
-                  <ImageWithSkeleton
-                    src={service.images[0]?.public_url}
-                    alt={service.title}
-                    height={250}
-                  />
-                )}
-                <Typography variant='h6'>{service.title}</Typography>
-                <Typography
-                  className={styles.price}
-                  color='primary'
-                >
-                  {service.is_free ? 'Free' : `${service.price} ${service.currency}`}
-                </Typography>
-                <Typography
-                  variant='body2'
-                  className={styles['clamp-3']}
-                >
-                  {service.description}
-                </Typography>
-                <div className={styles.actions}>
-                  <Button
-                    variant='text'
-                    onClick={() => navigate(`/listing/${service.id}`)}
+      {latestServices && latestServices.length ? (
+        <>
+          <Typography variant='h4'>Latest New Services</Typography>
+          <div className={styles['horizontal-row']}>
+            {latestServices.map(service => (
+              <Card
+                key={service.id}
+                className={styles['card-item']}
+                variant='outlined'
+              >
+                <CardContent className={styles['card-content']}>
+                  {service.images && (
+                    <ImageWithSkeleton
+                      src={service.images[0]?.public_url}
+                      alt={service.title}
+                      height={250}
+                    />
+                  )}
+                  <Typography variant='h6'>{service.title}</Typography>
+                  <Typography
+                    className={styles.price}
+                    color='primary'
                   >
-                    <Typography
-                      color='primary'
-                      marginLeft={'auto'}
-                    >
-                      View
-                    </Typography>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-      </div>
-      <Typography variant='h4'>Latest New Products</Typography>
-      <div className={styles['horizontal-row']}>
-        {latestProducts &&
-          latestProducts.map(product => (
-            <Card
-              key={product.id}
-              className={styles['card-item']}
-              variant='outlined'
-            >
-              <CardContent className={styles['card-content']}>
-                {product.images && product.images.length > 0 && (
-                  <ImageWithSkeleton
-                    src={product.images[0].public_url}
-                    alt={product.title}
-                    height={250}
-                  />
-                )}
-                <Typography variant='h6'>{product.title}</Typography>
-                <Typography
-                  className={styles.price}
-                  color='primary'
-                >
-                  {product.is_free ? 'Free' : `${product.price} ${product.currency}`}
-                </Typography>
-                <Typography
-                  variant='body2'
-                  className={styles['clamp-4']}
-                >
-                  {product.description}
-                </Typography>
-                <div className={styles.actions}>
-                  <Button
-                    variant='text'
-                    onClick={() => navigate(`/listing/${product.id}`)}
+                    {service.is_free ? 'Free' : `${service.price} ${service.currency}`}
+                  </Typography>
+                  <Typography
+                    variant='body2'
+                    className={styles['clamp-3']}
                   >
-                    <Typography
-                      color='primary'
-                      marginLeft={'auto'}
+                    {service.description}
+                  </Typography>
+                  <div className={styles.actions}>
+                    <Button
+                      variant='text'
+                      onClick={() => navigate(`/listing/${service.id}`)}
                     >
-                      View
-                    </Typography>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-      </div>
+                      <Typography
+                        color='primary'
+                        marginLeft={'auto'}
+                      >
+                        View
+                      </Typography>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </>
+      ) : null}
+      {latestProducts && latestProducts.length ? (
+        <>
+          <Typography variant='h4'>Latest New Products</Typography>
+          <div className={styles['horizontal-row']}>
+            {latestProducts.map(product => (
+              <Card
+                key={product.id}
+                className={styles['card-item']}
+                variant='outlined'
+              >
+                <CardContent className={styles['card-content']}>
+                  {product.images && product.images.length > 0 && (
+                    <ImageWithSkeleton
+                      src={product.images[0].public_url}
+                      alt={product.title}
+                      height={250}
+                    />
+                  )}
+                  <Typography variant='h6'>{product.title}</Typography>
+                  <Typography
+                    className={styles.price}
+                    color='primary'
+                  >
+                    {product.is_free ? 'Free' : `${product.price} ${product.currency}`}
+                  </Typography>
+                  <Typography
+                    variant='body2'
+                    className={styles['clamp-4']}
+                  >
+                    {product.description}
+                  </Typography>
+                  <div className={styles.actions}>
+                    <Button
+                      variant='text'
+                      onClick={() => navigate(`/listing/${product.id}`)}
+                    >
+                      <Typography
+                        color='primary'
+                        marginLeft={'auto'}
+                      >
+                        View
+                      </Typography>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }

@@ -21,7 +21,7 @@ function MainFilter({
         onChange={handleChange}
         onKeyDown={e => {
           if (e.key === ' ') {
-            e.target.value += ' ';
+            (e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement).value += ' ';
             e.stopPropagation();
             e.preventDefault();
           }

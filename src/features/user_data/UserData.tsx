@@ -184,17 +184,6 @@ function UserData() {
         <Typography variant='h4'>Contact Information</Typography>
         <div className={style.user_data}>
           <FormInput
-            id='email'
-            type='text'
-            label='Email'
-            placeholder='Email'
-            name='email'
-            value={updatedUser?.contact_platforms.email || ''}
-            disabled={!edit}
-            onChange={handleUpdateUserContacts}
-            maxLength={50}
-          />
-          <FormInput
             id='telegram'
             type='text'
             label='Telegram'
@@ -226,6 +215,28 @@ function UserData() {
             disabled={!edit}
             onChange={handleUpdateUserContacts}
             maxLength={100}
+          />
+          <FormInput
+            id='website'
+            type='text'
+            label='Website'
+            placeholder='website'
+            name='website'
+            value={updatedUser?.contact_platforms.website || ''}
+            disabled={!edit}
+            onChange={handleUpdateUserContacts}
+            maxLength={20}
+          />
+          <FormInput
+            id='email'
+            type='text'
+            label='Email'
+            placeholder='Email'
+            name='email'
+            value={updatedUser?.contact_platforms.email || ''}
+            disabled={!edit}
+            onChange={handleUpdateUserContacts}
+            maxLength={50}
           />
           <FormInput
             id='phone'

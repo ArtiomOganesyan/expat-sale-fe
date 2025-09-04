@@ -16,7 +16,6 @@ import { useSnackbar } from '../../shared/hooks/useSnackbar';
 import { useNavigate } from 'react-router';
 import { LOCAL_STORAGE_KEY } from '../../utils/constants/Item';
 import { useNewItemValidation } from '../../shared/hooks/useNewItemValidation';
-import { Height } from '@mui/icons-material';
 
 function NewItemForm() {
   const [create, createMeta] = useCreateItemMutation();

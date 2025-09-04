@@ -225,7 +225,7 @@ function UserData() {
             value={updatedUser?.contact_platforms.website || ''}
             disabled={!edit}
             onChange={handleUpdateUserContacts}
-            maxLength={20}
+            maxLength={50}
           />
           <FormInput
             id='email'

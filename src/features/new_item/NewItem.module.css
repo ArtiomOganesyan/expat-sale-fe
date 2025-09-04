@@ -17,10 +17,10 @@
   letter-spacing: -1.2px;
 }
 
-.arrow{
-    position: absolute;
-    top: 0;
-    left: 0;
+.arrow {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .form_container {
@@ -42,7 +42,9 @@
 
   .price_block {
     display: flex;
-    gap: 1rem;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
 
     > div {
       width: 100%;
@@ -69,4 +71,30 @@
       background-color: #ccc;
     }
   } */
+}
+
+/* Make the first control (price input) grow to fill available space */
+.price_block :global(.MuiFormControl-root):first-child {
+  flex: 1 1 auto;
+}
+
+/* Reserve a fixed width for the currency select (adjust width as needed) */
+.price_block :global(.MuiFormControl-root):last-child {
+  flex: 0 0 140px;
+  max-width: 140px;
+}
+/* Ensure MUI input/select controls have the same height and vertical centering */
+.price_block :global(.MuiInputBase-root),
+.price_block :global(.MuiSelect-select) {
+  min-height: 56px;
+  height: 56px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+/* Tweak the select inner padding so text sits vertically centered */
+.price_block :global(.MuiSelect-select) {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }

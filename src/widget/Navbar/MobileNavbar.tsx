@@ -1,7 +1,6 @@
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, Box } from '@mui/material';
 
-import FingerprintIcon from '@mui/icons-material/Fingerprint';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility';
 import CategoryIcon from '@mui/icons-material/Category';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 
@@ -76,7 +75,7 @@ function MobileNavbar() {
             color='inherit'
             onClick={handleMenuOpen}
           >
-            {user?.id ? <AccountCircle /> : <FingerprintIcon />}
+            <SettingsAccessibilityIcon />
           </IconButton>
           <Menu
             anchorEl={anchorEl}

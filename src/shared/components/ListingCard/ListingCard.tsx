@@ -1,5 +1,6 @@
 import Carousel from 'react-material-ui-carousel';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { useRef } from 'react';
 import { useGetCurrencyRateQuery } from '../../../entities/currency/currencyAPI';
 import { LOCAL_STORAGE_KEY } from '../../../utils/constants/Item';
 import { useSwipeable } from 'react-swipeable';
@@ -15,13 +16,53 @@ interface ListingCardProps {
 }
 
 function ListingCard({ item, url }: ListingCardProps) {
+  const navigate = useNavigate();
   const [index, setIndex] = useState<number>(0);
+  const imgRef = useRef<HTMLDivElement | null>(null);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => setIndex(prev => prev + 1),
     onSwipedRight: () => setIndex(prev => prev - 1),
     trackMouse: true,
   });
+
+  const HOTSPOT_W = 0.6;
+  const HOTSPOT_H = 0.6;
+
+  const { ref: swipeRef, ...imageTapHandlers } = useSwipeable({
+    onTap: (e: any) => {
+      const ev: MouseEvent | TouchEvent | undefined = e?.event;
+      if (!imgRef.current || !ev) return;
+      let x: number | undefined, y: number | undefined;
+      if ('changedTouches' in ev && ev.changedTouches?.length) {
+        x = ev.changedTouches[0].clientX;
+        y = ev.changedTouches[0].clientY;
+      } else if ('clientX' in ev) {
+        x = (ev as MouseEvent).clientX;
+        y = (ev as MouseEvent).clientY;
+      }
+      if (x == null || y == null) return;
+
+      const r = imgRef.current.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      const dx = Math.abs(x - cx);
+      const dy = Math.abs(y - cy);
+
+      const halfW = (r.width * HOTSPOT_W) / 2;
+      const halfH = (r.height * HOTSPOT_H) / 2;
+
+      if (dx <= halfW && dy <= halfH) {
+        navigate(`${url}/${item.id}`);
+      }
+    },
+    trackMouse: true,
+  });
+
+  const setRefs = (el: HTMLDivElement | null) => {
+    imgRef.current = el;
+    swipeRef(el);
+  };
 
   const imagesToShow = item.images?.length
     ? item.images
@@ -79,7 +120,13 @@ function ListingCard({ item, url }: ListingCardProps) {
       style={{ gridColumn: item.xl ? 'span 2' : 'auto', gridRow: item.xl ? 'span 2' : 'auto' }}
       {...handlers}
     >
-      <div style={{ background: '#fafafa', borderRadius: 12, overflow: 'hidden', height: item.xl ? 400 : 200 }}>
+      <div
+        ref={setRefs}
+        {...imageTapHandlers}
+        style={{ background: '#fafafa', borderRadius: 12, overflow: 'hidden', height: item.xl ? 400 : 200, cursor: 'pointer' }}
+        role='link'
+        aria-label='Open item'
+      >
         <Carousel
           index={index}
           // @ts-ignore

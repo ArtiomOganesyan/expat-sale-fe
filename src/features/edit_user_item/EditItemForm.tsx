@@ -19,6 +19,7 @@ import { type EditItem } from '../../entities/items/types/items';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { useSnackbar } from '../../shared/hooks/useSnackbar';
 import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
+import { useIsServiceCategory } from '../../shared/hooks/useIsServiceCategory';
 
 function EditItemData() {
   const params = useParams();
@@ -32,6 +33,18 @@ function EditItemData() {
   const [error, setError] = useState('');
   const { showSnackbar } = useSnackbar();
 
+  const categoryIdForHook = updatedItem?.categoryId ?? item?.categoryId ?? item?.category?.id ?? null;
+  const isService = useIsServiceCategory(categoryIdForHook);
+  console.log(
+    'catId=',
+    categoryIdForHook,
+    'updated=',
+    updatedItem?.categoryId,
+    'payload=',
+    item?.category?.id,
+    'isService=',
+    isService
+  );
   useEffect(() => {
     if (item) {
       setUpdatedItem({
@@ -137,7 +150,6 @@ function EditItemData() {
           disabled={!edit}
           onChange={handleInputChange}
         />
-
         <Actions
           edit={edit}
           updateMeta={updateMeta}
@@ -158,39 +170,41 @@ function EditItemData() {
           onChange={handleInputChange}
           options={{ multiline: true, minRows: 4, maxRows: 8 }}
         />
-        <FormInput
-          label={'Price'}
-          type={'number'}
-          id={'price'}
-          name={'price'}
-          disabled={!edit}
-          value={updatedItem?.price ?? ''}
-          onChange={handleInputChange}
-        />
-        <EditCurrencyBlock
-          updatedItem={updatedItem}
-          handleSelectChange={handleSelectChange}
-          edit={edit}
-        />
-
+        {!isService && (
+          <FormInput
+            label={'Price'}
+            type={'number'}
+            id={'price'}
+            name={'price'}
+            disabled={!edit}
+            value={updatedItem?.price ?? ''}
+            onChange={handleInputChange}
+          />
+        )}
+        {!isService && (
+          <EditCurrencyBlock
+            updatedItem={updatedItem}
+            handleSelectChange={handleSelectChange}
+            edit={edit}
+          />
+        )}
         <EditCategoryBlock
           updatedItem={updatedItem}
           handleSelectChange={handleSelectChange}
           edit={edit}
         />
-
-        <EditConditionBlock
-          updatedItem={updatedItem}
-          handleSelectChange={handleSelectChange}
-          edit={edit}
-        />
-
+        {!isService && (
+          <EditConditionBlock
+            updatedItem={updatedItem}
+            handleSelectChange={handleSelectChange}
+            edit={edit}
+          />
+        )}
         <EditLocationBlockBlock
           updatedItem={updatedItem}
           handleLocationChange={handleLocationChange}
           edit={edit}
         />
-
         {updatedItem && (
           <EditDistanceBlock
             updatedItem={updatedItem}
@@ -198,7 +212,6 @@ function EditItemData() {
             edit={edit}
           />
         )}
-
         {updatedItem && (
           <div className={styles.item_option_block}>
             <FormCheckBox

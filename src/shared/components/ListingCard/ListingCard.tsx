@@ -1,10 +1,9 @@
 import Carousel from 'react-material-ui-carousel';
 import { Link, useNavigate } from 'react-router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useGetCurrencyRateQuery } from '../../../entities/currency/currencyAPI';
 import { LOCAL_STORAGE_KEY } from '../../../utils/constants/Item';
 import { useSwipeable } from 'react-swipeable';
-import { useState } from 'react';
 import styles from './ListingCard.module.css';
 import { type Item } from '../../../entities/items/types/items';
 import { formatPrice } from '../../../utils/formatPrice';
@@ -19,6 +18,10 @@ function ListingCard({ item, url }: ListingCardProps) {
   const navigate = useNavigate();
   const [index, setIndex] = useState<number>(0);
   const imgRef = useRef<HTMLDivElement | null>(null);
+
+  const isService = item.category?.type === 'services';
+  const itemPriceNum = Number(item.price);
+  const shouldHidePrice = isService && (itemPriceNum === 0 || item.is_free);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => setIndex(prev => prev + 1),
@@ -91,26 +94,34 @@ function ListingCard({ item, url }: ListingCardProps) {
     return +result.toFixed(2);
   };
 
-  const itemPrice = Number(item.price);
-  const itemCurrency = item.currency;
-
-  let displayMainPrice = `${formatPrice(itemPrice, itemCurrency)} ${itemCurrency}`;
+  let displayMainPrice = '';
   let displayConvertedPrice: string | null = null;
 
-  if (!selectedCurrency) {
-    if (itemCurrency !== fallbackCurrency) {
-      const converted = convertPrice(itemPrice, itemCurrency, fallbackCurrency);
-      if (converted != null) {
-        displayMainPrice = `${converted} ${fallbackCurrency}`;
+  if (!shouldHidePrice) {
+    const itemCurrency = item.currency;
+    const itemPrice = itemPriceNum;
+
+    if (!selectedCurrency) {
+      if (itemCurrency !== fallbackCurrency) {
+        const converted = convertPrice(itemPrice, itemCurrency, fallbackCurrency);
+        if (converted != null) {
+          displayMainPrice = `${converted} ${fallbackCurrency}`;
+        } else {
+          displayMainPrice = `${formatPrice(itemPrice, itemCurrency)} ${itemCurrency}`;
+        }
+      } else {
+        displayMainPrice = `${formatPrice(itemPrice, itemCurrency)} ${itemCurrency}`;
       }
-    }
-  } else if (selectedCurrency === itemCurrency) {
-    displayMainPrice = `${itemPrice} ${itemCurrency}`;
-  } else {
-    const converted = convertPrice(itemPrice, itemCurrency, selectedCurrency);
-    if (converted != null) {
-      displayMainPrice = `${itemPrice} ${itemCurrency}`;
-      displayConvertedPrice = `(${formatPrice(converted, selectedCurrency)} ${selectedCurrency})`;
+    } else if (selectedCurrency === itemCurrency) {
+      displayMainPrice = `${formatPrice(itemPrice, itemCurrency)} ${itemCurrency}`;
+    } else {
+      const converted = convertPrice(itemPrice, itemCurrency, selectedCurrency);
+      if (converted != null) {
+        displayMainPrice = `${formatPrice(itemPrice, itemCurrency)} ${itemCurrency}`;
+        displayConvertedPrice = `(${formatPrice(converted, selectedCurrency)} ${selectedCurrency})`;
+      } else {
+        displayMainPrice = `${formatPrice(itemPrice, itemCurrency)} ${itemCurrency}`;
+      }
     }
   }
 
@@ -152,8 +163,15 @@ function ListingCard({ item, url }: ListingCardProps) {
           className={styles.cardLink}
         >
           <div className={styles.title}>{item.title}</div>
-          <div className={`${styles.price} ${styles.mainPrice}`}>{displayMainPrice}</div>
-          {displayConvertedPrice && <div className={styles.price}>{displayConvertedPrice}</div>}
+
+          <div
+            className={`${styles.price} ${styles.mainPrice}`}
+            style={{ visibility: shouldHidePrice ? 'hidden' : 'visible' }}
+          >
+            {shouldHidePrice ? '\u00A0' : displayMainPrice}
+          </div>
+
+          {!shouldHidePrice && displayConvertedPrice && <div className={styles.price}>{displayConvertedPrice}</div>}
         </Link>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useIsServiceCategory } from '../../shared/hooks/useIsServiceCategory';
 import { useAddImageToItemMutation, useCreateItemMutation } from '../../entities/items/itemAPI';
 
 import styles from './NewItem.module.css';
@@ -54,6 +55,13 @@ function NewItemForm() {
   const titleRef = useRef<HTMLInputElement | null>(null);
   const descRef = useRef<HTMLInputElement | null>(null);
   const priceRef = useRef<HTMLInputElement | null>(null);
+  const isService = useIsServiceCategory(formData.categoryId);
+
+  useEffect(() => {
+    if (isService) {
+      setFieldOk('price');
+    }
+  }, [isService, setFieldOk]);
 
   const createOnBlur = (field: keyof typeof errors, extraValue?: any) => () => {
     const msg = validateField(field, extraValue ?? formData[field]);
@@ -102,7 +110,7 @@ function NewItemForm() {
         region: formData.location.region,
         city: formData.location.city,
       },
-      price: Number(formData.price),
+      price: isService ? 0 : Number(formData.price),
       currency: formData.currency,
     });
 
@@ -160,6 +168,14 @@ function NewItemForm() {
           helperText={errors.description}
           inputRef={descRef}
         />
+        <NewItemCategory
+          handleSelectChange={handleSelectChange}
+          formData={formData}
+          error={Boolean(errors.categoryId)}
+          helperText={errors.categoryId}
+          onBlur={onBlurCategoryId}
+        />
+        {!isService && (
         <div className={styles.price_block}>
           <FormInput
             label={'Price'}
@@ -179,17 +195,13 @@ function NewItemForm() {
             formData={formData}
           />
         </div>
-        <NewItemCategory
-          handleSelectChange={handleSelectChange}
-          formData={formData}
-          error={Boolean(errors.categoryId)}
-          helperText={errors.categoryId}
-          onBlur={onBlurCategoryId}
-        />
+        )}
+        {!isService && (
         <NewItemCondition
           handleSelectChange={handleSelectChange}
           formData={formData}
         />
+        )}
         <NewItemLocation
           handleLocationChange={handleLocationChange}
           setFormData={setFormData}

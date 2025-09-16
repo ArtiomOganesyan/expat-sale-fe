@@ -77,4 +77,5 @@ export type CategoryItem = {
   slug: string;
   created_at: string;
   updated_at: string;
+  type?: 'services' | 'products'; 
 };

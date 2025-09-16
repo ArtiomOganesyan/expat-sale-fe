@@ -2,7 +2,7 @@ import Carousel from 'react-material-ui-carousel';
 import { Link, useNavigate } from 'react-router';
 import { useRef, useState } from 'react';
 import { useGetCurrencyRateQuery } from '../../../entities/currency/currencyAPI';
-import { LOCAL_STORAGE_KEY } from '../../../utils/constants/Item';
+import { LOCAL_STORAGE_KEY_CURRENCY } from '../../../utils/constants/Item';
 import { useSwipeable } from 'react-swipeable';
 import styles from './ListingCard.module.css';
 import { type Item } from '../../../entities/items/types/items';
@@ -78,7 +78,7 @@ function ListingCard({ item, url }: ListingCardProps) {
 
   const { data: rates = [] } = useGetCurrencyRateQuery();
   const fallbackCurrency = 'usd';
-  const selectedCurrency = localStorage.getItem(LOCAL_STORAGE_KEY);
+  const selectedCurrency = localStorage.getItem(LOCAL_STORAGE_KEY_CURRENCY);
 
   const getRate = (iso: string): number | null => {
     const rate = rates.find(r => r.iso_4217 === iso)?.rate;

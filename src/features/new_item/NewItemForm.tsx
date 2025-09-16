@@ -15,7 +15,7 @@ import { NewItemCurrency } from './ui/NewItemCurrency/NewItemCurrency';
 import { NewItemDistance } from './ui/NewItemDistance/NewItemDistance';
 import { useSnackbar } from '../../shared/hooks/useSnackbar';
 import { useNavigate } from 'react-router';
-import { LOCAL_STORAGE_KEY } from '../../utils/constants/Item';
+import { LOCAL_STORAGE_KEY_CURRENCY } from '../../utils/constants/Item';
 import { useNewItemValidation } from '../../shared/hooks/useNewItemValidation';
 
 function NewItemForm() {
@@ -23,7 +23,7 @@ function NewItemForm() {
   const [addImage, addImageMeta] = useAddImageToItemMutation();
   const isLoading = createMeta.isLoading || addImageMeta.isLoading;
   const navigate = useNavigate();
-  const savedCurrency = localStorage.getItem(LOCAL_STORAGE_KEY) || 'usd';
+  const savedCurrency = localStorage.getItem(LOCAL_STORAGE_KEY_CURRENCY) || 'usd';
 
   const [formData, setFormData] = useState({
     title: '',
@@ -176,31 +176,31 @@ function NewItemForm() {
           onBlur={onBlurCategoryId}
         />
         {!isService && (
-        <div className={styles.price_block}>
-          <FormInput
-            label={'Price'}
-            type={'number'}
-            id={'price'}
-            name={'price'}
-            value={formData.price}
-            onChange={handleInputChange}
-            onBlur={onBlurPrice}
-            error={Boolean(errors.price)}
-            helperText={errors.price}
-            disabled={formData.is_free}
-            inputRef={priceRef}
-          />
-          <NewItemCurrency
+          <div className={styles.price_block}>
+            <FormInput
+              label={'Price'}
+              type={'number'}
+              id={'price'}
+              name={'price'}
+              value={formData.price}
+              onChange={handleInputChange}
+              onBlur={onBlurPrice}
+              error={Boolean(errors.price)}
+              helperText={errors.price}
+              disabled={formData.is_free}
+              inputRef={priceRef}
+            />
+            <NewItemCurrency
+              handleSelectChange={handleSelectChange}
+              formData={formData}
+            />
+          </div>
+        )}
+        {!isService && (
+          <NewItemCondition
             handleSelectChange={handleSelectChange}
             formData={formData}
           />
-        </div>
-        )}
-        {!isService && (
-        <NewItemCondition
-          handleSelectChange={handleSelectChange}
-          formData={formData}
-        />
         )}
         <NewItemLocation
           handleLocationChange={handleLocationChange}

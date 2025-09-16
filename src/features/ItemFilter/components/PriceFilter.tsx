@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useLocation } from 'react-router';
 import { useGetMaxPriceQuery } from '../../../entities/items/itemsAPI';
 import { useGetCurrencyRateQuery } from '../../../entities/currency/currencyAPI';
-import { LOCAL_STORAGE_KEY } from '../../../utils/constants/Item';
+import { LOCAL_STORAGE_KEY_CURRENCY } from '../../../utils/constants/Item';
 import { formatPrice } from '../../../utils/formatPrice';
 
 type PriceFilterProps = {
@@ -20,7 +20,7 @@ function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
   const categoryId = new URLSearchParams(search).get('categoryId');
   const { data: maxData } = useGetMaxPriceQuery({ categoryId: categoryId || '' }, { skip: !categoryId });
   const { data: rates = [] } = useGetCurrencyRateQuery();
-  const selectedISO = (localStorage.getItem(LOCAL_STORAGE_KEY) || 'usd').toLowerCase();
+  const selectedISO = (localStorage.getItem(LOCAL_STORAGE_KEY_CURRENCY) || 'usd').toLowerCase();
 
   const getRate = useCallback(
     (iso: string): number | null => {

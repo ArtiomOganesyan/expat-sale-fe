@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { getSelectedOption } from '../../../../utils/getSelectedOption';
 import { useAppSelector } from '../../../../hooks/hooks';
 import { getRates } from '../../../../entities/currency/currencySlice';
-import { LOCAL_STORAGE_KEY } from '../../../../utils/constants/Item';
+import { LOCAL_STORAGE_KEY_CURRENCY } from '../../../../utils/constants/Item';
 
 interface NewItemCurrencyProps {
   className?: string;
@@ -17,7 +17,7 @@ const DEFAULT_CURRENCY = 'usd';
 export const NewItemCurrency: FC<NewItemCurrencyProps> = ({ className, formData, handleSelectChange }) => {
   const currencyRates = useAppSelector(getRates);
 
-  const savedCurrency = localStorage.getItem(LOCAL_STORAGE_KEY);
+  const savedCurrency = localStorage.getItem(LOCAL_STORAGE_KEY_CURRENCY);
   const currentCurrency = formData.currency || savedCurrency || DEFAULT_CURRENCY;
 
   const currentRate = currencyRates.find(rate => rate.iso === currentCurrency);

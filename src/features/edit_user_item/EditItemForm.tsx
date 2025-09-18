@@ -35,16 +35,7 @@ function EditItemData() {
 
   const categoryIdForHook = updatedItem?.categoryId ?? item?.categoryId ?? item?.category?.id ?? null;
   const isService = useIsServiceCategory(categoryIdForHook);
-  console.log(
-    'catId=',
-    categoryIdForHook,
-    'updated=',
-    updatedItem?.categoryId,
-    'payload=',
-    item?.category?.id,
-    'isService=',
-    isService
-  );
+
   useEffect(() => {
     if (item) {
       setUpdatedItem({
@@ -171,22 +162,22 @@ function EditItemData() {
           options={{ multiline: true, minRows: 4, maxRows: 8 }}
         />
         {!isService && (
-          <FormInput
-            label={'Price'}
-            type={'number'}
-            id={'price'}
-            name={'price'}
-            disabled={!edit}
-            value={updatedItem?.price ?? ''}
-            onChange={handleInputChange}
-          />
-        )}
-        {!isService && (
-          <EditCurrencyBlock
-            updatedItem={updatedItem}
-            handleSelectChange={handleSelectChange}
-            edit={edit}
-          />
+          <>
+            <FormInput
+              label='Price'
+              type='number'
+              id='price'
+              name='price'
+              disabled={!edit}
+              value={updatedItem?.price ?? ''}
+              onChange={handleInputChange}
+            />
+            <EditCurrencyBlock
+              updatedItem={updatedItem}
+              handleSelectChange={handleSelectChange}
+              edit={edit}
+            />
+          </>
         )}
         <EditCategoryBlock
           updatedItem={updatedItem}

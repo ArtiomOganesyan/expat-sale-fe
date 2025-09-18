@@ -21,6 +21,8 @@ export type Item = {
   is_favorite: boolean;
 };
 
+export type CategoryType = 'services' | 'products';
+
 type Location = {
   city: string;
   region: string;
@@ -77,5 +79,5 @@ export type CategoryItem = {
   slug: string;
   created_at: string;
   updated_at: string;
-  type?: 'services' | 'products'; 
+  type: CategoryType; 
 };

@@ -11,14 +11,16 @@ import { formatPrice } from '../../../utils/formatPrice';
 type PriceFilterProps = {
   filters: Record<string, any>;
   onPriceChange: (minPriceBase: number, maxPriceBase: number) => void;
+  clearPrice: () => void;
 };
 
 const BASE_ISO = 'usd';
 
-function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
+function PriceFilter({ filters, onPriceChange, clearPrice }: PriceFilterProps) {
   const { search } = useLocation();
   const categoryId = new URLSearchParams(search).get('categoryId');
-  const { data: maxData } = useGetMaxPriceQuery({ categoryId: categoryId || '' }, { skip: !categoryId });
+  const { data: maxData, error, isFetching } = useGetMaxPriceQuery({ categoryId: categoryId || '' }, { skip: !categoryId });
+
   const { data: rates = [] } = useGetCurrencyRateQuery();
   const selectedISO = (localStorage.getItem(LOCAL_STORAGE_KEY_CURRENCY) || 'usd').toLowerCase();
 
@@ -74,6 +76,12 @@ function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
     setValue(prev => [prev[0], Math.max(prev[0], maxSelected)]);
   }, [maxSelected]);
 
+  useEffect(() => {
+    if (error || isFetching) {
+      clearPrice();
+    }
+  }, [error, isFetching]);
+
   const debouncedPriceChange = useCallback(
     (() => {
       let timeoutId: number | undefined;
@@ -114,6 +122,9 @@ function PriceFilter({ filters, onPriceChange }: PriceFilterProps) {
   };
 
   if (!categoryId) return null;
+  if (isFetching || error) {
+    return null;
+  }
   if (filters.isFree) return null;
   const [minSel, maxSel] = value;
   if (minSel === maxSel) return null;

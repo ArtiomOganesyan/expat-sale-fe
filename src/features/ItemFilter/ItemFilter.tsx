@@ -61,6 +61,15 @@ function ItemFilter() {
     }));
   };
 
+  const clearPrice = () => {
+    setFilters((prev: any) => {
+      const next = { ...prev };
+      delete next.minPrice;
+      delete next.maxPrice;
+      return next;
+    });
+  };
+
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     setFilters((prev: any) => ({ ...prev, [name]: checked }));
@@ -159,6 +168,7 @@ function ItemFilter() {
           <PriceFilter
             filters={filters}
             onPriceChange={handlePriceChange}
+            clearPrice={clearPrice}
           />
           <ConditionFilter
             filters={filters}

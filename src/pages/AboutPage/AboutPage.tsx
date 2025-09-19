@@ -6,11 +6,14 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import LiveHelpOutlinedIcon from '@mui/icons-material/LiveHelpOutlined';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivismOutlined';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+
 import { SvgIcon } from '@mui/material';
 
 import FacebookSVG from '../../assets/svg/facebook.svg';
 import LinkedInSVG from '../../assets/svg/linkedin.svg';
 import TelegramSVG from '../../assets/svg/telegram.svg';
+import SafeSellerBadge from '../../shared/components/Badges/SafeSellerBadge';
 
 function AboutPage() {
   return (
@@ -37,7 +40,7 @@ function AboutPage() {
             variant='h4'
             sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
           >
-            <PublicIcon /> Our Mission
+            <PublicIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} /> Our Mission
           </Typography>
           <p>
             We’re a small team of passionate developers who have lived through the struggles of relocation — selling everything
@@ -63,7 +66,7 @@ function AboutPage() {
               variant='h5'
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
             >
-              <SupportAgentIcon /> Services
+              <SupportAgentIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} /> Services
             </Typography>
             <p>
               <b>Find trusted specialists</b> who understand the expat life —{' '}
@@ -77,12 +80,28 @@ function AboutPage() {
               variant='h5'
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
             >
-              <StorefrontIcon /> Marketplace
+              <StorefrontIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} />
+              Marketplace
             </Typography>
             <p>
               A flea-market style space to <b>sell what you don’t need</b> and
               <b> find what you do</b>. Moving out? List your stuff. Just arrived? Discover affordable items to make your new
               place feel like home.
+            </p>
+          </CardContent>
+
+          <CardContent>
+            <Typography
+              variant='h5'
+              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+            >
+              <HealthAndSafetyIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} /> Safe Seller
+            </Typography>
+
+            <p>
+              A Safe Seller is a user who has been <b>verified by our operations team</b> to help with fraud prevention. We do our
+              best to build a safe community, but please remember it's <b>up to you to be careful</b> and stay safe during
+              transactions.
             </p>
           </CardContent>
         </Card>

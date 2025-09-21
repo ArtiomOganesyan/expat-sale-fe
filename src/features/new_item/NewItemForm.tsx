@@ -1,6 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { useIsServiceCategory } from '../../shared/hooks/useIsServiceCategory';
-import { useAddImageToItemMutation, useCreateItemMutation } from '../../entities/items/itemAPI';
+import {
+  useAddImageToItemMutation,
+  useCreateItemMutation,
+  useLazyGetPriceListTemplateQuery,
+  useUploadPriceListMutation,
+} from '../../entities/items/itemAPI';
 
 import styles from './NewItem.module.css';
 import FormInput from '../../shared/components/FormInput/FormInput';
@@ -17,9 +22,15 @@ import { useSnackbar } from '../../shared/hooks/useSnackbar';
 import { useNavigate } from 'react-router';
 import { LOCAL_STORAGE_KEY_CURRENCY } from '../../utils/constants/Item';
 import { useNewItemValidation } from '../../shared/hooks/useNewItemValidation';
+import { Stack, Typography } from '@mui/material';
+import FromPriceListUpload from '../../shared/components/FormPriceListUpload/FromPriceListUpload';
+import { safeLang } from '../../utils/saveLang';
 
 function NewItemForm() {
   const [create, createMeta] = useCreateItemMutation();
+  const [getPriceListTemplate, { isFetching }] = useLazyGetPriceListTemplateQuery();
+  const [uploadPriceList, uploadMeta] = useUploadPriceListMutation();
+  const [priceListFile, setPriceListFile] = useState<File | null>(null);
   const [addImage, addImageMeta] = useAddImageToItemMutation();
   const isLoading = createMeta.isLoading || addImageMeta.isLoading;
   const navigate = useNavigate();
@@ -78,6 +89,34 @@ function NewItemForm() {
     setFieldOk('price');
   };
 
+  const handleGetTemplate = async () => {
+    try {
+      const csvText = await getPriceListTemplate().unwrap();
+      const fileName = `price-list-template_${safeLang()}.csv`;
+
+      try {
+        const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      } catch {
+        const a = document.createElement('a');
+        a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvText);
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+    } catch (e) {
+      console.error('Не удалось скачать шаблон прайс-листа', e);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { ok, firstErrorKey } = validateAll();
@@ -125,6 +164,17 @@ function NewItemForm() {
 
     if (result.data) {
       const itemId = result.data.id;
+      if (priceListFile) {
+        try {
+          await uploadPriceList({ itemId, file: priceListFile }).unwrap();
+        } catch (err: any) {
+          showSnackbar({
+            title: 'Price list upload failed',
+            subtitle: err?.data?.message || 'Please try again later',
+            severity: 'error',
+          });
+        }
+      }
       await addImage({ itemId, files });
       showSnackbar({
         title: 'Item created',
@@ -206,6 +256,25 @@ function NewItemForm() {
           handleLocationChange={handleLocationChange}
           setFormData={setFormData}
         />
+        {isService && (
+          <Stack
+            width={'100%'}
+            gap={2}
+          >
+            <FromPriceListUpload
+              file={priceListFile}
+              setFile={setPriceListFile}
+            />
+            <Typography
+              fontSize={20}
+              fontWeight={500}
+              sx={{ cursor: 'pointer' }}
+              onClick={() => handleGetTemplate()}
+            >
+              {isFetching ? 'Downloading…' : 'Download the price list template'}
+            </Typography>
+          </Stack>
+        )}
         <NewItemDistance handleLocationChange={handleLocationChange} />
         <div className={styles.item_option_block}>
           <FormCheckBox
@@ -241,3 +310,6 @@ function NewItemForm() {
 }
 
 export default NewItemForm;
+function resolveLangForFileName() {
+  throw new Error('Function not implemented.');
+}

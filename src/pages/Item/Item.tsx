@@ -26,7 +26,7 @@ import {
 } from '@mui/material';
 import type React from 'react';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FavoriteHeartIcon from '../../shared/icons/FavoriteHeartIcon';
@@ -39,7 +39,7 @@ import { ResolveIcon } from './ResolveIcon';
 import { resolveUrl } from './utils/resolveUrl';
 import ErrorFallback from '../../shared/components/ErrorComponent/ErrorComponent';
 import { resolveLocation } from './utils/resolveLocation';
-import { safeLang } from '../../utils/saveLang';
+import ItemPriceList from './PriceList';
 
 type MyPaperProps = {
   className?: string;
@@ -75,40 +75,14 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
   const [stateFavorite, setStateFavorite] = useState<boolean>(data?.is_favorite ?? false);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
-  const handleDownloadPriceList = async () => {
-    try {
-      const itemId = data?.id ?? params.id ?? '';
-      if (!itemId) return;
-      const csvText = await triggerDownload({ itemId }).unwrap();
-      const fileName = `price-list_${itemId}_${safeLang()}.csv`;
-
-      try {
-        const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      } catch {
-        const a = document.createElement('a');
-        a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvText);
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      }
-    } catch (e) {
-      console.error('Failed to download price list', e);
-    }
-  };
-
   const navigate = useNavigate();
   const isAuthenticated = !!user?.id;
 
   const matches = useMediaQuery('(max-width: 480px)');
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   if (isLoading) {
     return <LoadingComponent />;
@@ -295,7 +269,7 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
                     </Grid2>
                   )}
 
-                  {data?.price_usd && (
+                  {data?.price_usd && data?.category?.type !== 'services' && (
                     <Grid2
                       size={12}
                       sx={{ marginBottom: 2 }}
@@ -386,19 +360,7 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
                       <Typography variant='body2'>Not specified</Typography>
                     )}
                   </Grid2>
-                  <Grid2
-                    size={12}
-                    sx={{ marginBottom: 2 }}
-                  >
-                    <Button
-                      variant='outlined'
-                      onClick={handleDownloadPriceList}
-                      disabled={isDownloading || !data?.id}
-                      sx={{ width: '100%' }}
-                    >
-                      {isDownloading ? 'Downloading…' : 'Download price list'}
-                    </Button>
-                  </Grid2>
+                  <ItemPriceList itemId={data?.id} />
                 </Grid2>
               </CardContent>
             )}

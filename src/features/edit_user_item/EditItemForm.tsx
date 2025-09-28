@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { useSnackbar } from '../../shared/hooks/useSnackbar';
 import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
 import { useIsServiceCategory } from '../../shared/hooks/useIsServiceCategory';
+import EditItemPriceList from './ui/EditItemPriceList/EditItemPriceList';
 
 function EditItemData() {
   const params = useParams();
@@ -221,6 +222,14 @@ function EditItemData() {
               onChange={(_, checked) => handleCheckboxChange('published', checked)}
               disabled={!edit}
             />
+            {isService && item?.id && (
+              <div style={{ marginTop: 16 }}>
+                <EditItemPriceList
+                  itemId={item.id}
+                  editEnabled={edit}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>

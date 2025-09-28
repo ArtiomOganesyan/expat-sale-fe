@@ -1,29 +1,78 @@
 // FromPriceListUpload.tsx
 import { useEffect, useRef, useState } from 'react';
-import Button from '@mui/material/Button';
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Box,
+  Button,
+  IconButton,
+  Typography,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import FormError from '../FormError/FormError';
 
 type Props = {
   file: File | null;
   setFile: (f: File | null) => void;
   maxSizeMB?: number;
-  previewRows?: number;
+  disabled?: boolean;
 };
 
 export default function FromPriceListUpload({
   file,
   setFile,
-  maxSizeMB = 5,
-  previewRows = 10,
+  maxSizeMB = 2,
+  disabled = true
 }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState('');
-  const [previewTable, setPreviewTable] = useState<string[][]>([]);
+  const [rows, setRows] = useState<string[][]>([]);
+  const [expanded, setExpanded] = useState(false);
+
+  const parseCSV = (text: string): string[][] => {
+    const out: string[][] = [];
+    let row: string[] = [];
+    let cur = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const next = text[i + 1];
+
+      if (inQuotes) {
+        if (ch === '"' && next === '"') {
+          cur += '"';
+          i++;
+        } else if (ch === '"') {
+          inQuotes = false;
+        } else {
+          cur += ch;
+        }
+      } else {
+        if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ',') {
+          row.push(cur.trim());
+          cur = '';
+        } else if (ch === '\n') {
+          row.push(cur.trim());
+          out.push(row);
+          row = [];
+          cur = '';
+        } else if (ch !== '\r') {
+          cur += ch;
+        }
+      }
+    }
+    if (cur.length > 0 || inQuotes || row.length > 0) {
+      row.push(cur.trim());
+      out.push(row);
+    }
+    return out.filter(r => r.some(cell => cell !== ''));
+  };
 
   useEffect(() => {
     if (error) {
@@ -43,16 +92,12 @@ export default function FromPriceListUpload({
       setError('No file selected');
       return;
     }
-
-
     const sizeMB = f.size / (1024 * 1024);
     if (sizeMB > maxSizeMB) {
       setError(`File size exceeds ${maxSizeMB} MB`);
       e.currentTarget.value = '';
       return;
     }
-
-
     const allowedMime = ['text/csv', 'application/vnd.ms-excel', 'application/csv'];
     const looksLikeCsv = f.name.toLowerCase().endsWith('.csv') || allowedMime.includes(f.type);
     if (!looksLikeCsv) {
@@ -62,34 +107,29 @@ export default function FromPriceListUpload({
     }
 
     setFile(f);
+    setExpanded(false);
     e.currentTarget.value = '';
   };
 
   const handleRemove = () => {
     setFile(null);
-    setPreviewTable([]);
+    setRows([]);
+    setExpanded(false);
   };
 
   useEffect(() => {
     if (!file) {
-      setPreviewTable([]);
+      setRows([]);
       return;
     }
     const reader = new FileReader();
     reader.onload = () => {
       const text = String(reader.result || '');
-
-      const lines = text.split(/\r?\n/).filter(Boolean).slice(0, previewRows);
-      const rows = lines.map(line => {
-
-        return line.split(',').map(cell => cell.trim());
-      });
-      setPreviewTable(rows);
+      setRows(parseCSV(text));
     };
     reader.onerror = () => setError('Failed to read file');
-    const blobSlice = file.slice(0, 200 * 1024);
-    reader.readAsText(blobSlice, 'utf-8');
-  }, [file, previewRows]);
+    reader.readAsText(file, 'utf-8');
+  }, [file]);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -98,6 +138,7 @@ export default function FromPriceListUpload({
         startIcon={<CloudUploadIcon />}
         onClick={handlePickClick}
         sx={{ width: '100%' }}
+        disabled={disabled}
       >
         {file ? 'Change CSV' : 'Choose CSV'}
       </Button>
@@ -110,7 +151,6 @@ export default function FromPriceListUpload({
         onChange={handleFileChange}
       />
 
-      {/* инфо + удалить */}
       {file && (
         <Box
           sx={{
@@ -130,6 +170,7 @@ export default function FromPriceListUpload({
             </Typography>
             <Typography variant="caption" color="text.secondary">
               {(file.size / (1024 * 1024)).toFixed(2)} MB
+              {rows.length ? ` · ${rows.length} rows` : ''}
             </Typography>
           </Box>
           <IconButton size="small" aria-label="remove file" onClick={handleRemove}>
@@ -138,43 +179,54 @@ export default function FromPriceListUpload({
         </Box>
       )}
 
-      {/* превью таблицы */}
-      {previewTable.length > 0 && (
-        <Box
-          sx={{
-            mt: 1,
-            maxHeight: 220,
-            overflow: 'auto',
-            border: theme => `1px solid ${theme.palette.divider}`,
-            borderRadius: 1,
-          }}
+      {file && rows.length > 0 && (
+        <Accordion
+          expanded={expanded}
+          onChange={(_, isExp) => setExpanded(isExp)}
+          sx={{ mt: 1, width: '100%' }}
         >
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <tbody>
-              {previewTable.map((row, ri) => (
-                <tr key={ri}>
-                  {row.map((cell, ci) => (
-                    <td
-                      key={ci}
-                      style={{
-                        borderBottom: '1px solid rgba(0,0,0,0.08)',
-                        padding: '6px 8px',
-                        fontSize: 12,
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis',
-                        overflow: 'hidden',
-                        maxWidth: 220,
-                      }}
-                      title={cell}
-                    >
-                      {cell}
-                    </td>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="body2">Preview price list</Typography>
+          </AccordionSummary>
+
+          <AccordionDetails>
+            <Box
+              sx={{
+                maxHeight: 360,
+                overflow: 'auto',
+                border: theme => `1px solid ${theme.palette.divider}`,
+                borderRadius: 1,
+              }}
+            >
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <tbody>
+                  {rows.map((r, ri) => (
+                    <tr key={ri}>
+                      {r.map((cell, ci) => (
+                        <td
+                          key={ci}
+                          style={{
+                            borderBottom: '1px solid rgba(0,0,0,0.08)',
+                            padding: '6px 8px',
+                            fontSize: ri === 0 ? 14 : 12,
+                            fontWeight: ri === 0 ? 600 : 400,
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            maxWidth: 260,
+                          }}
+                          title={cell}
+                        >
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Box>
+                </tbody>
+              </table>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
       )}
 
       <FormError

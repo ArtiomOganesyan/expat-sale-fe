@@ -1,5 +1,10 @@
 import { useParams } from 'react-router';
-import { useAddToFavoriteMutation, useGetItemByIdQuery, useRemoveFromFavoriteMutation } from '../../entities/items/itemAPI';
+import {
+  useAddToFavoriteMutation,
+  useGetItemByIdQuery,
+  useLazyGetPriceListByItemQuery,
+  useRemoveFromFavoriteMutation,
+} from '../../entities/items/itemAPI';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -8,6 +13,7 @@ import Carousel from 'react-material-ui-carousel';
 import {
   AppBar,
   Box,
+  Button,
   CardActionArea,
   Chip,
   Grid2,
@@ -20,7 +26,7 @@ import {
 } from '@mui/material';
 import type React from 'react';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FavoriteHeartIcon from '../../shared/icons/FavoriteHeartIcon';
@@ -32,8 +38,9 @@ import type { PlatformType } from './ResolveIcon';
 import { ResolveIcon } from './ResolveIcon';
 import { resolveUrl } from './utils/resolveUrl';
 import ErrorFallback from '../../shared/components/ErrorComponent/ErrorComponent';
-import { resolveLocation } from './utils/resolveLocation';
+import { resolveLocation } from './utils/resolveLocation'
 import SafeSellerBadge from '../../shared/components/Badges/SafeSellerBadge';
+import ItemPriceList from './PriceList';
 
 type MyPaperProps = {
   className?: string;
@@ -62,6 +69,7 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
   const user = useAppSelector(selectUser);
 
   const params = useParams();
+  const [triggerDownload, { isFetching: isDownloading }] = useLazyGetPriceListByItemQuery();
   const { data, isLoading, isError } = useGetItemByIdQuery({ itemId: params.id });
   const [addToFavorite] = useAddToFavoriteMutation();
   const [removeFromFavorite] = useRemoveFromFavoriteMutation();
@@ -72,6 +80,10 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
   const isAuthenticated = !!user?.id;
 
   const matches = useMediaQuery('(max-width: 480px)');
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   if (isLoading) {
     return <LoadingComponent />;
@@ -278,7 +290,7 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
                     </Grid2>
                   )}
 
-                  {data?.price_usd && (
+                  {data?.price_usd && data?.category?.type !== 'services' && (
                     <Grid2
                       size={12}
                       sx={{ marginBottom: 2 }}
@@ -328,7 +340,6 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
                     <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Location`}</Typography>
                     <Typography variant={'body1'}>{resolveLocation(data?.location)}</Typography>
                   </Grid2>
-
                   <Grid2
                     size={12}
                     sx={{ marginBottom: 2 }}
@@ -370,6 +381,7 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
                       <Typography variant='body2'>Not specified</Typography>
                     )}
                   </Grid2>
+                  <ItemPriceList itemId={data?.id} />
                 </Grid2>
               </CardContent>
             )}

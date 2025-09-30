@@ -2,6 +2,20 @@ import TAG_TYPES from '../../store/constants/TagTypes';
 import { listingApi } from './api';
 import { type EditItem, type Item } from './types/items';
 
+const resolveLangForTemplate = () => {
+  try {
+    const raw = localStorage.getItem('i18nextLng') || '';
+    const base = raw.split('-')[0]?.toLowerCase();
+    const map: Record<string, string> = {
+      en: 'en',
+      ru: 'ru',
+    };
+    return map[base] || 'en';
+  } catch {
+    return 'en';
+  }
+};
+
 export const itemAPI = listingApi.injectEndpoints({
   endpoints: builder => ({
     getItemById: builder.query<Item, any>({
@@ -75,6 +89,42 @@ export const itemAPI = listingApi.injectEndpoints({
         method: 'DELETE',
       }),
     }),
+    getPriceListTemplate: builder.query<string, void>({
+      query: () => {
+        const lang = resolveLangForTemplate();
+        return {
+          url: `/media/price-list/template/${lang}`,
+          method: 'GET',
+          headers: { Accept: 'text/csv' },
+          responseHandler: 'text' as const,
+        };
+      },
+      keepUnusedDataFor: 0,
+    }),
+    uploadPriceList: builder.mutation<void, { itemId: string; file: File }>({
+      query: ({ itemId, file }) => {
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+        return {
+          url: `/media/price-list/service/${itemId}`,
+          method: 'POST',
+          body: formData,
+        };
+      },
+      invalidatesTags: (r, e, { itemId }) => [
+        { type: TAG_TYPES.ITEM_BY_ID, id: itemId },
+        { type: TAG_TYPES.LISTING_MASONRY, id: `items-user-stat` },
+      ],
+    }),
+    getPriceListByItem: builder.query<string, { itemId: string }>({
+      query: ({ itemId }) => ({
+        url: `/media/price-list/service/${itemId}`,
+        method: 'GET',
+        headers: { Accept: 'text/csv' },
+        responseHandler: 'text' as const, 
+      }),
+      keepUnusedDataFor: 0,
+    }),
   }),
 });
 
@@ -87,4 +137,7 @@ export const {
   useGetItemByIdQuery,
   useAddToFavoriteMutation,
   useRemoveFromFavoriteMutation,
+  useLazyGetPriceListTemplateQuery,
+  useUploadPriceListMutation,
+  useLazyGetPriceListByItemQuery,
 } = itemAPI;

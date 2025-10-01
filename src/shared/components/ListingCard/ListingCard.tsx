@@ -8,6 +8,7 @@ import styles from './ListingCard.module.css';
 import { type Item } from '../../../entities/items/types/items';
 import { formatPrice } from '../../../utils/formatPrice';
 import ImageWithSkeleton from '../ImageWithSkeleton/ImageWithSkeleton';
+import SafeSellerBadge from '../Badges/SafeSellerBadge';
 
 interface ListingCardProps {
   item: Item;
@@ -124,6 +125,9 @@ function ListingCard({ item, url }: ListingCardProps) {
       }
     }
   }
+  const handleSellerProfileClick = () => {
+    navigate(`/about`);
+  };
 
   return (
     <div
@@ -145,14 +149,35 @@ function ListingCard({ item, url }: ListingCardProps) {
           autoPlay={true}
           animation='slide'
           height={item.xl ? 400 : 200}
+          navButtonsWrapperProps={{
+            style: {
+              height: '80%',
+            },
+          }}
         >
           {imagesToShow.map(image => (
-            <ImageWithSkeleton
+            <div
               key={image.public_url}
-              src={image.public_url}
-              alt={'product'}
-              height={item.xl ? 400 : 200}
-            />
+              className={styles.imageWrapper}
+            >
+              <ImageWithSkeleton
+                src={image.public_url}
+                alt='product'
+                height={item.xl ? 400 : 200}
+              />
+
+              {item.user.safe_seller && (
+                <div
+                  className={styles.safeBadge}
+                  onClick={handleSellerProfileClick}
+                >
+                  <SafeSellerBadge
+                    size={item.xl ? 'l' : 'm'}
+                    showText={false}
+                  />
+                </div>
+              )}
+            </div>
           ))}
         </Carousel>
       </div>

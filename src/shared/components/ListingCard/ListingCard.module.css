@@ -56,3 +56,15 @@
   text-decoration: none;
   color: inherit;
 }
+
+.imageWrapper {
+  position: relative;
+  height: 100%;
+}
+
+.safeBadge {
+  position: absolute;
+  left: 8px;
+  bottom: 16px;
+  z-index: 3;
+}

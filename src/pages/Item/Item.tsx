@@ -38,7 +38,8 @@ import type { PlatformType } from './ResolveIcon';
 import { ResolveIcon } from './ResolveIcon';
 import { resolveUrl } from './utils/resolveUrl';
 import ErrorFallback from '../../shared/components/ErrorComponent/ErrorComponent';
-import { resolveLocation } from './utils/resolveLocation';
+import { resolveLocation } from './utils/resolveLocation'
+import SafeSellerBadge from '../../shared/components/Badges/SafeSellerBadge';
 import ItemPriceList from './PriceList';
 
 type MyPaperProps = {
@@ -92,6 +93,10 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
   }
 
   const handleBack = () => navigate(-1);
+  const handleSellerProfileClick = () => {
+    navigate(`/about`);
+  };
+  
   return (
     <>
       <Box
@@ -205,6 +210,22 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
                           display: isImageLoaded ? 'block' : 'none',
                         }}
                       />
+                      {data?.user?.safe_seller && (
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            left: 8,
+                            bottom: 16,
+                            zIndex: 2,
+                          }}
+                          onClick={handleSellerProfileClick}
+                        >
+                          <SafeSellerBadge
+                            size={matches ? 'm' : 'l'}
+                            showText={false}
+                          />
+                        </Box>
+                      )}
                       {isImageLoaded && data?.images && (
                         <Box
                           sx={{

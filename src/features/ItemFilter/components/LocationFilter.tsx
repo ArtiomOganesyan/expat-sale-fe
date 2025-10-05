@@ -141,6 +141,13 @@ function LocationFilter({ filters, handleLocationChange }: LocationFilterProps) 
           label={label}
           placeholder={placeholder}
           title=''
+          InputLabelProps={{
+            sx: {
+              // style the floating label when it acts like a placeholder
+              background: 'var(--color-invisible)',
+              px: '4px',
+            },
+          }}
           InputProps={{
             ...params.InputProps,
             endAdornment: (

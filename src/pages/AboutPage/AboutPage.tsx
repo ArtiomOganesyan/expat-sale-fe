@@ -13,9 +13,25 @@ import { SvgIcon } from '@mui/material';
 import FacebookSVG from '../../assets/svg/facebook.svg';
 import LinkedInSVG from '../../assets/svg/linkedin.svg';
 import TelegramSVG from '../../assets/svg/telegram.svg';
-import SafeSellerBadge from '../../shared/components/Badges/SafeSellerBadge';
+import { useLocation } from 'react-router';
+import { useEffect } from 'react';
 
 function AboutPage() {
+  const location = useLocation();
+
+  const scrollToId = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  useEffect(() => {
+    const hash = location.hash;
+    if (hash) {
+      scrollToId(hash.substring(1));
+    }
+  }, [location]);
+
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
@@ -74,7 +90,6 @@ function AboutPage() {
               stress.
             </p>
           </CardContent>
-
           <CardContent>
             <Typography
               variant='h5'
@@ -89,8 +104,7 @@ function AboutPage() {
               place feel like home.
             </p>
           </CardContent>
-
-          <CardContent>
+          <CardContent id='safe-seller'>
             <Typography
               variant='h5'
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}

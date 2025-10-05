@@ -1,7 +1,10 @@
 import { Typography } from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import { useNavigate } from 'react-router';
 
 function SafeSellerBadge({ size = 'm', showText = true }: { size?: 's' | 'm' | 'l'; showText?: boolean }) {
+  const navigation = useNavigate();
+
   const getBadgeSize = () => {
     switch (size) {
       case 's':
@@ -27,6 +30,12 @@ function SafeSellerBadge({ size = 'm', showText = true }: { size?: 's' | 'm' | '
         borderRadius: '8px',
         padding: badgeSize.padding,
         background: 'rgba(255, 255, 255, 0.5)',
+        zIndex: 1000,
+        cursor: 'pointer',
+      }}
+      onClick={e => {
+        e.stopPropagation();
+        navigation('/about#safe-seller');
       }}
     >
       <HealthAndSafetyIcon sx={{ color: 'var(--color-accent-strong)' }} />

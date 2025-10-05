@@ -172,7 +172,7 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
               }}
               onClick={() => {
                 if (data?.id) {
-                  const url = `${window.location.origin}/item/${data.id}`;
+                  const url = `${window.location.origin}/listing/${data.id}`;
                   navigator.clipboard.writeText(url);
                 }
               }}

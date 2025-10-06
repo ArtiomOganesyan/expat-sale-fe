@@ -38,9 +38,10 @@ import type { PlatformType } from './ResolveIcon';
 import { ResolveIcon } from './ResolveIcon';
 import { resolveUrl } from './utils/resolveUrl';
 import ErrorFallback from '../../shared/components/ErrorComponent/ErrorComponent';
-import { resolveLocation } from './utils/resolveLocation'
+import { resolveLocation } from './utils/resolveLocation';
 import SafeSellerBadge from '../../shared/components/Badges/SafeSellerBadge';
 import ItemPriceList from './PriceList';
+import IosShareIcon from '@mui/icons-material/IosShare';
 
 type MyPaperProps = {
   className?: string;
@@ -93,302 +94,322 @@ export const Item: React.FC<{}> = forwardRef<HTMLDivElement, {}>((props, ref) =>
   }
 
   const handleBack = () => navigate(-1);
-  const handleSellerProfileClick = () => {
-    navigate(`/about`);
-  };
-  
+
   return (
-    <>
-      <Box
-        display={'flex'}
-        flexDirection={'column'}
-        justifyContent={'center'}
-        alignItems={'center'}
-        sx={{
-          marginTop: '40px',
-          marginBottom: '40px',
-        }}
-      >
-        <AppBar color='default'>
-          <Toolbar sx={{ justifyContent: 'space-between', minHeight: '40px' }}>
+    <Box
+      display={'flex'}
+      flexDirection={'column'}
+      justifyContent={'center'}
+      alignItems={'center'}
+      sx={{
+        marginTop: '40px',
+        marginBottom: '40px',
+      }}
+    >
+      <AppBar color='default'>
+        <Toolbar sx={{ justifyContent: 'space-between', minHeight: '40px' }}>
+          <IconButton
+            edge='start'
+            color='inherit'
+            onClick={handleBack}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+
+          {isAuthenticated && (
             <IconButton
-              edge='start'
+              edge='end'
               color='inherit'
-              onClick={handleBack}
+              onClick={() => {
+                if (stateFavorite) {
+                  removeFromFavorite({ itemId: data?.id ?? '' });
+                  setStateFavorite(false);
+                } else {
+                  addToFavorite({ itemId: data?.id ?? '' });
+                  setStateFavorite(true);
+                }
+              }}
+              size='small'
             >
-              <ArrowBackIcon />
+              {stateFavorite ? <FavoriteHeartIcon isFavorite={true} /> : <FavoriteBorderIcon />}
             </IconButton>
+          )}
+        </Toolbar>
+      </AppBar>
 
-            {isAuthenticated && (
-              <IconButton
-                edge='end'
-                color='inherit'
-                onClick={() => {
-                  if (stateFavorite) {
-                    removeFromFavorite({ itemId: data?.id ?? '' });
-                    setStateFavorite(false);
-                  } else {
-                    addToFavorite({ itemId: data?.id ?? '' });
-                    setStateFavorite(true);
-                  }
-                }}
-                size='small'
-              >
-                {stateFavorite ? <FavoriteHeartIcon isFavorite={true} /> : <FavoriteBorderIcon />}
-              </IconButton>
-            )}
-          </Toolbar>
-        </AppBar>
-
-        <MyPaper>
-          <Card
+      <MyPaper>
+        <Card
+          sx={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: 0,
+          }}
+        >
+          <Box
             sx={{
-              height: '100%',
               width: '100%',
+              height: '100%',
               display: 'flex',
-              flexDirection: 'column',
-              padding: 0,
+              position: 'relative',
             }}
           >
-            <Box
-              sx={{
-                width: '100%',
-                height: '100%',
+            <div
+              style={{
+                position: 'absolute',
+                zIndex: 2,
+                right: 16,
+                top: 16,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                width: 32,
+                height: 32,
+                borderRadius: '25%',
                 display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                if (data?.id) {
+                  const url = `${window.location.origin}/listing/${data.id}`;
+                  navigator.clipboard.writeText(url);
+                }
               }}
             >
-              <Carousel
-                autoPlay={false}
-                indicators={false}
-                sx={{ width: '100%', height: '100%' }}
-                navButtonsAlwaysInvisible={matches}
-              >
-                {data?.images.map((image, index) => {
-                  const imageKey = `${image.id || index}`;
-                  const isImageLoaded = loadedImages[imageKey];
+              <IosShareIcon sx={{ color: 'white' }} />
+            </div>
 
-                  return (
-                    <CardActionArea
-                      key={imageKey}
-                      data-active={data.id}
-                      sx={{
-                        position: 'relative',
-                        minHeight: '45vh',
-                        height: '45vh',
-                        width: '100%',
-                        '&[data-active]': {
-                          backgroundColor: 'action.selected',
-                          '&:hover': {
-                            backgroundColor: 'action.selectedHover',
-                          },
+            <Carousel
+              autoPlay={false}
+              indicators={false}
+              sx={{ width: '100%', height: '100%' }}
+              navButtonsAlwaysInvisible={matches}
+            >
+              {data?.images.map((image, index) => {
+                const imageKey = `${image.id || index}`;
+                const isImageLoaded = loadedImages[imageKey];
+
+                return (
+                  <CardActionArea
+                    key={imageKey}
+                    data-active={data.id}
+                    sx={{
+                      position: 'relative',
+                      minHeight: '45vh',
+                      height: '45vh',
+                      width: '100%',
+                      '&[data-active]': {
+                        backgroundColor: 'action.selected',
+                        '&:hover': {
+                          backgroundColor: 'action.selectedHover',
                         },
-                      }}
-                    >
-                      {!isImageLoaded && (
-                        <Skeleton
-                          variant='rectangular'
-                          sx={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                          }}
-                          animation='wave'
-                        />
-                      )}
-                      <CardMedia
-                        component='img'
-                        image={image.public_url}
-                        onLoad={() => {
-                          setLoadedImages(prev => ({
-                            ...prev,
-                            [imageKey]: true,
-                          }));
-                        }}
+                      },
+                    }}
+                  >
+                    {!isImageLoaded && (
+                      <Skeleton
+                        variant='rectangular'
                         sx={{
-                          display: isImageLoaded ? 'block' : 'none',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
                         }}
+                        animation='wave'
                       />
-                      {data?.user?.safe_seller && (
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            left: 8,
-                            bottom: 16,
-                            zIndex: 2,
-                          }}
-                          onClick={handleSellerProfileClick}
-                        >
-                          <SafeSellerBadge
-                            size={matches ? 'm' : 'l'}
-                            showText={false}
-                          />
-                        </Box>
-                      )}
-                      {isImageLoaded && data?.images && (
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            bottom: 16,
-                            right: 16,
-                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                            color: 'white',
-                            borderRadius: '25%',
-                            width: 32,
-                            height: 32,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '0.8rem',
-                          }}
-                        >
-                          {`${index + 1}/${data.images.length}`}
-                        </Box>
-                      )}
-                    </CardActionArea>
-                  );
-                })}
-              </Carousel>
-            </Box>
-            {isLoading ? (
-              <Skeleton
-                variant='rectangular'
-                width='100%'
-                height='100%'
-                animation='wave'
-              />
-            ) : (
-              <CardContent
-                sx={{
-                  width: '100%',
-                  display: 'flex',
-                  backgroundColor: 'white',
-                  alignItems: 'center',
-                  justifyContent: 'space-around',
-                  padding: '0 !important',
-                  flexDirection: 'column',
-                }}
-              >
-                <Grid2
-                  container
-                  sx={{ width: '100%', paddingLeft: 1, paddingRight: 1 }}
-                >
-                  {data?.title && (
-                    <Grid2
-                      size={12}
-                      sx={{ marginBottom: 2 }}
-                    >
-                      <Stack>
-                        <Typography
-                          variant='h6'
-                          sx={{ fontWeight: 'bold', textAlign: 'center' }}
-                        >
-                          {data.title}
-                        </Typography>
-                      </Stack>
-                    </Grid2>
-                  )}
-
-                  {data?.price_usd && data?.category?.type !== 'services' && (
-                    <Grid2
-                      size={12}
-                      sx={{ marginBottom: 2 }}
-                    >
-                      <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Price`}</Typography>
-                      <Typography
-                        sx={{ fontWeight: 'bold', width: '35%', border: 'none', color: 'primary.main' }}
-                        variant={'body1'}
-                      >
-                        {Number(data?.price ?? 0) > 0 ? `${data.price} ${data.currency}` : 'free'}
-                      </Typography>
-                    </Grid2>
-                  )}
-
-                  {data?.category && (
-                    <Grid2
-                      size={12}
-                      sx={{ marginBottom: 2 }}
-                    >
-                      <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Category`}</Typography>
-                      <Typography variant={'body1'}>{data.category.name}</Typography>
-                    </Grid2>
-                  )}
-                  {data?.description && (
-                    <Grid2 size={12}>
-                      <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Description`}</Typography>
-                      <ExpandableDescription
-                        maxChars={60}
-                        text={data.description}
-                      />
-                    </Grid2>
-                  )}
-                  {data?.user.username && (
-                    <Grid2
-                      size={12}
-                      sx={{ marginBottom: 2 }}
-                    >
-                      <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Saler`}</Typography>
-                      <Typography variant={'body1'}>{data.user.username}</Typography>
-                    </Grid2>
-                  )}
-
-                  <Grid2
-                    size={12}
-                    sx={{ marginBottom: 2 }}
-                  >
-                    <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Location`}</Typography>
-                    <Typography variant={'body1'}>{resolveLocation(data?.location)}</Typography>
-                  </Grid2>
-                  <Grid2
-                    size={12}
-                    sx={{ marginBottom: 2 }}
-                  >
-                    <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Contacts`}</Typography>
-
-                    {data?.user?.contact_platforms && Object.keys(data.user.contact_platforms).length > 0 ? (
-                      <Box
-                        marginTop={1}
-                        display='flex'
-                        flexDirection='row'
-                        flexWrap='wrap'
-                        gap={1}
-                      >
-                        {Object.entries(data.user.contact_platforms).map(([platform, contact], index: number) => {
-                          return (
-                            <Chip
-                              color={'primary'}
-                              sx={{ cursor: 'pointer' }}
-                              key={`platform-${index}`}
-                              icon={
-                                <Box
-                                  sx={{ padding: '1px' }}
-                                  display={'flex'}
-                                  alignItems={'center'}
-                                  justifyContent={'center'}
-                                >
-                                  <ResolveIcon platform={platform as PlatformType} />
-                                </Box>
-                              }
-                              label={contact}
-                              onClick={() => resolveUrl(platform, contact)}
-                              variant='outlined'
-                            />
-                          );
-                        })}
-                      </Box>
-                    ) : (
-                      <Typography variant='body2'>Not specified</Typography>
                     )}
+                    <CardMedia
+                      component='img'
+                      image={image.public_url}
+                      onLoad={() => {
+                        setLoadedImages(prev => ({
+                          ...prev,
+                          [imageKey]: true,
+                        }));
+                      }}
+                      sx={{
+                        display: isImageLoaded ? 'block' : 'none',
+                      }}
+                    />
+                    {data?.user?.safe_seller && (
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          left: 8,
+                          bottom: 16,
+                          zIndex: 200,
+                        }}
+                      >
+                        <SafeSellerBadge
+                          size={matches ? 'm' : 'l'}
+                          showText={false}
+                        />
+                      </Box>
+                    )}
+                    {isImageLoaded && data?.images && (
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          bottom: 16,
+                          right: 16,
+                          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                          color: 'white',
+                          borderRadius: '25%',
+                          width: 32,
+                          height: 32,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        {`${index + 1}/${data.images.length}`}
+                      </Box>
+                    )}
+                  </CardActionArea>
+                );
+              })}
+            </Carousel>
+          </Box>
+          {isLoading ? (
+            <Skeleton
+              variant='rectangular'
+              width='100%'
+              height='100%'
+              animation='wave'
+            />
+          ) : (
+            <CardContent
+              sx={{
+                width: '100%',
+                display: 'flex',
+                backgroundColor: 'white',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                padding: '0 !important',
+                flexDirection: 'column',
+              }}
+            >
+              <Grid2
+                container
+                sx={{ width: '100%', paddingLeft: 1, paddingRight: 1 }}
+              >
+                {data?.title && (
+                  <Grid2
+                    size={12}
+                    sx={{ marginBottom: 2 }}
+                  >
+                    <Stack>
+                      <Typography
+                        variant='h6'
+                        sx={{ fontWeight: 'bold', textAlign: 'center' }}
+                      >
+                        {data.title}
+                      </Typography>
+                    </Stack>
                   </Grid2>
-                  <ItemPriceList itemId={data?.id} />
+                )}
+
+                {data?.price_usd && data?.category?.type !== 'services' && (
+                  <Grid2
+                    size={12}
+                    sx={{ marginBottom: 2 }}
+                  >
+                    <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Price`}</Typography>
+                    <Typography
+                      sx={{ fontWeight: 'bold', width: '35%', border: 'none', color: 'primary.main' }}
+                      variant={'body1'}
+                    >
+                      {Number(data?.price ?? 0) > 0 ? `${data.price} ${data.currency}` : 'free'}
+                    </Typography>
+                  </Grid2>
+                )}
+
+                {data?.category && (
+                  <Grid2
+                    size={12}
+                    sx={{ marginBottom: 2 }}
+                  >
+                    <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Category`}</Typography>
+                    <Typography variant={'body1'}>{data.category.name}</Typography>
+                  </Grid2>
+                )}
+                {data?.description && (
+                  <Grid2 size={12}>
+                    <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Description`}</Typography>
+                    <ExpandableDescription
+                      maxChars={60}
+                      text={data.description}
+                    />
+                  </Grid2>
+                )}
+                {data?.user.username && (
+                  <Grid2
+                    size={12}
+                    sx={{ marginBottom: 2 }}
+                  >
+                    <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Saler`}</Typography>
+                    <Typography variant={'body1'}>{data.user.username}</Typography>
+                  </Grid2>
+                )}
+
+                <Grid2
+                  size={12}
+                  sx={{ marginBottom: 2 }}
+                >
+                  <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Location`}</Typography>
+                  <Typography variant={'body1'}>{resolveLocation(data?.location)}</Typography>
                 </Grid2>
-              </CardContent>
-            )}
-          </Card>
-        </MyPaper>
-      </Box>
-    </>
+                <Grid2
+                  size={12}
+                  sx={{ marginBottom: 2 }}
+                >
+                  <Typography sx={{ fontWeight: 'bold', width: '35%', border: 'none' }}>{`Contacts`}</Typography>
+
+                  {data?.user?.contact_platforms && Object.keys(data.user.contact_platforms).length > 0 ? (
+                    <Box
+                      marginTop={1}
+                      display='flex'
+                      flexDirection='row'
+                      flexWrap='wrap'
+                      gap={1}
+                    >
+                      {Object.entries(data.user.contact_platforms).map(([platform, contact], index: number) => {
+                        return (
+                          <Chip
+                            color={'primary'}
+                            sx={{ cursor: 'pointer' }}
+                            key={`platform-${index}`}
+                            icon={
+                              <Box
+                                sx={{ padding: '1px' }}
+                                display={'flex'}
+                                alignItems={'center'}
+                                justifyContent={'center'}
+                              >
+                                <ResolveIcon platform={platform as PlatformType} />
+                              </Box>
+                            }
+                            label={contact}
+                            onClick={() => resolveUrl(platform, contact)}
+                            variant='outlined'
+                          />
+                        );
+                      })}
+                    </Box>
+                  ) : (
+                    <Typography variant='body2'>Not specified</Typography>
+                  )}
+                </Grid2>
+                <ItemPriceList itemId={data?.id} />
+              </Grid2>
+            </CardContent>
+          )}
+        </Card>
+      </MyPaper>
+    </Box>
   );
 });
 

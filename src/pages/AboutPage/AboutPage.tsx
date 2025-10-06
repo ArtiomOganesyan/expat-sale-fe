@@ -11,7 +11,8 @@ import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import FacebookSVG from '../../assets/svg/facebook.svg';
 import LinkedInSVG from '../../assets/svg/linkedin.svg';
 import TelegramSVG from '../../assets/svg/telegram.svg';
-import SafeSellerBadge from '../../shared/components/Badges/SafeSellerBadge';
+import { useLocation } from 'react-router';
+import { useEffect } from 'react';
 
 import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 import en from './i18n/en.json';
@@ -19,6 +20,20 @@ import ru from './i18n/ru.json';
 
 function AboutPage() {
   const { t } = useCustomTranslation('about', en, ru);
+  const location = useLocation();
+
+  const scrollToId = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  useEffect(() => {
+    const hash = location.hash;
+    if (hash) {
+      scrollToId(hash.substring(1));
+    }
+  }, [location]);
 
   return (
     <div className={styles.container}>
@@ -75,7 +90,6 @@ function AboutPage() {
               {t('services.p1.end')}
             </p>
           </CardContent>
-
           <CardContent>
             <Typography
               variant='h5'
@@ -92,8 +106,7 @@ function AboutPage() {
               {t('marketplace.p1.part3')}
             </p>
           </CardContent>
-
-          <CardContent>
+          <CardContent id='safe-seller'>
             <Typography
               variant='h5'
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}

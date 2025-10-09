@@ -3,7 +3,7 @@ import Settings from '../../features/settings/Settings';
 import { useTranslation } from 'react-i18next';
 
 const SettingsPage = () => {
-  const { t } = useTranslation('settings_page');
+  const { t } = useTranslation('settings');
 
   return (
     <div className={styles.container}>

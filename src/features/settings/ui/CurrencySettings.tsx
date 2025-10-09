@@ -3,14 +3,12 @@ import type { SelectChangeEvent } from '@mui/material';
 import { useState } from 'react';
 import { useGetCurrencyRateQuery } from '../../../entities/currency/currencyAPI';
 import { LOCAL_STORAGE_KEY_CURRENCY } from '../../../utils/constants/Item';
-import { useCustomTranslation } from '../../../hooks/useCustomTranslation';
-import en from '../i18n/en.json';
-import ru from '../i18n/ru.json';
+import { useTranslation } from 'react-i18next';
 
 const CurrencySettings = () => {
   const { data: rates = [] } = useGetCurrencyRateQuery(undefined);
   const [selectedCurrency, setSelectedCurrency] = useState<string>(() => localStorage.getItem(LOCAL_STORAGE_KEY_CURRENCY) ?? '');
-  const { t } = useCustomTranslation('currency', en, ru);
+  const { t } = useTranslation('currency');
   const handleChange = (event: SelectChangeEvent) => {
     const value = event.target.value;
     setSelectedCurrency(value);

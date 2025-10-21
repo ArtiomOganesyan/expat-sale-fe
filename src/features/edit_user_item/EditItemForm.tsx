@@ -222,14 +222,14 @@ function EditItemData() {
               onChange={(_, checked) => handleCheckboxChange('published', checked)}
               disabled={!edit}
             />
-            {isService && item?.id && (
-              <div style={{ marginTop: 16 }}>
-                <EditItemPriceList
-                  itemId={item.id}
-                  editEnabled={edit}
-                />
-              </div>
-            )}
+          </div>
+        )}
+        {isService && item?.id && (
+          <div style={{ width: '100%' }}>
+            <EditItemPriceList
+              itemId={item.id}
+              editEnabled={edit}
+            />
           </div>
         )}
       </div>

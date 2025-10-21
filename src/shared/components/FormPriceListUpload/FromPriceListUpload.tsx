@@ -25,7 +25,7 @@ export default function FromPriceListUpload({
   file,
   setFile,
   maxSizeMB = 2,
-  disabled = true
+  disabled = false
 }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState('');

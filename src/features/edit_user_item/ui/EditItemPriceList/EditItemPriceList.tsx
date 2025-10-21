@@ -101,7 +101,7 @@ export default function EditItemPriceList({ itemId, editEnabled = true }: Props)
   const hasPrice = currentRows.length > 0 && !fetchError;
 
   return (
-    <Grid2 container spacing={1} sx={{ mt: 2 }}>
+    <Grid2 container spacing={1} sx={{ mt: 2, width: '100%' }}>
       {hasPrice && (
         <Grid2 sx={{ width: '100%', mt: 2, display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <Grid2>

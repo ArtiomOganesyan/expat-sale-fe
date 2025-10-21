@@ -32,6 +32,7 @@ export const NewItemDistance: React.FC<NewItemDistanceProps> = ({ className, han
       <div>Distance from City: {val} km</div>
       <Slider
         marks={marks}
+        sx={{color: 'black'}}
         step={1}
         value={val}
         valueLabelDisplay='auto'
@@ -39,7 +40,7 @@ export const NewItemDistance: React.FC<NewItemDistanceProps> = ({ className, han
         max={MAX}
         onChange={(_, newValue) => {
           handleLocationChange('location', 'radius', newValue);
-          handleChange(_, newValue)
+          handleChange(_, newValue);
         }}
       />
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

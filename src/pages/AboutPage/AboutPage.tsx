@@ -13,9 +13,26 @@ import { SvgIcon } from '@mui/material';
 import FacebookSVG from '../../assets/svg/facebook.svg';
 import LinkedInSVG from '../../assets/svg/linkedin.svg';
 import TelegramSVG from '../../assets/svg/telegram.svg';
-import SafeSellerBadge from '../../shared/components/Badges/SafeSellerBadge';
+import { useLocation } from 'react-router';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function AboutPage() {
+  const location = useLocation();
+  const { t } = useTranslation('about');
+  const scrollToId = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  useEffect(() => {
+    const hash = location.hash;
+    if (hash) {
+      scrollToId(hash.substring(1));
+    }
+  }, [location]);
+
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
@@ -23,15 +40,15 @@ function AboutPage() {
           variant='h2'
           sx={{ textAlign: 'end', fontWeight: '400', letterSpacing: '-2px' }}
         >
-          Pack&Go
+          {t('brand')}
         </Typography>
         <Typography
           variant='h4'
           sx={{ textAlign: 'end', fontWeight: '400' }}
         >
-          Arrive Ready
+          {t('slogan')}
         </Typography>
-        <Typography className={styles.tagline}>Helping people move, settle, and start fresh — anywhere in the world.</Typography>
+        <Typography className={styles.tagline}>{t('tagline')}</Typography>
       </div>
 
       <Card className={styles.mission}>
@@ -40,15 +57,10 @@ function AboutPage() {
             variant='h4'
             sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
           >
-            <PublicIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} /> Our Mission
+            <PublicIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} />
+            {t('mission.title')}
           </Typography>
-          <p>
-            We’re a small team of passionate developers who have lived through the struggles of relocation — selling everything
-            before leaving, landing in a new country, and trying to rebuild from scratch. <br />
-            <br />
-            Pack&GO exists to make that journey smoother. Whether you’re moving across the street or across continents, we want
-            you to feel supported, connected, and ready for your new chapter.
-          </p>
+          <p style={{ whiteSpace: 'pre-line' }}>{t('mission.body')}</p>
         </CardContent>
       </Card>
 
@@ -59,19 +71,21 @@ function AboutPage() {
               variant='h4'
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
             >
-              <LiveHelpOutlinedIcon /> What we offer
+              <LiveHelpOutlinedIcon /> {t('offer.title')}
             </Typography>
             <br />
             <Typography
               variant='h5'
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
             >
-              <SupportAgentIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} /> Services
+              <SupportAgentIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} /> 
+              {t('services.title')}
             </Typography>
             <p>
-              <b>Find trusted specialists</b> who understand the expat life —{' '}
-              <b>movers, translators, legal help, housing, and more</b>. Everything you need to navigate relocation without the
-              stress.
+           <b>{t('services.p1.bold1')}</b>
+              {t('services.p1.mid')}
+              <b>{t('services.p1.bold2')}</b>
+              {t('services.p1.end')}
             </p>
           </CardContent>
 
@@ -81,28 +95,34 @@ function AboutPage() {
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
             >
               <StorefrontIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} />
-              Marketplace
+              {t('marketplace.title')}
             </Typography>
             <p>
-              A flea-market style space to <b>sell what you don’t need</b> and
-              <b> find what you do</b>. Moving out? List your stuff. Just arrived? Discover affordable items to make your new
-              place feel like home.
-            </p>
+              {t('marketplace.p1.part1')}
+              <b>{t('marketplace.p1.bold1')}</b>
+              {t('marketplace.p1.part2')}
+              <b>{t('marketplace.p1.bold2')}</b>
+              {t('marketplace.p1.part3')}
+              </p>
           </CardContent>
 
-          <CardContent>
+          <CardContent id='safe-seller'>
             <Typography
               variant='h5'
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
             >
-              <HealthAndSafetyIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} /> Safe Seller
+              <HealthAndSafetyIcon sx={{ color: 'var(--color-accent-strong)', fontSize: '32px' }} /> 
+              {t('safeSeller.title')}
             </Typography>
 
             <p>
-              A Safe Seller is a user who has been <b>verified by our operations team</b> to help with fraud prevention. We do our
-              best to build a safe community, but please remember it's <b>up to you to be careful</b> and stay safe during
-              transactions.
+              {t('safeSeller.p1.part1')}
+              <b>{t('safeSeller.p1.bold1')}</b>
+              {t('safeSeller.p1.part2')}
+              <b>{t('safeSeller.p1.bold2')}</b>
+              {t('safeSeller.p1.part3')}
             </p>
+
           </CardContent>
         </Card>
       </div>
@@ -112,9 +132,9 @@ function AboutPage() {
           variant='h4'
           sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
         >
-          <VolunteerActivismIcon /> Support Our Work
+          <VolunteerActivismIcon /> {t('support.title')}
         </Typography>
-        <p>Contact us to learn about current support options:</p>
+        <p>{t('support.subtitle')}</p>
         <div className={styles.buttons}>
           <Button
             component='a'
@@ -130,7 +150,7 @@ function AboutPage() {
                 inheritViewBox
                 sx={{ fontSize: 32 }}
               />
-              Facebook
+              {t('links.facebook')}
             </div>
           </Button>
           <Button
@@ -147,7 +167,7 @@ function AboutPage() {
                 inheritViewBox
                 sx={{ fontSize: 32 }}
               />
-              LinkedIn
+              {t('links.linkedin')}
             </div>
           </Button>
           <Button
@@ -164,7 +184,7 @@ function AboutPage() {
                 inheritViewBox
                 sx={{ fontSize: 32 }}
               />
-              Telegram
+              {t('links.telegram')}
             </div>
           </Button>
         </div>

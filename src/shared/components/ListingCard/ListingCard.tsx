@@ -8,6 +8,7 @@ import styles from './ListingCard.module.css';
 import { type Item } from '../../../entities/items/types/items';
 import { formatPrice } from '../../../utils/formatPrice';
 import ImageWithSkeleton from '../ImageWithSkeleton/ImageWithSkeleton';
+import SafeSellerBadge from '../Badges/SafeSellerBadge';
 
 interface ListingCardProps {
   item: Item;
@@ -134,27 +135,53 @@ function ListingCard({ item, url }: ListingCardProps) {
       <div
         ref={setRefs}
         {...imageTapHandlers}
-        style={{ background: '#fafafa', borderRadius: 12, overflow: 'hidden', height: item.xl ? 400 : 200, cursor: 'pointer' }}
+        style={{
+          background: '#fafafa',
+          borderRadius: 12,
+          overflow: 'hidden',
+          height: item.xl ? 400 : 200,
+          cursor: 'pointer',
+          position: 'relative',
+        }}
         role='link'
         aria-label='Open item'
       >
-        <Carousel
-          index={index}
-          // @ts-ignore
-          onChange={now => setIndex(now)}
-          autoPlay={true}
-          animation='slide'
-          height={item.xl ? 400 : 200}
-        >
-          {imagesToShow.map(image => (
-            <ImageWithSkeleton
-              key={image.public_url}
-              src={image.public_url}
-              alt={'product'}
-              height={item.xl ? 400 : 200}
-            />
-          ))}
-        </Carousel>
+        <>
+          <Carousel
+            index={index}
+            // @ts-ignore
+            onChange={now => setIndex(now)}
+            autoPlay={true}
+            animation='slide'
+            height={item.xl ? 400 : 200}
+            navButtonsWrapperProps={{
+              style: {
+                height: '80%',
+              },
+            }}
+          >
+            {imagesToShow.map(image => (
+              <div
+                key={image.public_url}
+                className={styles.imageWrapper}
+              >
+                <ImageWithSkeleton
+                  src={image.public_url}
+                  alt='product'
+                  height={item.xl ? 400 : 200}
+                />
+              </div>
+            ))}
+          </Carousel>
+          {item.user.safe_seller && (
+            <div className={styles.safeBadge}>
+              <SafeSellerBadge
+                size={item.xl ? 'l' : 'm'}
+                showText={false}
+              />
+            </div>
+          )}
+        </>
       </div>
 
       <div className={styles.cardContent}>

@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import PrivateRoute from './routes/PrivateRoute';
 import ListingMasonry from '../features/items/ListingMasonry';
 import Layout from '../layouts/MainLayout/MainLayout';
@@ -80,6 +80,11 @@ function AppRouter() {
               element={<UserItemEdit />}
             />
           </Route>
+          {/* redirect to index if no match */}
+          <Route
+            path='*'
+            element={<Navigate to='/' />}
+          />
         </Route>
       </Routes>
     </Suspense>

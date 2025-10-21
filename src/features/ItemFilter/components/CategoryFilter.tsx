@@ -56,7 +56,12 @@ function CategoryFilter({
         fullWidth
         size='small'
       >
-        <InputLabel htmlFor='category-select'>Category</InputLabel>
+        <InputLabel
+          sx={{ background: 'var(--color-invisible)' }}
+          htmlFor='category-select'
+        >
+          Category
+        </InputLabel>
         <Select
           id='category-select'
           name='categoryId'

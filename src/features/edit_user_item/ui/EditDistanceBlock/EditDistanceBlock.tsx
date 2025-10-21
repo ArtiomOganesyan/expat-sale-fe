@@ -32,6 +32,7 @@ export const EditDistanceBlock: FC<EditDistanceBlockProps> = ({ className, updat
       <div>Distance from City: {val} km</div>
       {/* @ts-ignore */}
       <Slider
+        sx={{color: 'black'}}
         marks={marks}
         step={1}
         value={updatedItem.location ? updatedItem.location.radius : val}

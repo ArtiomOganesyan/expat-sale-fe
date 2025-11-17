@@ -1,18 +1,11 @@
 // FromPriceListUpload.tsx
 import { useEffect, useRef, useState } from 'react';
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Box,
-  Button,
-  IconButton,
-  Typography,
-} from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Box, Button, IconButton, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import FormError from '../FormError/FormError';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   file: File | null;
@@ -21,12 +14,8 @@ type Props = {
   disabled?: boolean;
 };
 
-export default function FromPriceListUpload({
-  file,
-  setFile,
-  maxSizeMB = 2,
-  disabled = false
-}: Props) {
+export default function FromPriceListUpload({ file, setFile, maxSizeMB = 2, disabled = false }: Props) {
+  const { t } = useTranslation('item');
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState('');
   const [rows, setRows] = useState<string[][]>([]);
@@ -134,20 +123,20 @@ export default function FromPriceListUpload({
   return (
     <Box sx={{ width: '100%' }}>
       <Button
-        variant="contained"
+        variant='contained'
         startIcon={<CloudUploadIcon />}
         onClick={handlePickClick}
         sx={{ width: '100%' }}
         disabled={disabled}
       >
-        {file ? 'Change CSV' : 'Choose CSV'}
+        {file ? t('form.pricelist.change') : t('form.pricelist.choose')}
       </Button>
 
       <input
         ref={inputRef}
         hidden
-        type="file"
-        accept=".csv,text/csv,application/vnd.ms-excel,application/csv"
+        type='file'
+        accept='.csv,text/csv,application/vnd.ms-excel,application/csv'
         onChange={handleFileChange}
       />
 
@@ -165,16 +154,27 @@ export default function FromPriceListUpload({
           }}
         >
           <Box sx={{ minWidth: 0 }}>
-            <Typography variant="body2" noWrap title={file.name}>
+            <Typography
+              variant='body2'
+              noWrap
+              title={file.name}
+            >
               {file.name}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography
+              variant='caption'
+              color='text.secondary'
+            >
               {(file.size / (1024 * 1024)).toFixed(2)} MB
               {rows.length ? ` · ${rows.length} rows` : ''}
             </Typography>
           </Box>
-          <IconButton size="small" aria-label="remove file" onClick={handleRemove}>
-            <CloseIcon fontSize="small" />
+          <IconButton
+            size='small'
+            aria-label='remove file'
+            onClick={handleRemove}
+          >
+            <CloseIcon fontSize='small' />
           </IconButton>
         </Box>
       )}
@@ -186,7 +186,7 @@ export default function FromPriceListUpload({
           sx={{ mt: 1, width: '100%' }}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="body2">Preview price list</Typography>
+            <Typography variant='body2'>{t('form.pricelist.preview')}</Typography>
           </AccordionSummary>
 
           <AccordionDetails>

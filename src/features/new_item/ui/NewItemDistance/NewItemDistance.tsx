@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 
 interface NewItemDistanceProps {
   className?: string;
@@ -22,6 +23,7 @@ const marks = [
 ];
 
 export const NewItemDistance: React.FC<NewItemDistanceProps> = ({ className, handleLocationChange }) => {
+  const { t } = useTranslation('item');
   const [val, setVal] = React.useState<number | number[]>(MIN);
   const handleChange = (_: Event, newValue: number | number[]) => {
     setVal(newValue);
@@ -29,10 +31,10 @@ export const NewItemDistance: React.FC<NewItemDistanceProps> = ({ className, han
 
   return (
     <Box sx={{ width: '100%', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div>Distance from City: {val} km</div>
+      <div>{t('form.distance')}: {val} {t('form.distance.km')}</div>
       <Slider
         marks={marks}
-        sx={{color: 'black'}}
+        sx={{ color: 'black' }}
         step={1}
         value={val}
         valueLabelDisplay='auto'
@@ -49,14 +51,14 @@ export const NewItemDistance: React.FC<NewItemDistanceProps> = ({ className, han
           onClick={() => setVal(MIN)}
           sx={{ cursor: 'pointer' }}
         >
-          {MIN} km
+          {MIN} {t('form.distance.km')}
         </Typography>
         <Typography
           variant='body2'
           onClick={() => setVal(MAX)}
           sx={{ cursor: 'pointer' }}
         >
-          {MAX} km
+          {MAX} {t('form.distance.km')}
         </Typography>
       </Box>
     </Box>

@@ -3,6 +3,7 @@ import FormSelect from '../../../../shared/components/FormSelect/FormSelect';
 import { getSelectedOption } from '../../../../utils/getSelectedOption';
 import { CONDITION } from '../../../../utils/constants/Item';
 import { prepareCategoryText } from '../../../../utils/prepareCategoryText';
+import { useTranslation } from 'react-i18next';
 
 interface NewItemConditionProps {
   className?: string;
@@ -11,6 +12,7 @@ interface NewItemConditionProps {
 }
 
 export const NewItemCondition: FC<NewItemConditionProps> = ({ className, formData, handleSelectChange }) => {
+  const { t } = useTranslation('item');
   return (
     <FormSelect
       value={getSelectedOption(
@@ -21,7 +23,7 @@ export const NewItemCondition: FC<NewItemConditionProps> = ({ className, formDat
         'value',
         formData.is_new ? 'new' : 'used'
       )}
-      label={'Condition'}
+      label={t('form.condition')}
       id={'condition'}
       onChange={(_, newValue) => {
         const isNew = newValue?.value === 'new';
@@ -29,7 +31,7 @@ export const NewItemCondition: FC<NewItemConditionProps> = ({ className, formDat
       }}
       options={Object.values(CONDITION).map(c => ({
         value: c,
-        label: prepareCategoryText(c),
+        label: prepareCategoryText(t(`form.condition.${c}`)),
       }))}
     />
   );

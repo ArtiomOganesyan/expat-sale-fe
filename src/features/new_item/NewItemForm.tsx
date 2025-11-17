@@ -25,8 +25,10 @@ import { useNewItemValidation } from '../../shared/hooks/useNewItemValidation';
 import { Stack, Typography } from '@mui/material';
 import FromPriceListUpload from '../../shared/components/FormPriceListUpload/FromPriceListUpload';
 import { safeLang } from '../../utils/saveLang';
+import { useTranslation } from 'react-i18next';
 
 function NewItemForm() {
+  const { t } = useTranslation('item');
   const [create, createMeta] = useCreateItemMutation();
   const [getPriceListTemplate, { isFetching }] = useLazyGetPriceListTemplateQuery();
   const [uploadPriceList, uploadMeta] = useUploadPriceListMutation();
@@ -189,11 +191,11 @@ function NewItemForm() {
     <div className={styles.form_container}>
       <form onSubmit={handleSubmit}>
         <FormInput
-          label={'Title'}
+          label={t('form.title')}
           type={'text'}
           id={'title'}
           name={'title'}
-          placeholder={'What do you want to sell?'}
+          placeholder={t('form.title.placeholder')}
           onChange={handleInputChange}
           onBlur={onBlurTitle}
           error={Boolean(errors.title)}
@@ -201,12 +203,12 @@ function NewItemForm() {
           inputRef={titleRef}
         />
         <FormInput
-          label={'Description'}
+          label={t('form.description')}
           type={'text'}
           id='description'
           name='description'
           value={formData.description}
-          placeholder='Describe your item'
+          placeholder={t('form.description.placeholder')}
           onChange={handleInputChange}
           options={{
             multiline: true,
@@ -228,7 +230,7 @@ function NewItemForm() {
         {!isService && (
           <div className={styles.price_block}>
             <FormInput
-              label={'Price'}
+              label={t('form.price')}
               type={'number'}
               id={'price'}
               name={'price'}
@@ -271,21 +273,21 @@ function NewItemForm() {
               sx={{ cursor: 'pointer' }}
               onClick={() => handleGetTemplate()}
             >
-              {isFetching ? 'Downloading…' : 'Download the price list template'}
+              {isFetching ? t('form.pricelist.downloading') : t('form.pricelist.template')}
             </Typography>
           </Stack>
         )}
         <NewItemDistance handleLocationChange={handleLocationChange} />
         <div className={styles.item_option_block}>
           <FormCheckBox
-            label={'Free'}
+            label={t('form.free')}
             id={'is_free'}
             name={'is_free'}
             checked={formData.is_free}
             onChange={handleIsFreeToggle}
           />
           <FormCheckBox
-            label={'Published'}
+            label={t('form.published')}
             id={'published'}
             name={'published'}
             checked={formData.published}
@@ -302,7 +304,7 @@ function NewItemForm() {
           variant='contained'
           disabled={isLoading}
         >
-          {isLoading ? 'Creating...' : 'Create Item'}
+          {isLoading ? t('form.creating') : t('form.create')}
         </Button>
       </form>
     </div>

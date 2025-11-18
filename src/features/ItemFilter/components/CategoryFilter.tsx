@@ -5,6 +5,8 @@ import ListSubheader from '@mui/material/ListSubheader';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Box from '@mui/material/Box';
+import { useTranslation } from 'react-i18next';
+import { toSnakeCase } from '../../../utils/toSnakeCase';
 
 function CategoryFilter({
   filters,
@@ -15,13 +17,15 @@ function CategoryFilter({
   categories: Category[] | undefined;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }) {
+  const { t } = useTranslation('filter');
+
   const renderOptions = () => {
     const children = [
       <MenuItem
         value=''
         key=''
       >
-        <em>All Categories</em>
+        <em>{t(`filter.categories.all_categories`)}</em>
       </MenuItem>,
     ];
 
@@ -32,16 +36,17 @@ function CategoryFilter({
           value={category.id}
           sx={{ borderBottom: '1px solid grey', borderTop: '4px solid grey' }}
         >
-          {category.name}
+          {t(`filter.categories.${toSnakeCase(category.slug)}`)}
         </MenuItem>
       );
+
       category.children?.map(child =>
         children.push(
           <MenuItem
             key={child.id}
             value={child.id}
           >
-            {child.name}
+            {t(`filter.categories.${toSnakeCase(category.slug)}.${toSnakeCase(child.slug)}`)}
           </MenuItem>
         )
       );
@@ -60,12 +65,12 @@ function CategoryFilter({
           sx={{ background: 'var(--color-invisible)' }}
           htmlFor='category-select'
         >
-          Category
+          {t('filter.categories')}
         </InputLabel>
         <Select
           id='category-select'
           name='categoryId'
-          label='Category'
+          label={t('filter.categories')}
           value={filters.categoryId || ''}
           onChange={e => {
             handleChange(e as React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>);

@@ -1,4 +1,5 @@
 import TextField from '@mui/material/TextField';
+import { useTranslation } from 'react-i18next';
 
 function MainFilter({
   inputValue,
@@ -7,6 +8,8 @@ function MainFilter({
   inputValue: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }) {
+  const { t } = useTranslation('filter');
+
   return (
     <div
       onClick={e => e.stopPropagation()}
@@ -15,7 +18,7 @@ function MainFilter({
       <TextField
         id='search'
         type='text'
-        placeholder='What are you looking for?'
+        placeholder={t('filter')}
         name='search'
         value={inputValue}
         onChange={handleChange}

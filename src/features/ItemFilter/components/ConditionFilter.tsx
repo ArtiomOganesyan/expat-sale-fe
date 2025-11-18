@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import { Checkbox, FormControlLabel } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 function ConditionFilter({
   filters,
@@ -8,6 +9,8 @@ function ConditionFilter({
   filters: Record<string, any>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }) {
+  const { t } = useTranslation('filter');
+
   return (
     <Box sx={{ width: '100%', maxWidth: '350px', px: 2, py: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
       <FormControlLabel
@@ -22,7 +25,7 @@ function ConditionFilter({
             }
           />
         }
-        label='New only'
+        label={t(`filter.condition.new_only`)}
         sx={{ ml: 0 }}
       />
 
@@ -38,7 +41,7 @@ function ConditionFilter({
             }
           />
         }
-        label='Free only'
+        label={t(`filter.condition.free_only`)}
         sx={{ ml: 0 }}
       />
     </Box>

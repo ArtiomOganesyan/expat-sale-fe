@@ -24,6 +24,8 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import { useGetParentCategoriesQuery } from '../../entities/categories/categoriesAPI';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState, forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toSnakeCase } from '../../utils/toSnakeCase';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
@@ -42,6 +44,7 @@ function ListingMenu() {
   const { data: categories, isLoading: isLoadingCategories } = useGetParentCategoriesQuery();
 
   const navigate = useNavigate();
+  const { t } = useTranslation('listing');
 
   const { data: latestServices, isLoading: isLoadingServices } = useGetLatestServicesQuery();
   const { data: latestProducts, isLoading: isLoadingProducts } = useGetLatestProductsQuery();
@@ -64,7 +67,7 @@ function ListingMenu() {
   return (
     <div className={styles.container}>
       <div>
-        <Typography variant='h2'>Explore</Typography>
+        <Typography variant='h2'>{t('explore')}</Typography>
       </div>
       <div style={{ display: 'flex', gap: '12px' }}>
         <Button
@@ -77,7 +80,7 @@ function ListingMenu() {
             variant='h6'
             color='primary.main'
           >
-            Services
+            {t('services')}
           </Typography>
         </Button>
         <Button
@@ -91,7 +94,7 @@ function ListingMenu() {
             variant='h6'
             color='primary.main'
           >
-            Market
+            {t('market')}
           </Typography>
         </Button>
       </div>
@@ -112,7 +115,7 @@ function ListingMenu() {
               variant='h6'
               component='div'
             >
-              Categories
+              {t('market.categories')}
             </Typography>
             <IconButton
               edge='end'
@@ -130,7 +133,7 @@ function ListingMenu() {
               variant='body2'
               color='text.secondary'
             >
-              No additional categories available.
+              {t('no_more_items')}
             </Typography>
           ) : (
             <List>
@@ -139,7 +142,7 @@ function ListingMenu() {
                   key={cat.id}
                   onClick={() => handleSelectCategory(cat.id)}
                 >
-                  <ListItemText primary={cat.name} />
+                  <ListItemText primary={t(`market.categories.${toSnakeCase(cat.name)}`)} />
                 </ListItemButton>
               ))}
             </List>

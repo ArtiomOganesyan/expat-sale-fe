@@ -42,7 +42,7 @@ const LocalizationSettings = () => {
 
   return (
     <FormControl fullWidth>
-      <InputLabel id='language-select-label'>{t('language')}</InputLabel>
+      <InputLabel id='language-select-label'>{t('settings.language')}</InputLabel>
       <Select
         labelId='language-select-label'
         value={selectedLang}

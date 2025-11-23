@@ -13,6 +13,10 @@ import {
   ListItemText,
   DialogContent,
 } from '@mui/material';
+import LanguageIcon from '@mui/icons-material/Language';
+import BasicSpeedDial, { type SpeedDialActionItem } from '../../shared/components/SpeedDial/SpeedDial';
+import i18n from '../../i18n';
+import { LOCAL_STORAGE_KEY_LANGUAGE } from '../../utils/constants/Item';
 import type { TransitionProps } from '@mui/material/transitions';
 import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
 import styles from './ListingMenu.module.css';
@@ -24,6 +28,21 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import { useGetParentCategoriesQuery } from '../../entities/categories/categoriesAPI';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState, forwardRef } from 'react';
+
+const LANGUAGES = [
+  { code: 'en', label: 'English' },
+  { code: 'ru', label: 'Русский' },
+] as const;
+
+async function changeLang(code: string) {
+  await i18n.changeLanguage(code);
+  try {
+    localStorage.setItem(LOCAL_STORAGE_KEY_LANGUAGE, code);
+  } catch {
+    /* noop to satisfy eslint no-empty */
+  }
+  if (typeof document !== 'undefined') document.dir = i18n.dir(code);
+}
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
@@ -50,6 +69,26 @@ function ListingMenu() {
   const [openCatDialog, setOpenCatDialog] = useState(false);
 
   const secondaryCategories = (categories || []).slice(1);
+
+  const languageActions: SpeedDialActionItem[] = LANGUAGES.map(l => ({
+    name: l.label,
+    onClick: () => changeLang(l.code),
+    icon: <span style={{ fontWeight: 700, fontSize: 12 }}>{l.code.toUpperCase()}</span>,
+    fab: {
+      size: 'small',
+      sx: {
+        width: 40,
+        height: 40,
+        minHeight: 40,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 12,
+        fontWeight: 700,
+        letterSpacing: 0.5,
+      },
+    },
+  }));
 
   if (isLoadingServices || isLoadingProducts || isLoadingCategories) return <LoadingComponent />;
 
@@ -246,6 +285,13 @@ function ListingMenu() {
           </div>
         </>
       ) : null}
+      <BasicSpeedDial
+        actions={languageActions}
+        Icon={LanguageIcon}
+        ariaLabel='language-switcher'
+        bottom={100}
+        right={26}
+      />
     </div>
   );
 }

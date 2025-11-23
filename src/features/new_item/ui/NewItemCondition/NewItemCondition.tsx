@@ -18,7 +18,7 @@ export const NewItemCondition: FC<NewItemConditionProps> = ({ className, formDat
       value={getSelectedOption(
         Object.values(CONDITION).map(c => ({
           value: c,
-          label: prepareCategoryText(c),
+          label: prepareCategoryText(t(`form.condition.${c}`)),
         })),
         'value',
         formData.is_new ? 'new' : 'used'

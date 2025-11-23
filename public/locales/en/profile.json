@@ -1,0 +1,23 @@
+{
+  "profile.username.title": "Username",
+  "profile.username.placeholder": "Username",
+
+  "profile.edit.actions.save": "Save",
+  "profile.edit.actions.edit": "Edit",
+  "profile.edit.actions.cancel": "Cancel",
+  "profile.edit.actions.logout": "Logout",
+
+  "profile.buttons.actions.newitems": "add new item",
+  "profile.buttons.actions.myproducts": "my products",
+
+  "profile.contact": "Contact information",
+
+  "profile.update.success.title": "Profile updated",
+  "profile.update.success.subtitle": "Your information has been saved",
+
+  "profile.update.success.avatar": "Avatar updated",
+  "profile.update.success.avatar.subtitle": "Your avatar has been successfully updated",
+
+  "profile.update.failed.title": "Update failed",
+  "profile.update.failed.subtitle": "An error occurred."
+}

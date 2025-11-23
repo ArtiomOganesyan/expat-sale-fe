@@ -4,9 +4,11 @@ import { useAppSelector } from '../../hooks/hooks';
 import { selectUser } from '../../entities/user/userSlice';
 import { useUserProductStatQuery } from '../../entities/items/itemsAPI';
 import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
+import { useTranslation } from 'react-i18next';
 
 function UserProfileNavigation() {
   const navigate = useNavigate();
+  const { t } = useTranslation('profile');
 
   const { isLoading, isFetching, isError, error } = useUserProductStatQuery();
 
@@ -24,12 +26,12 @@ function UserProfileNavigation() {
 
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <Button onClick={() => navigate('/item/new')}>Add New Item</Button>
+      <Button onClick={() => navigate('/item/new')}>{t('profile.buttons.actions.newitems')}</Button>
       <Button
         variant='outlined'
         onClick={moveToUserItems}
       >
-        My Products
+        {t('profile.buttons.actions.myproducts')}
       </Button>
     </div>
   );

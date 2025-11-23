@@ -1,19 +1,11 @@
 // src/components/EditItemPriceList/EditItemPriceList.tsx
 import { useEffect, useState } from 'react';
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Box,
-  Button,
-  Grid,
-  Typography,
-  Grid2,
-} from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Box, Button, Grid, Typography, Grid2 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useLazyGetPriceListByItemQuery, useUploadPriceListMutation } from '../../../../entities/items/itemAPI';
 import { useSnackbar } from '../../../../shared/hooks/useSnackbar';
 import FromPriceListUpload from '../../../../shared/components/FormPriceListUpload/FromPriceListUpload';
+import { useTranslation } from 'react-i18next';
 
 const parseCSV = (text: string): string[][] => {
   const out: string[][] = [];
@@ -26,17 +18,33 @@ const parseCSV = (text: string): string[][] => {
     const next = text[i + 1];
 
     if (inQuotes) {
-      if (ch === '"' && next === '"') { cur += '"'; i++; }
-      else if (ch === '"') { inQuotes = false; }
-      else { cur += ch; }
+      if (ch === '"' && next === '"') {
+        cur += '"';
+        i++;
+      } else if (ch === '"') {
+        inQuotes = false;
+      } else {
+        cur += ch;
+      }
     } else {
       if (ch === '"') inQuotes = true;
-      else if (ch === ',') { row.push(cur.trim()); cur = ''; }
-      else if (ch === '\n') { row.push(cur.trim()); out.push(row); row = []; cur = ''; }
-      else if (ch !== '\r') { cur += ch; }
+      else if (ch === ',') {
+        row.push(cur.trim());
+        cur = '';
+      } else if (ch === '\n') {
+        row.push(cur.trim());
+        out.push(row);
+        row = [];
+        cur = '';
+      } else if (ch !== '\r') {
+        cur += ch;
+      }
     }
   }
-  if (cur.length > 0 || inQuotes || row.length > 0) { row.push(cur.trim()); out.push(row); }
+  if (cur.length > 0 || inQuotes || row.length > 0) {
+    row.push(cur.trim());
+    out.push(row);
+  }
   return out.filter(r => r.some(cell => cell !== ''));
 };
 
@@ -46,6 +54,7 @@ type Props = {
 };
 
 export default function EditItemPriceList({ itemId, editEnabled = true }: Props) {
+  const { t } = useTranslation('item');
   const [triggerGet, { isFetching: isFetchingPrice }] = useLazyGetPriceListByItemQuery();
   const [uploadPriceList, { isLoading: isUploading }] = useUploadPriceListMutation();
   const { showSnackbar } = useSnackbar();
@@ -101,12 +110,19 @@ export default function EditItemPriceList({ itemId, editEnabled = true }: Props)
   const hasPrice = currentRows.length > 0 && !fetchError;
 
   return (
-    <Grid2 container spacing={1} sx={{ mt: 2, width: '100%' }}>
+    <Grid2
+      container
+      spacing={1}
+      sx={{ mt: 2, width: '100%' }}
+    >
       {hasPrice && (
         <Grid2 sx={{ width: '100%', mt: 2, display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <Grid2>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-              Price list
+            <Typography
+              variant='subtitle1'
+              sx={{ fontWeight: 700 }}
+            >
+              {t('form.pricelist')}
             </Typography>
           </Grid2>
 
@@ -117,8 +133,8 @@ export default function EditItemPriceList({ itemId, editEnabled = true }: Props)
               sx={{ width: '100%' }}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="body2">
-                  {previewExpanded ? 'Hide full price list' : 'Show full price list'}
+                <Typography variant='body2'>
+                  {previewExpanded ? `${t('form.pricelist.hide')}` : `${t('form.pricelist.show')}`}
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -164,18 +180,30 @@ export default function EditItemPriceList({ itemId, editEnabled = true }: Props)
       )}
 
       <Grid2 sx={{ width: '100%', mt: hasPrice ? 1 : 0, opacity: editEnabled ? 1 : 0.5 }}>
-        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
-          {hasPrice ? 'Replace price list' : 'Upload price list'}
+        <Typography
+          variant='subtitle2'
+          sx={{ fontWeight: 600, mb: 0.5 }}
+        >
+          {hasPrice ? `${t('form.pricelist.replace')}` : `${t('form.pricelist.upload')}`}
         </Typography>
-        <FromPriceListUpload file={newFile} setFile={setNewFile} maxSizeMB={2} disabled={!editEnabled}/>
+        <FromPriceListUpload
+          file={newFile}
+          setFile={setNewFile}
+          maxSizeMB={2}
+          disabled={!editEnabled}
+        />
         <Button
-          variant="outlined"
+          variant='outlined'
           sx={{ mt: 1 }}
           onClick={handleReplace}
           disabled={!editEnabled || !newFile || isUploading}
           fullWidth
         >
-          {isUploading ? 'Uploading…' : hasPrice ? 'Replace with new CSV' : 'Upload CSV'}
+          {isUploading
+            ? `${t('form.pricelist.downloading')}`
+            : hasPrice
+              ? `${t('form.pricelist.replace.new')}`
+              : `${t('form.pricelist.choose')}`}
         </Button>
       </Grid2>
     </Grid2>

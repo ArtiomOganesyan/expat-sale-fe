@@ -5,6 +5,7 @@ import FormSelect from '../../../../shared/components/FormSelect/FormSelect';
 import { prepareCategoryText } from '../../../../utils/prepareCategoryText';
 import { CONDITION } from '../../../../utils/constants/Item';
 import { type EditItem } from '../../../../entities/items/types/items';
+import { useTranslation } from 'react-i18next';
 
 interface EditConditionBlockProps {
   className?: string;
@@ -14,12 +15,13 @@ interface EditConditionBlockProps {
 }
 
 export const EditConditionBlock: FC<EditConditionBlockProps> = ({ className, updatedItem, handleSelectChange, edit }) => {
+  const { t } = useTranslation('item');
   const selectedCondition = useMemo(() => {
     if (updatedItem?.is_new === undefined) return null;
     const value = updatedItem.is_new ? CONDITION.NEW : CONDITION.USED;
     return {
       value,
-      label: prepareCategoryText(value),
+      label: prepareCategoryText(t(`form.condition.${value}`)),
     };
   }, [updatedItem?.is_new]);
 
@@ -27,7 +29,7 @@ export const EditConditionBlock: FC<EditConditionBlockProps> = ({ className, upd
     <FormSelect
       sx={clsx(styles.block, className)}
       value={selectedCondition}
-      label={'Condition'}
+      label={t('form.condition')}
       id={'condition'}
       onChange={(_, newValue) => {
         const isNew = newValue?.value === 'new';
@@ -35,7 +37,7 @@ export const EditConditionBlock: FC<EditConditionBlockProps> = ({ className, upd
       }}
       options={Object.values(CONDITION).map(c => ({
         value: c,
-        label: prepareCategoryText(c),
+        label: prepareCategoryText(t(`form.condition.${c}`)),
       }))}
       disabled={!edit}
     />

@@ -1,0 +1,23 @@
+{
+  "profile.username.title": "Никнейм",
+  "profile.username.placeholder": "Никнейм",
+
+  "profile.edit.actions.save": "Сохранить",
+  "profile.edit.actions.edit": "Изменить",
+  "profile.edit.actions.cancel": "Отменить",
+  "profile.edit.actions.logout": "Выйти",
+
+  "profile.buttons.actions.newitems": "новый товар",
+  "profile.buttons.actions.myproducts": "мои товары",
+
+  "profile.contact": "Контактная информация",
+
+  "profile.update.success.title": "Профиль обновлён",
+  "profile.update.success.subtitle": "Ваша информация сохранена",
+
+  "profile.update.success.avatar": "Аватар загружен",
+  "profile.update.success.avatar.subtitle": "Ваш аватар был успешно изменён",
+
+  "profile.update.failed.title": "Загрузка неудалась",
+  "profile.update.failed.subtitle": "Произошла ошибка"
+}

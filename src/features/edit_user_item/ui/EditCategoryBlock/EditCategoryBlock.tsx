@@ -6,6 +6,7 @@ import { useAppSelector } from '../../../../hooks/hooks';
 import { getCategories } from '../../../../entities/categories/categoriesSlice';
 import { prepareCategoryText } from '../../../../utils/prepareCategoryText';
 import { type EditItem } from '../../../../entities/items/types/items';
+import { useTranslation } from 'react-i18next';
 
 interface EditCategoryBlockProps {
   className?: string;
@@ -15,6 +16,7 @@ interface EditCategoryBlockProps {
 }
 
 export const EditCategoryBlock: FC<EditCategoryBlockProps> = ({ className, updatedItem, handleSelectChange, edit }) => {
+  const { t } = useTranslation('item');
   const categories = useAppSelector(getCategories);
 
   const subcategories = useMemo(() => {
@@ -49,7 +51,7 @@ export const EditCategoryBlock: FC<EditCategoryBlockProps> = ({ className, updat
     <FormSelect
       sx={clsx(styles.block, className)}
       value={selectedCategory}
-      label='Category'
+      label={t('form.category')}
       id='category'
       onChange={(_, newValue) => {
         handleSelectChange('categoryId', newValue?.subcategoryId || 'Other');

@@ -1,7 +1,8 @@
 // src/components/Item/ItemPriceList.tsx
 import { useEffect, useState } from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Box, Grid2, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Box, Grid2, Typography, IconButton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DownloadIcon from '@mui/icons-material/Download';
 import { useGetItemByIdQuery, useLazyGetPriceListByItemQuery } from '../../entities/items/itemAPI';
 import { useParams } from 'react-router';
 import { safeLang } from '../../utils/saveLang';
@@ -127,13 +128,20 @@ export default function ItemPriceList({ itemId }: ItemPriceListProps) {
           </Typography>
         </Grid2>
         <Grid2>
-          <Typography
+          <IconButton
             onClick={handleDownloadPriceList}
-            variant='subtitle1'
-            sx={{ fontWeight: 500, color: 'blue', textDecoration: 'underline' }}
+            sx={{
+              color: 'primary.main',
+              padding: 0,
+              width: 32,
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
-            .csv
-          </Typography>
+            <DownloadIcon />
+          </IconButton>
         </Grid2>
       </Grid2>
 

@@ -54,7 +54,7 @@ function MobileNavbar() {
       <Toolbar sx={{ justifyContent: 'space-around' }}>
         <IconButton
           color='inherit'
-          edge='start'
+          // edge='start'
           onClick={() => {
             navigate('/');
           }}
@@ -63,7 +63,7 @@ function MobileNavbar() {
         </IconButton>
         <IconButton
           color='inherit'
-          edge='start'
+          // edge='start'
           onClick={() => {
             navigate('/about');
           }}

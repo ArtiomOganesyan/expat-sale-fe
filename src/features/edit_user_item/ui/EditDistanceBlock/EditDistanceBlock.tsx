@@ -1,6 +1,7 @@
 import { Box, Slider, Typography } from '@mui/material';
 import { type FC, useState } from 'react';
 import { type EditItem } from '../../../../entities/items/types/items';
+import { useTranslation } from 'react-i18next';
 
 interface EditDistanceBlockProps {
   className?: string;
@@ -23,16 +24,17 @@ const marks = [
 ];
 
 export const EditDistanceBlock: FC<EditDistanceBlockProps> = ({ className, updatedItem, handleLocationChange, edit }) => {
+  const { t } = useTranslation('item');
   const [val, setVal] = useState<number | number[] | undefined>(updatedItem.location ? updatedItem.location.radius : MIN);
   const handleChange = (_: Event, newValue: number | number[]) => {
     setVal(newValue);
   };
   return (
     <Box sx={{ width: '100%', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div>Distance from City: {val} km</div>
+      <div>{t('form.distance')}: {val} {t('form.distance.km')}</div>
       {/* @ts-ignore */}
       <Slider
-        sx={{color: 'black'}}
+        sx={{ color: 'black' }}
         marks={marks}
         step={1}
         value={updatedItem.location ? updatedItem.location.radius : val}
@@ -52,14 +54,14 @@ export const EditDistanceBlock: FC<EditDistanceBlockProps> = ({ className, updat
           onClick={() => setVal(MIN)}
           sx={{ cursor: 'pointer' }}
         >
-          {MIN} km
+          {MIN} {t('form.distance.km')}
         </Typography>
         <Typography
           variant='body2'
           onClick={() => setVal(MAX)}
           sx={{ cursor: 'pointer' }}
         >
-          {MAX} km
+          {MAX} {t('form.distance.km')}
         </Typography>
       </Box>
     </Box>

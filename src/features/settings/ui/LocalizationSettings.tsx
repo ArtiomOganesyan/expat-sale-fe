@@ -1,7 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material';
 import { LOCAL_STORAGE_KEY_LANGUAGE } from '../../../utils/constants/Item';
-import i18n from 'i18next';
+import i18n from '../../../i18n';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

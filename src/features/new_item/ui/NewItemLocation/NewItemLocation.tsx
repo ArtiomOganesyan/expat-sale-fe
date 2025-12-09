@@ -2,6 +2,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import FromSelectSearch from '../../../../shared/components/FormSelectSearch/FromSelectSearch';
 import { useGetCountriesQuery, useGetRegionsQuery } from '../../../../entities/places/placesAPI';
 import type { Country } from '../../../../entities/places/places.type';
+import { useTranslation } from 'react-i18next';
 
 interface NewItemLocationProps {
   className?: string;
@@ -10,6 +11,7 @@ interface NewItemLocationProps {
 }
 
 export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLocationChange, setFormData }) => {
+  const { t } = useTranslation('item');
   // Internal selection state similar to LocationFilter
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
@@ -76,7 +78,7 @@ export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLoc
     <React.Fragment>
       {/* Country */}
       <FromSelectSearch<{ country: string }>
-        label={'Country'}
+        label={t('form.country')}
         id={'country'}
         onChange={(_, newValue) => {
           if (!newValue) return onCountrySelect(null);
@@ -93,7 +95,7 @@ export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLoc
       {/* Region */}
       {selectedCountry && (
         <FromSelectSearch<{ region: string }>
-          label={'Region'}
+          label={t('form.region')}
           id={'region'}
           onChange={(_, newValue) => onRegionSelect(newValue?.region || null)}
           inputValue={regionInputValue}
@@ -108,7 +110,7 @@ export const NewItemLocation: FC<NewItemLocationProps> = ({ className, handleLoc
       {/* City */}
       {selectedCountry && selectedRegion && (
         <FromSelectSearch<{ city: string }>
-          label={'City'}
+          label={t('form.city')}
           id={'city'}
           onChange={(_, newValue) => onCitySelect(newValue?.city || null)}
           inputValue={cityInputValue}

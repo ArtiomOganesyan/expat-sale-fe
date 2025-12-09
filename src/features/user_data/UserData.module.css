@@ -54,14 +54,16 @@
 
 .actions {
   display: flex;
-  width: 60%;
-  justify-content: space-around;
+  width: 100%;
+
+  justify-content: center;
+  gap: 8px;
 }
 
 .actions > button {
   padding: 0.5rem;
   transition: all 0.3s;
-  width: 30%;
+  /* width: 30%; */
   border-radius: 8px;
 }
 

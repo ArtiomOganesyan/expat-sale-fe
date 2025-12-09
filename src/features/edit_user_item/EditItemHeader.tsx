@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router';
 
 import styles from './EditItemForm.module.css';
 import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 function EditItemHeader() {
   const navigate = useNavigate();
+  const { t } = useTranslation('item');
 
   return (
     <div className={styles.header_container}>
@@ -17,7 +19,7 @@ function EditItemHeader() {
         variant='h5'
         fontWeight={600}
       >
-        Return to Item List
+        {t(`header.edit`)}
       </Typography>
     </div>
   );

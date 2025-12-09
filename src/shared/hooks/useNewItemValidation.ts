@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export type NewItemFormData = {
   title: string;
@@ -20,6 +21,7 @@ type Errors = Partial<{
 }>;
 
 export function useNewItemValidation(formData: NewItemFormData) {
+  const { t } = useTranslation('item');
   const [errors, setErrors] = useState<Errors>({});
 
   const validateField = useCallback(
@@ -28,18 +30,18 @@ export function useNewItemValidation(formData: NewItemFormData) {
 
       switch (name) {
         case 'title':
-          if (!String(v || '').trim()) return 'Title is required';
-          if (String(v).trim().length < 3) return 'Title must be at least 3 characters';
+          if (!String(v || '').trim()) return t('form.error.title');
+          if (String(v).trim().length < 3) return t('form.error.title.characters');
           return '';
         case 'description':
-          if (!String(v || '').trim()) return 'Description is required';
+          if (!String(v || '').trim()) return t('form.error.description');
           return '';
         case 'price':
           if (formData.is_free) return '';
-          if (v === '' || v === null || Number.isNaN(Number(v))) return 'Price is required';
+          if (v === '' || v === null || Number.isNaN(Number(v))) return t('form.error.price');
           return '';
         case 'categoryId':
-          if (!v) return 'Category is required';
+          if (!v) return t('form.error.category');
           return '';
         default:
           return '';

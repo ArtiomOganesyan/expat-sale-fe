@@ -6,6 +6,7 @@ import { getSelectedOption } from '../../../../utils/getSelectedOption';
 import { useAppSelector } from '../../../../hooks/hooks';
 import { getRates } from '../../../../entities/currency/currencySlice';
 import { type EditItem } from '../../../../entities/items/types/items';
+import { useTranslation } from 'react-i18next';
 
 interface EditCurrencyBlockProps {
   className?: string;
@@ -15,6 +16,7 @@ interface EditCurrencyBlockProps {
 }
 
 export const EditCurrencyBlock: FC<EditCurrencyBlockProps> = ({ className, updatedItem, handleSelectChange, edit }) => {
+  const { t } = useTranslation('item');
   const currencyRates = useAppSelector(getRates);
   return (
     <FormSelect
@@ -27,7 +29,7 @@ export const EditCurrencyBlock: FC<EditCurrencyBlockProps> = ({ className, updat
         'value',
         updatedItem?.currency
       )}
-      label='Currency'
+      label={t('form.currency')}
       id={'currency'}
       onChange={(_, newValue) => {
         handleSelectChange('currency', newValue?.value || 'EUR');

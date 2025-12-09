@@ -14,8 +14,10 @@ import { type User } from '../../entities/user/user.type';
 import { useSnackbar } from '../../shared/hooks/useSnackbar';
 import UserProfileNavigation from './UserProfileNavigation';
 import { isValidUpdatedUserData } from './utils';
+import { useTranslation } from 'react-i18next';
 
 function UserData() {
+  const { t } = useTranslation('profile');
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState('');
   const [updatedUser, setUpdatedUser] = useState<User | null>(null);
@@ -35,11 +37,11 @@ function UserData() {
 
   useEffect(() => {
     if (updateMeta.isError) {
-      const err = (updateMeta?.error as any)?.data?.error || 'An error occurred.';
+      const err = (updateMeta?.error as any)?.data?.error || `${t('profile.update.failed.subtitle')}`;
       setError(err);
 
       showSnackbar({
-        title: 'Update failed',
+        title: `${t('profile.update.failed.title')}`,
         subtitle: err,
         severity: 'error',
       });
@@ -64,7 +66,7 @@ function UserData() {
 
     if (!isUpdateValidate.isValid) {
       showSnackbar({
-        title: 'Update failed',
+        title: `${t('profile.update.failed.title')}`,
         subtitle: isUpdateValidate.message,
         severity: 'error',
       });
@@ -85,8 +87,8 @@ function UserData() {
       const res = await updateUserMutation({ id: user?.id, data });
       if (!('error' in res)) {
         showSnackbar({
-          title: 'Profile updated',
-          subtitle: 'Your information has been saved',
+          title: `${t('profile.update.success.title')}`,
+          subtitle: `${t('profile.update.success.subtitle')}`,
           severity: 'success',
         });
       }
@@ -135,8 +137,8 @@ function UserData() {
           formData,
         });
         showSnackbar({
-          title: 'Avatar updated',
-          subtitle: 'Your avatar has been successfully updated',
+          title: `${t('profile.update.success.avatar')}`,
+          subtitle: `${t('profile.update.success.avatar.subtitle')}`,
           severity: 'success',
         });
       }
@@ -153,6 +155,7 @@ function UserData() {
       <form>
         <div className={style.header}>
           <ImageContainer
+            edit={edit}
             user={user}
             updateUserAvatar={updateUserAvatar}
             fileInputRef={fileInputRef}
@@ -160,10 +163,10 @@ function UserData() {
           />
           <FormInput
             id='username'
-            label='Username'
+            label={t('profile.username.title')}
             type='text'
             name='username'
-            placeholder='Username'
+            placeholder={t('profile.username.placeholder')}
             value={updatedUser?.username || ''}
             disabled={!edit}
             onChange={handleUpdateUser}
@@ -181,7 +184,7 @@ function UserData() {
         <div className={style.break_line} />
         <UserProfileNavigation />
         <div className={style.break_line} />
-        <Typography variant='h4'>Contact Information</Typography>
+        <Typography variant='h4'>{t('profile.contact')}</Typography>
         <div className={style.user_data}>
           <FormInput
             id='telegram'

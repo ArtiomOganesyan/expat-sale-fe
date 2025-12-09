@@ -3,6 +3,7 @@ import FromSelectSearch from '../../../../shared/components/FormSelectSearch/Fro
 import { useGetCountriesQuery, useGetRegionsQuery } from '../../../../entities/places/placesAPI';
 import type { Country } from '../../../../entities/places/places.type';
 import { type EditItem } from '../../../../entities/items/types/items';
+import { useTranslation } from 'react-i18next';
 
 interface EditLocationBlockProps {
   className?: string;
@@ -12,6 +13,7 @@ interface EditLocationBlockProps {
 }
 
 export const EditLocationBlockBlock: FC<EditLocationBlockProps> = ({ updatedItem, handleLocationChange, edit }) => {
+    const { t } = useTranslation('item');
   // Mirror LocationFilter/NewItemLocation: selected country object + inputs
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
@@ -101,7 +103,7 @@ export const EditLocationBlockBlock: FC<EditLocationBlockProps> = ({ updatedItem
     <React.Fragment>
       <FromSelectSearch<{ country: string }>
         value={selectedCountry ? { country: selectedCountry.country, label: selectedCountry.country } : null}
-        label={'Country'}
+        label={t('form.country')}
         id={'country'}
         onChange={(_, newValue) => {
           if (!newValue) return handleCountrySelect(null);
@@ -118,7 +120,7 @@ export const EditLocationBlockBlock: FC<EditLocationBlockProps> = ({ updatedItem
       {selectedCountry && (
         <FromSelectSearch<{ region: string }>
           value={selectedRegion ? { region: selectedRegion, label: selectedRegion } : null}
-          label={'Region'}
+          label={t('form.region')}
           id={'region'}
           onChange={(_, newValue) => handleRegionSelect(newValue?.region || null)}
           inputValue={regionInputValue}
@@ -131,7 +133,7 @@ export const EditLocationBlockBlock: FC<EditLocationBlockProps> = ({ updatedItem
       {selectedCountry && selectedRegion && (
         <FromSelectSearch<{ city: string }>
           value={selectedCity ? { city: selectedCity, label: selectedCity } : null}
-          label={'City'}
+          label={t('form.city')}
           id={'city'}
           onChange={(_, newValue) => handleCitySelect(newValue?.city || null)}
           inputValue={cityInputValue}

@@ -21,8 +21,10 @@ import { useSnackbar } from '../../shared/hooks/useSnackbar';
 import { LoadingComponent } from '../../widget/Loading/LoadingComponent';
 import { useIsServiceCategory } from '../../shared/hooks/useIsServiceCategory';
 import EditItemPriceList from './ui/EditItemPriceList/EditItemPriceList';
+import { useTranslation } from 'react-i18next';
 
 function EditItemData() {
+  const { t } = useTranslation('item');
   const params = useParams();
   const dispatch = useAppDispatch();
   const { data: item, isLoading, isError } = useGetItemByIdQuery({ itemId: params.id });
@@ -134,10 +136,10 @@ function EditItemData() {
         />
         <FormInput
           id='title'
-          label='Title'
+          label={t('form.title')}
           type='text'
           name='title'
-          placeholder='Title'
+          placeholder={t('form.title.placeholder')}
           value={updatedItem?.title || ''}
           disabled={!edit}
           onChange={handleInputChange}
@@ -154,8 +156,8 @@ function EditItemData() {
         <FormInput
           id='description'
           type='text'
-          label='Description'
-          placeholder='Description'
+          label={t('form.description')}
+          placeholder={t('form.description.placeholder')}
           name='description'
           value={updatedItem?.description || ''}
           disabled={!edit}
@@ -165,7 +167,7 @@ function EditItemData() {
         {!isService && (
           <>
             <FormInput
-              label='Price'
+              label={t('form.price')}
               type='number'
               id='price'
               name='price'
@@ -207,7 +209,7 @@ function EditItemData() {
         {updatedItem && (
           <div className={styles.item_option_block}>
             <FormCheckBox
-              label={'Free'}
+              label={t('form.free')}
               id={'is_free'}
               name={'is_free'}
               checked={updatedItem.is_free}
@@ -215,7 +217,7 @@ function EditItemData() {
               disabled={!edit}
             />
             <FormCheckBox
-              label={'Published'}
+              label={t('form.published')}
               id={'published'}
               name={'published'}
               checked={updatedItem.published}

@@ -5,6 +5,7 @@ import { getSelectedOption } from '../../../../utils/getSelectedOption';
 import { useAppSelector } from '../../../../hooks/hooks';
 import { getCategories } from '../../../../entities/categories/categoriesSlice';
 import { prepareCategoryText } from '../../../../utils/prepareCategoryText';
+import { useTranslation } from 'react-i18next';
 
 interface NewItemCategoryProps {
   className?: string;
@@ -15,7 +16,15 @@ interface NewItemCategoryProps {
   onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }
 
-export const NewItemCategory: FC<NewItemCategoryProps> = ({ className, formData, handleSelectChange, error, helperText, onBlur }) => {
+export const NewItemCategory: FC<NewItemCategoryProps> = ({
+  className,
+  formData,
+  handleSelectChange,
+  error,
+  helperText,
+  onBlur,
+}) => {
+  const { t } = useTranslation('item');
   const categories = useAppSelector(getCategories);
   const subcategories = useMemo(() => {
     const sub_cat: {
@@ -46,7 +55,7 @@ export const NewItemCategory: FC<NewItemCategoryProps> = ({ className, formData,
       subcategoryId: string;
     }>
       value={getSelectedOption(subcategories, 'subcategoryId', formData.categoryId)}
-      label={'Category'}
+      label={t('form.category')}
       id={'category'}
       onChange={(_, newValue) => {
         handleSelectChange('categoryId', newValue?.subcategoryId ?? formData.categoryId);

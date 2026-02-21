@@ -1,3 +1,18 @@
 {
-  "settings": "Настройки"
+  "settings": "Настройки",
+  "register": "Регистрация",
+  "login": "Войти",
+  "login.title": "Войдите в свой аккаунт",
+  "login.subtitle": "Рады снова вас видеть!",
+  "login.username": "Имя пользователя",
+  "login.password": "Пароль",
+  "login.button": "ВОЙТИ",
+  "register.title": "Создать аккаунт",
+  "register.subtitle": "Давайте создадим ваш аккаунт!",
+  "register.username": "Имя пользователя",
+  "register.password": "Пароль",
+  "register.confirm_password": "Подтвердите пароль",
+  "register.button": "ЗАРЕГИСТРИРОВАТЬСЯ",
+  "settings.language": "Язык",
+  "settings.currency": "Валюта"
 }

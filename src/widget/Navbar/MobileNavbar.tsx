@@ -9,10 +9,12 @@ import { useAppSelector } from '../../hooks/hooks';
 import { selectUser } from '../../entities/user/userSlice';
 import NavbarLinkMapping from './utils/NavbarLinkMapping';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 function MobileNavbar() {
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
+  const { t } = useTranslation('settings');
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
@@ -39,9 +41,9 @@ function MobileNavbar() {
   const nonAuthLinks = () => {
     return (
       <>
-        <MenuItem onClick={() => handleMenuClose('Login')}>Login</MenuItem>
-        <MenuItem onClick={() => handleMenuClose('Register')}>Register</MenuItem>
-        <MenuItem onClick={() => handleMenuClose('Settings')}>Settings</MenuItem>
+        <MenuItem onClick={() => handleMenuClose('Login')}>{t('login')}</MenuItem>
+        <MenuItem onClick={() => handleMenuClose('Register')}>{t('register')}</MenuItem>
+        <MenuItem onClick={() => handleMenuClose('Settings')}>{t('settings')}</MenuItem>
       </>
     );
   };

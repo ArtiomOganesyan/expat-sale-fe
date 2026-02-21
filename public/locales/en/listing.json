@@ -1,0 +1,15 @@
+{
+  "explore": "EXPLORE",
+  "services": "SERVICES",
+  "no_more_items": "No more items to load",
+  "market": "MARKET",
+  "market.categories": "Categories",
+  "market.categories.baby_and_kids": "Baby and Kids",
+  "market.categories.jobs_and_services": "Jobs and Services",
+  "market.categories.others": "Others",
+  "market.categories.housing": "Housing",
+  "market.categories.transport": "Transport",
+  "market.categories.electronics": "Electronics",
+  "market.categories.furniture": "Furniture",
+  "market.categories.pets": "Pets"
+}

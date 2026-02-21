@@ -14,7 +14,7 @@ i18next
     debug: true,
     fallbackLng: 'en',
     defaultNS,
-    ns: ['main', 'about', 'settings', 'item'],
+    ns: ['main', 'about', 'settings', 'listing'],
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },

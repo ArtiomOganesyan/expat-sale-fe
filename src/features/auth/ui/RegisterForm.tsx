@@ -6,6 +6,7 @@ import FormInput from '../../../shared/components/FormInput/FormInput';
 import { Button } from '@mui/material';
 import FormError from '../../../shared/components/FormError/FormError';
 import { useSnackbar } from '../../../shared/hooks/useSnackbar';
+import { useTranslation } from 'react-i18next';
 
 function RegisterForm() {
   const [username, setUsername] = React.useState('');
@@ -13,6 +14,8 @@ function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [error, setError] = React.useState('');
   const { showSnackbar } = useSnackbar();
+
+  const { t } = useTranslation('settings');
 
   const navigate = useNavigate();
 
@@ -58,11 +61,14 @@ function RegisterForm() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>Create an account</div>
-      <div className={styles.subtitle}>Let’s create your account!</div>
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.title}>{t('register.title')}</div>
+      <div className={styles.subtitle}>{t('register.subtitle')}</div>
+      <form
+        onSubmit={handleSubmit}
+        className={styles.form}
+      >
         <FormInput
-          label='Username'
+          label={t('register.username')}
           placeholder='Create a unique username'
           id='username'
           type='text'
@@ -70,7 +76,7 @@ function RegisterForm() {
           onChange={e => setUsername(e.target.value)}
         />
         <FormInput
-          label='Password'
+          label={t('register.password')}
           placeholder='Pick a strong password'
           type='password'
           id='password'
@@ -78,7 +84,7 @@ function RegisterForm() {
           onChange={e => setPassword(e.target.value)}
         />
         <FormInput
-          label='Confirm Password'
+          label={t('register.confirm_password')}
           placeholder='Confirm your password'
           type='password'
           id='confirmPassword'
@@ -92,7 +98,7 @@ function RegisterForm() {
           type='submit'
           disabled={!password || !username || password !== confirmPassword}
         >
-          {meta.isLoading ? 'Loading...' : 'Register'}
+          {meta.isLoading ? 'Loading...' : t('register.button')}
         </Button>
       </form>
     </div>

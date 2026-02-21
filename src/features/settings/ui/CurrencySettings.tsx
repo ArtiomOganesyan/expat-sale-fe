@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 const CurrencySettings = () => {
   const { data: rates = [] } = useGetCurrencyRateQuery(undefined);
   const [selectedCurrency, setSelectedCurrency] = useState<string>(() => localStorage.getItem(LOCAL_STORAGE_KEY_CURRENCY) ?? '');
-  const { t } = useTranslation('currency');
+  const { t } = useTranslation('settings');
   const handleChange = (event: SelectChangeEvent) => {
     const value = event.target.value;
     setSelectedCurrency(value);
@@ -17,7 +17,7 @@ const CurrencySettings = () => {
 
   return (
     <FormControl fullWidth>
-      <InputLabel id='currency-select-label'>{t('currency')}</InputLabel>
+      <InputLabel id='currency-select-label'>{t('settings.currency')}</InputLabel>
       <Select
         labelId='currency-select-label'
         value={selectedCurrency}

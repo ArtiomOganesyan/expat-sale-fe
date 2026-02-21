@@ -6,12 +6,15 @@ import FormInput from '../../../shared/components/FormInput/FormInput';
 import FormError from '../../../shared/components/FormError/FormError';
 import { Button } from '@mui/material';
 import { useSnackbar } from '../../../shared/hooks/useSnackbar';
+import { useTranslation } from 'react-i18next';
 
 function LoginForm() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState('');
   const { showSnackbar } = useSnackbar();
+
+  const { t } = useTranslation('settings');
 
   const navigate = useNavigate();
 
@@ -50,14 +53,14 @@ function LoginForm() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>Login to your account</div>
-      <div className={styles.subtitle}>It’s great to see you again!</div>
+      <div className={styles.title}>{t('login.title')}</div>
+      <div className={styles.subtitle}>{t('login.subtitle')}</div>
       <form
         onSubmit={handleSubmit}
         className={styles.form}
       >
         <FormInput
-          label={'Username'}
+          label={t('login.username')}
           type={'text'}
           id={'username'}
           name={'username'}
@@ -65,7 +68,7 @@ function LoginForm() {
           onChange={e => setUsername(e.target.value)}
         />
         <FormInput
-          label={'Password'}
+          label={t('login.password')}
           type={'password'}
           id={'password'}
           name={'password'}
@@ -77,7 +80,7 @@ function LoginForm() {
           type='submit'
           disabled={!password || !username}
         >
-          {meta.isLoading ? 'Loading...' : 'Login'}
+          {meta.isLoading ? 'Loading...' : t('login.button')}
         </Button>
       </form>
     </div>

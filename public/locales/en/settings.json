@@ -1,3 +1,18 @@
 {
-  "settings": "Settings"
+  "settings": "Settings",
+  "register": "Register",
+  "login": "Login",
+  "login.title": "Login to your account",
+  "login.subtitle": "It’s great to see you again!",
+  "login.username": "Username",
+  "login.password": "Password",
+  "login.button": "LOGIN",
+  "register.title": "Create an account",
+  "register.subtitle": "Let’s create your account!",
+  "register.username": "Username",
+  "register.password": "Password",
+  "register.confirm_password": "Confirm password",
+  "register.button": "REGISTER",
+  "settings.language": "Language",
+  "settings.currency": "Currency"
 }
